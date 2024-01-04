@@ -1,0 +1,21 @@
+
+.dishes__button {
+    width: 320px;
+    height: 36px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+    align-self: center;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+@media screen and (max-width: 550px) {
+    .dishes__button{
+        width: 240px;
+    }
+}

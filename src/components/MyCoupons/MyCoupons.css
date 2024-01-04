@@ -1,0 +1,17 @@
+.coupons {
+    max-width: 1140px;
+    margin: 0 70px 0;
+    min-height: calc(100vh - 100px);
+}
+
+.coupons__title {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 16px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.coupons__text {
+    margin: 0 0 70px 0;
+}

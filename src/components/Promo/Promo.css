@@ -1,0 +1,13 @@
+.carousel {
+    max-width: 600px;
+    height: 600px;
+    border: 1px solid #FF3055;
+    border-radius: 30px;
+    margin: 0 70px;
+}
+
+.carousel__image {
+    width: 200px;
+    height: 200px;
+}
+

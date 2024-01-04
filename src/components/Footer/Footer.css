@@ -1,0 +1,129 @@
+.footer {
+    background-color: #FAFAFA;
+    max-width: 1280px;
+    margin: 0 auto;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    text-align: center;
+}
+
+.footer__logo {
+    margin: 18px auto 18px auto;
+    width: 71px;
+    height: 64px;
+}
+
+.footer__link {
+    text-decoration: none;
+    color: #000000;
+    list-style: none;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.footer__link-active {
+    text-decoration: none;
+    color: #FF3055;
+    list-style: none;
+    margin-right: 20px;
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+.footer__container {
+    border-top: 1px solid #FF3055;
+    max-width: 1140px;
+    margin: 0 70px 0;
+    display: flex;
+}
+
+.footer__copyright {
+    margin: 20px auto 20px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    max-width: 48px;
+    color: #A0A0A0;
+}
+
+.footer__list {
+    margin: 20px 0 20px;
+    list-style: none;
+    display: flex;
+    padding-left: 0px;
+
+}
+
+.footer__item:last-child {
+    width: 20px;
+}
+
+.footer__link {
+    text-decoration: none;
+    color: #000000;
+    transition: 1s ease;
+    margin-right: 20px;
+}
+
+
+
+@media screen and (max-width: 768px) {
+    .footer {
+        background-color: #FFFFFF;
+        max-width:768px;
+    }
+
+    .footer__container {
+        margin-right: 50px;
+        margin-left: 50px;
+    }
+
+}
+
+@media screen and (max-width: 550px) {
+    .footer {
+        background-color: #FFFFFF;
+        margin: 0 auto 27px;
+    }
+
+    .footer__text {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .footer__container {
+        margin: 21px 10px 0;
+        flex-direction: column-reverse;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer__copyright {
+        margin: 0 0 37px;
+        font-size: 12px;
+        line-height: 15px;
+        max-width: 48px;
+        color: #A0A0A0;
+    }
+
+    .footer__list {
+        flex-direction: column;
+        padding: 0;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .footer__item {
+        margin-top: 12px;
+    }
+
+    .footer__link {
+        margin-left: 0;
+    }
+}
+
+
+

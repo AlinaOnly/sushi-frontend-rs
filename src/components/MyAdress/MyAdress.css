@@ -1,0 +1,32 @@
+.adress{
+    max-width: 1140px;
+    margin: 0 70px 0;
+    min-height: calc(100vh - 100px);
+}
+
+.adress__title {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 16px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.adress__text {
+    margin: 50px 0 70px 0;
+}
+
+.adress__submit-button{
+    background: #FF3055;
+    color: #ffffff;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 200px;
+    height: 45px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}

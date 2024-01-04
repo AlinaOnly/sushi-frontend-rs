@@ -1,0 +1,104 @@
+.header {
+    max-width: 1280px;
+    margin: 0 70px 20px;
+    display:flex;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.header__link {
+    text-decoration: none;
+    color: #000000;
+    list-style: none;
+    margin-right: 20px;
+    margin-top: 40px;
+}
+
+.header__link-active {
+    text-decoration: none;
+    color: #FF3055;
+    list-style: none;
+    margin-right: 20px;
+    margin-top: 40px;
+    font-weight: 500;
+}
+
+.header__logo {
+    margin: 18px 55px 18px auto;
+    width: 71px;
+    height: 64px;
+}
+
+.header__select {
+    border: none;
+    background: #ffffff;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 20px;
+}
+
+.header__phone {
+    margin: 43px 20px 0 0;
+}
+
+.header__account-logo {
+    margin-left: 10px;
+}
+
+.header__link-button {
+    margin-top: 25px;
+    text-decoration: none;
+}
+
+.header__phone-ref {
+    text-decoration: none;
+    color: #000000;
+}
+
+.header__cart-button{
+    background: #FF3055;
+    color: #ffffff;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 100px;
+    height: 45px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}
+
+.header__image-button-cart {
+    margin: 0 5px;
+}
+
+.header__submit-button-counters {
+    margin: 0;
+}
+
+
+@media screen and (max-width: 768px) {
+    .header {
+        max-width:768px;
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+
+    .header__logo {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .header {
+        margin: 0 14px 14px;
+    }
+    
+    .header__logo {
+        margin-bottom: 18px;
+    }
+}

@@ -68,3 +68,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+
+Корзина переход на отдельную страницу с редактированием товаров и переход далее на оформление заказа.
+
+попапом делаем 1 единицу товаров с описанием.
+
+В Меню между шапкой и товарами будут кнопки переходов на категории "Роллы" "Суши" "Удон"
+
+подумать как будет приходить информация о заказе администратору с фронта 

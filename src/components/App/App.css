@@ -1,0 +1,18 @@
+
+.app__button-opacity:hover {
+    opacity: 0.8;
+    transition: 1s ease;
+}
+
+.app__button-opacity:not(:hover) {
+    transition: 1s ease;
+}
+
+.app__text-opacity:hover {
+    opacity: 0.7;
+    transition: 1s ease;
+}
+
+.app__text-opacity:not(:hover) {
+    transition: 1s ease;
+}
