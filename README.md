@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -79,3 +80,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 В Меню между шапкой и товарами будут кнопки переходов на категории "Роллы" "Суши" "Удон"
 
 подумать как будет приходить информация о заказе администратору с фронта 
+=======
+# sushi-frontend-rs
+>>>>>>> c62af457a4ad618dfca9beaf8d0e5164a5f2dedd
