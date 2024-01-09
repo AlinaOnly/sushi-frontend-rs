@@ -98,7 +98,7 @@
     justify-content: center;
 }
 
-.login__signin_green {
+.login__signin_red {
     color: #FF3055;
     margin: 0 0 0 6px;
 }

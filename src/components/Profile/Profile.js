@@ -21,7 +21,7 @@ function Profile({ onUpdateProfile, onLogout, errorMessage }) {
     function handleSubmit(event) {
         event.preventDefault();
         onUpdateProfile(
-            values.first_name,
+            values.name,
             values.last_name,
             values.phone,
             values.email);
@@ -42,83 +42,83 @@ function Profile({ onUpdateProfile, onLogout, errorMessage }) {
             <div className="profile">
                 <h2 className="profile__text">Привет, {currentUser.name}!</h2>
                 <form className="profile__form" onSubmit={handleSubmit}>
-                <div className="profile__container">
-                    <label className="profile__label" htmlFor="name">Имя
-                        <input
-                            disabled={isDisableInput}
-                            value={values.first_name || ''}
-                            onChange={handleChange}
-                            id="name"
-                            className="profile__input"
-                            name="name"
-                            type="text"
-                            placeholder="Имя"
-                            minLength="2"
-                            maxLength="40"
-                            required
-                        /></label>
-                        <span 
-                            className={`${errors.name ? "profile__error" : "profile__error_hidden"}`}>
-                                    {NAME}
-                        </span>
-                </div>    
-                <div className="profile__container">
-                    <label className="profile__label" htmlFor="email">День рождения
-                        <input
-                            id="birthday"
-                            className="profile__input"
-                            name="date"
-                            type="date"
-                            autoComplete="off"
-                            placeholder="День рождения"
-                            minLength="8"
-                            maxLength="8"
-                            
-                            
-                        /></label>
-                        <span 
-                            className={`${errors.date ? "profile__error" : "profile__error_hidden"}`}>
-                                    {NAME}
-                        </span>
-                </div>    
-                <div className="profile__container">
-                    <label className="profile__label" htmlFor="email">E-mail
-                        <input
-                            disabled={isDisableInput}
-                            value={values.email || ''}
-                            onChange={handleChange}
-                            id="email"
-                            className="profile__input"
-                            name="email"
-                            type="email"
-                            placeholder="Email"
-                            minLength="6"
-                            maxLength="40"
-                            //pattern={REGEX_MAIL}
-                            required
-                        /></label>
-                        <span 
-                            className={`${errors.email ? "profile__error" : "profile__error_hidden"}`}>
-                                    {EMAIL}
-                        </span>
-                </div>
-                <div className="profile__container">
-                    <label className="profile__label" htmlFor="email">Телефон
-                        <input
-                            id="phone"
-                            className="profile__input"
-                            name="phone"
-                            type="phone"
-                            placeholder="+"
-                            minLength="12"
-                            maxLength="13"
-                            required
-                        /></label>
-                        <span 
-                            className={`${errors.phone ? "profile__error" : "profile__error_hidden"}`}>
-                                    {PHONE}
-                        </span>
-                </div>      
+                    <div className="profile__container">
+                        <label className="profile__label" htmlFor="name">Имя
+                            <input
+                                disabled={isDisableInput}
+                                value={values.name || ''}
+                                onChange={handleChange}
+                                id="name"
+                                className="profile__input"
+                                name="name"
+                                type="text"
+                                placeholder="Имя"
+                                minLength="2"
+                                maxLength="40"
+                                required
+                            /></label>
+                            <span 
+                                className={`${errors.name ? "profile__error" : "profile__error_hidden"}`}>
+                                        {NAME}
+                            </span>
+                    </div>    
+                    <div className="profile__container">
+                        <label className="profile__label" htmlFor="date">День рождения
+                            <input
+                                id="date"
+                                className="profile__input"
+                                name="date"
+                                type="date"
+                                autoComplete="off"
+                                placeholder="День рождения"
+                                minLength="8"
+                                maxLength="8"
+                                
+                                
+                            /></label>
+                            <span 
+                                className={`${errors.date ? "profile__error" : "profile__error_hidden"}`}>
+                                        {NAME}
+                            </span>
+                    </div>    
+                    <div className="profile__container">
+                        <label className="profile__label" htmlFor="email">E-mail
+                            <input
+                                disabled={isDisableInput}
+                                value={values.email || ''}
+                                onChange={handleChange}
+                                id="email"
+                                className="profile__input"
+                                name="email"
+                                type="email"
+                                placeholder="Email"
+                                minLength="6"
+                                maxLength="40"
+                                //pattern={REGEX_MAIL}
+                                required
+                            /></label>
+                            <span 
+                                className={`${errors.email ? "profile__error" : "profile__error_hidden"}`}>
+                                        {EMAIL}
+                            </span>
+                    </div>
+                    <div className="profile__container">
+                        <label className="profile__label" htmlFor="phone">Телефон
+                            <input
+                                id="phone"
+                                className="profile__input"
+                                name="phone"
+                                type="phone"
+                                placeholder="+"
+                                minLength="12"
+                                maxLength="13"
+                                required
+                            /></label>
+                            <span 
+                                className={`${errors.phone ? "profile__error" : "profile__error_hidden"}`}>
+                                        {PHONE}
+                            </span>
+                    </div>      
                 </form>
                 { !isDisableInput
                     ? (<button 

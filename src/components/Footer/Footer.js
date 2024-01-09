@@ -21,7 +21,6 @@ function Footer() {
             <NavLink className={({ isActive }) => (isActive ? "footer__link-active" : "footer__link")}
                 to="/promo">Промо
             </NavLink>
-                <p className="footer__copyright">&copy; 2022</p>
                 <ul className="footer__list">
                     <li className="footer__item">
                         <a className="footer__link app__text-opacity"
@@ -56,7 +55,9 @@ function Footer() {
                         </a>
                     </li>
                 </ul>
+                
             </div> 
+            <p className="footer__copyright">&copy; 2024</p>
         </footer>
     );
 }

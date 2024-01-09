@@ -30,6 +30,7 @@
 .popup__image {
     max-width: 300px;
     object-fit: cover;
+    object-position: left;
 }
 
 .popup__image-text {

@@ -128,7 +128,7 @@ function Register({ onRegister, errorMessage }) {
             </form>
             <div className="register__signup-container">
                 <Link to="/auth/jwt/create/" className="register__signup app__text-opacity">Уже зарегистрированы? 
-                    <p className="register__signup_green">Войти</p>
+                    <p className="register__signup_red">Войти</p>
                 </Link>
                 <p className="register__error-text">{errorMessage}</p>
             </div>

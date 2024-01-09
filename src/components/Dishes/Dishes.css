@@ -14,6 +14,13 @@
     line-height: 15px;
 }
 
+.dishes__categories {
+    margin: 70px 70px 0;
+    border-bottom: solid 2px #FF3055;
+    padding-bottom: 20px;
+    max-width: 150px;
+}
+
 @media screen and (max-width: 550px) {
     .dishes__button{
         width: 240px;

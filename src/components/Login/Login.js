@@ -67,7 +67,7 @@ function Login({ onLogin, errorMessage }) {
             </form>
             <div className="login__signin-container">
                 <Link to="/auth/users/" className="login__signin app__text-opacity">Еще не зарегистрированы? 
-                    <p className="login__signin_green">Регистрация</p>
+                    <p className="login__signin_red">Регистрация</p>
                 </Link>
                 <p className="register__error-text">{errorMessage}</p>
             </div>

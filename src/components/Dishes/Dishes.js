@@ -4,8 +4,8 @@ import DishesCardList from '../DishesCardList/DishesCardList';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 import poster0 from '../../images/fill.jpg';
-import poster1 from '../../images/bansai.jpg';
-import poster2 from '../../images/bonito.jpg';
+import poster1 from '../../images/vegas.jpg';
+import poster2 from '../../images/mega.jpg';
 import poster3 from '../../images/california.jpg';
 import poster4 from '../../images/philadelphia.jpg';
 import poster5 from '../../images/tokyo.jpg';
@@ -122,10 +122,11 @@ function Dishes({ onDishClick, handleBurgerMenu }) {
     return (
         <>
             <CategoryMenu handleBurgerMenu={handleBurgerMenu}/>
-            <DishesCardList
-                dishes={isDishes}
-                onDishClick={onDishClick}
-            />
+            <div className="dishes__categories">Роллы</div>
+                <DishesCardList
+                    dishes={isDishes}
+                    onDishClick={onDishClick}
+                />
         </>
     );
 }

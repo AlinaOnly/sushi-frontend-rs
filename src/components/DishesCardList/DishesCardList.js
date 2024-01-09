@@ -6,8 +6,7 @@ function DishesCardList({ dishes, onDishClick, dishesItems }) {
     return (
         <section className="dishes__card-lists">
             <ul className="dishes__card-list">
-            {
-                dishes.map((dish) => (
+            {dishes.map((dish) => (
                     <DishesCard
                         key={dish.id}
                         name={dish.name}
@@ -23,10 +22,8 @@ function DishesCardList({ dishes, onDishClick, dishesItems }) {
                         isDishes={dish.isDishes}
                         isCartDishes={dish.isCartDishes}
                         onDishClick={onDishClick}
-                        
                     />
-                ))
-            }
+                ))}
             </ul>
         </section>
     );

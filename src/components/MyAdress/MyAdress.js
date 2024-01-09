@@ -16,11 +16,7 @@ function MyAdress() {
     }*/
 
     function handleHideInput() {
-        setShownInputs(false);
-    }
-
-    function handleShowInput() {
-        setShownInputs(true);
+        setShownInputs(!isShownInputs);
     }
 
     return (
@@ -29,63 +25,70 @@ function MyAdress() {
             <section className="adress" >
                 <h2 className="adress__title">Ваши адреса</h2>
                 <div className="adress__container">
-                    <button 
-                        onClick={handleShowInput}
-                        className="adress__submit-button app__button-opacity">
-                        Добавить адрес
-                    </button>
-                    <p className="adress__text">Пока нет добавленных адресов</p>
-
-                    <form className="profile__form"  >
-                    <div className="profile__container">
-                        <label className="profile__label" htmlFor="name">Город
-                            <input
-                                value=""
-                                id="city"
-                                className="profile__input"
-                                name="city"
-                                type="text"
-                                placeholder="Город"
-                                minLength="2"
-                                maxLength="40"
-                                required
-                            /></label> 
-                        </div>    
-                    <div className="profile__container">
-                        <label className="profile__label" htmlFor="email">Название местоположения
-                            <input
-                                value=""
-                                id="place"
-                                className="profile__input"
-                                name="place"
-                                type="place"
-                                placeholder="Название местоположения"
-                                minLength="3"
-                                maxLength="40"
-                                required
-                            /></label>
-                        </div>
-                        <div className="profile__container">
-                        <label className="profile__label" htmlFor="name">Полный адрес
-                            <input
-                                value=""
-                                id="address"
-                                className="profile__input"
-                                name="address"
-                                type="text"
-                                placeholder="Полный адрес"
-                                minLength="5"
-                                maxLength="100"
-                                required
-                            /></label> 
-                        </div>   
-                        <button 
-                            onClick={handleShowInput}
-                            className="adress__submit-button app__button-opacity">
-                            Сохранить адрес
-                        </button>
-                </form>
-
+                { !isShownInputs ?    
+                        (   <>
+                                <p className="adress__text">Нет добавленных адресов</p>
+                                <button 
+                                    onClick={handleHideInput}
+                                    type="button"
+                                    aria-label="Добавить адрес"
+                                    className="adress__submit-button app__button-opacity">
+                                    Добавить адрес
+                                </button>
+                            </>  
+                        )
+                    :    (<form className="adress__form"  >
+                            <div className="adress__container">
+                                <label className="adress__label" htmlFor="city">
+                                    <input
+                                        //value=""
+                                        id="city"
+                                        className="adress__input"
+                                        name="city"
+                                        type="text"
+                                        placeholder="Город"
+                                        minLength="2"
+                                        maxLength="40"
+                                        required
+                                    /></label> 
+                            </div>    
+                            <div className="adress__container">
+                                <label className="adress__label" htmlFor="place">
+                                    <input
+                                        //value=""
+                                        id="place"
+                                        className="adress__input"
+                                        name="place"
+                                        type="text"
+                                        placeholder="Название местоположения"
+                                        minLength="3"
+                                        maxLength="40"
+                                        required
+                                    /></label>
+                            </div>
+                            <div className="adress__container">
+                                <label className="adress__label" htmlFor="address">
+                                    <input
+                                        //value=""
+                                        id="address"
+                                        className="adress__input"
+                                        name="address"
+                                        type="text"
+                                        placeholder="Полный адрес"
+                                        minLength="5"
+                                        maxLength="100"
+                                        required
+                                    /></label> 
+                            </div>   
+                            <button 
+                                type="submit"
+                                aria-label="Сохранить адрес"
+                                className="adress__submit-button app__button-opacity">
+                                Сохранить адрес
+                            </button>
+                        </form>
+                        )
+                }
                 </div>
             </section>
         </>

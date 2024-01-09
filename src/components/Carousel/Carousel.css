@@ -1,0 +1,49 @@
+
+.swiper {
+    max-width: 1140px;
+    margin: 0;
+}
+
+.swiper-slide {
+    background-color: #F9F9F9;
+    border-radius: 20px;
+    max-width: 320px !important;
+    margin: 0 50px 0 0;
+    display: flex;
+    overflow: hidden;
+}
+
+.swiper__image-product {
+    width: 110px;
+    height: 80px;
+}
+
+.swiper__button-add {
+    background: #FF3055;
+    color: #ffffff;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 130px;
+    height: 45px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.swiper__image {
+    margin: 20px;
+    width: 110px;
+    height: 80px;
+}
+
+.swiper__button-add {
+    margin: 20px 0;
+}
+
+.swiper__title {
+    text-align: center;
+}
+
+.swiper__text {
+    margin: 20px 0 0 0;
+}

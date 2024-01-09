@@ -75,7 +75,6 @@
 .dishes__photo {
     width: 100%;
     object-fit: contain;
-    height: 364px;
     cursor: pointer;
 }
 

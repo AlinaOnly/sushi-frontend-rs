@@ -1,13 +1,47 @@
 .carousel {
     max-width: 600px;
-    height: 600px;
+    height: 450px;
     border: 1px solid #FF3055;
     border-radius: 30px;
-    margin: 0 70px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.promo {
+    max-width: 1140px;
+    margin: 0 70px 0;
+}
+
+.promo__title {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 16px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    max-width: 300px;
+}
+
+.carousel__title {
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 16px;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+.carousel__text {
+    text-align: center;
+    height: 200px;
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
 .carousel__image {
     width: 200px;
     height: 200px;
+    margin-bottom: 10px;
 }
 

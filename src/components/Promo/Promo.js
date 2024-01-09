@@ -1,23 +1,18 @@
 import React from 'react';
 import Carousel from "react-multi-carousel";
-import photo from '../../images/logo.jpeg';
 import "react-multi-carousel/lib/styles.css";
+import photo from '../../images/logo.jpeg';
 import './Promo.css';
 
 function Promo () {
     const responsive = {
-        superLargeDesktop: {
-            // the naming can be any, depends on you.
-            breakpoint: { max: 4000, min: 3000 },
-            items: 5
-        },
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
-            items: 3
+            items: 2
         },
         tablet: {
             breakpoint: { max: 1024, min: 464 },
-            items: 2
+            items: 1
         },
         mobile: {
             breakpoint: { max: 464, min: 0 },
@@ -27,7 +22,7 @@ function Promo () {
 
 
     return (
-        <div className="promo">
+        <section className="promo">
             <h1 className="promo__title">Новости и акции</h1>
             <Carousel responsive={responsive}>
                 <div className="carousel">
@@ -56,7 +51,7 @@ function Promo () {
                     <img src={photo} className="carousel__image" alt="Фото промо акций"/>
                 </div>
             </Carousel>
-        </div>
+        </section>
     );
 };
 

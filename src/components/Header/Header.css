@@ -7,12 +7,23 @@
     line-height: 16px;
 }
 
+.header__container-links {
+    margin-top: 25px;
+    width: 600px;
+    align-items: center;
+    display: flex;
+}
+
 .header__link {
     text-decoration: none;
     color: #000000;
     list-style: none;
     margin-right: 20px;
-    margin-top: 40px;
+}
+
+.header__link-acc {
+    width: 80px;
+    margin-right: 5px;
 }
 
 .header__link-active {
@@ -20,14 +31,26 @@
     color: #FF3055;
     list-style: none;
     margin-right: 20px;
-    margin-top: 40px;
     font-weight: 500;
 }
 
+.header__logo-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
 .header__logo {
-    margin: 18px 55px 18px auto;
     width: 71px;
     height: 64px;
+}
+
+.header__container-select {
+    display: flex;
+    justify-content: end;
+    margin-top: 25px;
+    align-items: center;
+    width: 600px;
 }
 
 .header__select {
@@ -36,18 +59,19 @@
     cursor: pointer;
     padding: 0;
     margin-right: 20px;
+    height: fit-content;
 }
 
 .header__phone {
-    margin: 43px 20px 0 0;
+    margin-right: 10px;
+    width: 120px;
 }
 
 .header__account-logo {
-    margin-left: 10px;
+    margin-left: 2px;
 }
 
 .header__link-button {
-    margin-top: 25px;
     text-decoration: none;
 }
 

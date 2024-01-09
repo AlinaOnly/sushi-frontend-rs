@@ -16,3 +16,9 @@
 .app__text-opacity:not(:hover) {
     transition: 1s ease;
 }
+
+.app__broken-img:after {
+    content: "Мы сожалеем, но эта картинка не загрузилась";
+    background-image: url(../../images/404.jpeg);
+    
+}

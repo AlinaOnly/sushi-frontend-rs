@@ -4,11 +4,14 @@ import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import Header from '../Header/Header';
 
-
 import Dishes from '../Dishes/Dishes';
 import PopupDish from '../PopupDish/PopupDish';
-import Cart from '../Cart/Cart';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
+
+import Cart from '../Cart/Cart';
+import Delivery from '../Delivery/Delivery';
+import CashnCarry from '../CashnCarry/CashnCarry';
+import Payment from '../Payment/Payment';
 
 import Register from '../Register/Register';
 import Login from '../Login/Login';
@@ -314,6 +317,21 @@ function App() {
         <Route 
           path='/cart' 
           element={<Cart/>} 
+        />
+
+        <Route 
+          path='/delivery' 
+          element={<Delivery/>} 
+        />
+
+        <Route 
+          path='/pickup' 
+          element={<CashnCarry/>} 
+        />
+
+        <Route 
+          path='/payment' 
+          element={<Payment/>} 
         />
 
         <Route 

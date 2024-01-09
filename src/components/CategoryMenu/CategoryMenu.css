@@ -1,7 +1,7 @@
 .burger-category {
     display: flex;
     align-items:center;
-    margin: 70px 70px 0;
+    margin: 50px 70px 0;
     max-width: 1140px;
     justify-content: space-between;
 }

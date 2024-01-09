@@ -32,6 +32,7 @@
     background: #ffffff;
     padding-top: 23px;
     box-sizing: border-box;
+    border-radius: 10px;
 }
 
 .burger-menu__close {

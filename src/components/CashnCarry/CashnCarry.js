@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Delivery.css';
+import './CashnCarry.css';
 
-function Delivery() {
-    const [isChecked, setIsChecked] = useState(false);
+function CashnCarry() {
     const [count, setCount] = useState(1);
 
     // Счетчик столовых приборов
@@ -13,20 +12,6 @@ function Delivery() {
 
     const handleDelete = () => {
         setCount(prevCount => (prevCount > 0 ? prevCount - 1 : prevCount));
-    };
-    //end
-
-    // нажим и отжим radio btn
-    const handleRadioChange = () => {
-        // Только переключает состояние, если уже было выбрано
-        if (isChecked) {
-            setIsChecked((current) => !current);
-        }
-    };
-
-    // Событие onClick запускается в любом случае, даже когда радиокнопка уже была выбрана
-    const handleRadioClick = () => {
-        setIsChecked((current) => !current);
     };
     //end
 
@@ -113,13 +98,13 @@ function Delivery() {
                                 /></label>
                         </div>    
                         <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="adress">Адрес доставки
+                            <label className="delivery__label" htmlFor="adress">Пункт самовывоза
                                 <input
                                     id="adress"
                                     className="delivery__input"
                                     name="adress"
                                     type="text"
-                                    placeholder="Ваш адрес"
+                                    placeholder="Пункт самовывоза"
                                     minLength="10"
                                     maxLength="40"
                                     required
@@ -139,71 +124,6 @@ function Delivery() {
                                 type="button"
                                 className="cart__btn-product_add app__button-opacity">
                             </button>
-                        </div>
-                        <div className="delivery__container">
-                            <input
-                                className="delivery__input-radio"
-                                type="radio"
-                                name="toggleableRadio"
-                                checked={isChecked}
-                                onChange={handleRadioChange}
-                                onClick={handleRadioClick}
-                            />
-                            <label className="delivery__label" onClick={handleRadioClick}>
-                                Частный дом
-                            </label>
-                        </div>
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="home">Дом
-                                <input
-                                    id="home"
-                                    className="delivery__input"
-                                    name="home"
-                                    type="text"
-                                    placeholder="Дом"
-                                    minLength="1"
-                                    maxLength="6"
-                                    required
-                                /></label>
-                        </div>  
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="flat">Квартира
-                                <input
-                                    id="flat"
-                                    className="delivery__input"
-                                    name="flat"
-                                    type="text"
-                                    placeholder="Квартира"
-                                    minLength="1"
-                                    maxLength="1000"
-                                    required
-                                /></label>
-                        </div> 
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="floor">Этаж
-                                <input
-                                    id="floor"
-                                    className="delivery__input"
-                                    name="floor"
-                                    type="text"
-                                    placeholder="Этаж"
-                                    minLength="1"
-                                    maxLength="100"
-                                    required
-                                /></label>
-                        </div> 
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="homephone">Домофон
-                                <input
-                                    id="homephone"
-                                    className="delivery__input"
-                                    name="homephone"
-                                    type="text"
-                                    placeholder="Домофон"
-                                    minLength="1"
-                                    maxLength="1000"
-                                    required
-                                /></label>
                         </div>
                         <div className="delivery__container">
                             <label className="delivery__label">Комментарий к заказу
@@ -242,4 +162,4 @@ function Delivery() {
     );
 }
 
-export default Delivery;
+export default CashnCarry;

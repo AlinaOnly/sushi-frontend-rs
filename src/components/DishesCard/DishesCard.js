@@ -19,7 +19,7 @@ function DishesCard({ dish, onDishClick }) {
     return (
         <li className="dishes__card">
                 <img onClick={handleClick}
-                className="dishes__photo" src={dish.poster} alt={dish.name} />
+                className="dishes__photo app__broken-img" src={dish.poster} alt={dish.name} />
             <div className="dishes__description">
                 <h3 className="dishes__title">{dish.name}</h3>
                 <div className="dishes__options">

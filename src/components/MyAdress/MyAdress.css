@@ -2,18 +2,24 @@
     max-width: 1140px;
     margin: 0 70px 0;
     min-height: calc(100vh - 100px);
+    text-align: center;
+}
+
+.adress__container {
+    width: 410px;
+    margin: 0 auto;
 }
 
 .adress__title {
     font-size: 30px;
     font-weight: 500;
-    line-height: 16px;
+    line-height: 29px;
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 106px;
 }
 
 .adress__text {
-    margin: 50px 0 70px 0;
+    margin: 0;
 }
 
 .adress__submit-button{
@@ -29,4 +35,70 @@
     display: flex;
     justify-content: center;
     align-items:center;
+    margin: 50px auto 0;
 }
+
+.adress__submit-button_disable {
+    cursor: default;
+    background: #F8F8F8;
+    color: #C2C2C2;
+}
+
+
+.adress__label {
+    color: #A0A0A0;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.adress__input {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    outline: none;
+    color: #000000;
+    padding: 0 0 10px 0;
+    width: 396px;
+    background-color: #FFFFFF;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.adress__input:focus {
+    border-bottom: 1px solid #FF3055;
+}
+
+.adress__submit-button_disable {
+    cursor: default;
+    background: #F8F8F8;
+    color: #C2C2C2;
+}
+
+
+@media screen and (max-width: 550px) {
+    .adress__form {
+        max-width: 260px;
+    }
+
+    .adress__input {
+        width: 260px;
+    }
+    
+    .adress__submit-button {
+        margin-top: 274px;
+        width: 260px;
+        font-size: 12px;
+        line-height: 15px;
+    }
+}
+
+
+

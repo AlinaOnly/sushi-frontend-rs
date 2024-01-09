@@ -18,17 +18,17 @@
 
 .contacts__article {
     font-weight: 400;
-    line-height: 22px;
+    line-height: 30px;
     font-size: 16px;
 }
 
 .contacts__description {
     font-weight: 400;
-    line-height: 22px;
+    line-height: 30px;
     font-size: 16px;
 }
 
 .contacts__image {
     width:1140px;
-
+    margin-bottom: 50px;
 }
