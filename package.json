@@ -23,7 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build"
+    "deploy": "npm run build && scp -r ./build/* root@81.19.141.98:/home/root/sushi-frontend-rs/build"
   },
   "eslintConfig": {
     "extends": [
