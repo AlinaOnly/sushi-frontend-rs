@@ -90,7 +90,7 @@ class Api {
 
     // dishes api
     getDishById() {
-        return fetch(`${this._url}/menu/`, { 
+        return fetch(`${this._url}/menu/`, {
             method: 'GET',
             headers: this._headers,
             credentials: 'include',

@@ -20,7 +20,7 @@ import MyOrders from '../MyOrders/MyOrders';
 import MyAdress from '../MyAdress/MyAdress';
 import MyCoupons from '../MyCoupons/MyCoupons';
 
-import Main from '../Main/Main';
+//import Main from '../Main/Main';
 
 import Promo from '../Promo/Promo';
 import Contacts from '../Contact/Contact';
@@ -37,7 +37,7 @@ import './App.css';
 function App() {
   // location
   const navigate = useNavigate();
-  const location = useLocation();
+  //const location = useLocation();
 
   // users state
   const [currentUser, setCurrentUser] = useState({});
