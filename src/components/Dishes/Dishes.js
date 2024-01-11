@@ -3,9 +3,9 @@ import { React, useState } from 'react';
 import DishesCardList from '../DishesCardList/DishesCardList';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-import poster0 from '../../images/fill.jpg';
-import poster1 from '../../images/vegas.jpg';
-import poster2 from '../../images/mega.jpg';
+import poster0 from '../../images/1.jpg';
+import poster1 from '../../images/2.jpg';
+import poster2 from '../../images/3.jpg';
 import poster3 from '../../images/california.jpg';
 import poster4 from '../../images/philadelphia.jpg';
 import poster5 from '../../images/tokyo.jpg';
