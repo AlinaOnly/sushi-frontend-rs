@@ -3,5 +3,5 @@
 //export const REGEX_PHONE = "^((8|\+7)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,10}$";
 
 //URl Database
-//export const urlDB = 'http://127.0.0.1:8000/api/v1';
-export const urlDB = 'http://81.19.141.98/api/v1/';
+export const urlDB = 'http://127.0.0.1:8000/api/v1';
+//export const urlDB = 'http://81.19.141.98/api/v1/';

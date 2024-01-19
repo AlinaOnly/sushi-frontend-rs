@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import  useFormValidation from '../../utils/FormValidation';
 import ProfileNav from '../ProfileNav/ProfileNav';
 import './MyAdress.css';
 
 
 function MyAdress() {
+    const { values, isValid, errors, handleChange } = useFormValidation();
     const [isShownInputs, setShownInputs] = useState(false);
 
     /*function handleSubmit(event) {
@@ -81,9 +83,10 @@ function MyAdress() {
                                     /></label> 
                             </div>   
                             <button 
+                                disabled={!isValid}
                                 type="submit"
                                 aria-label="Сохранить адрес"
-                                className="adress__submit-button app__button-opacity">
+                                className={`adress__submit-button ${!isValid ? "adress__submit-button_disable" : "app__button-opacity"}`}>
                                 Сохранить адрес
                             </button>
                         </form>

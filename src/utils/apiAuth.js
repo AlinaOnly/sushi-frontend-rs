@@ -6,6 +6,7 @@ const auth = ({ first_name, last_name, email, phone, password }) =>{ //const reg
     return fetch(`${urlDB}/auth/users/`, {
         method: 'POST',
         headers: {
+            Accept: 'application/json',
             'Content-Type': 'application/json',
             //Authorization: 'Bearer realm="api"', // Authorization: `Bearer ${token}`
         },
@@ -20,46 +21,35 @@ const login = ({ email, password }) => {
     return fetch(`${urlDB}/auth/jwt/create/`, {
         method: 'POST',
         headers: {
+            Accept: 'application/json',
             'Content-Type': 'application/json',
         },
-        credentials: 'include',
-        body: JSON.stringify({
-            email, password
-        })
-    }).then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error('Network response was not ok.');
-    }).then(data => {
-        localStorage.setItem('logInJwt', data.access);
-        return data;
-    }).catch(error => {
-        // Обработка ошибок, возможно здесь стоит вывести ошибку пользователю
-        console.error('There was a problem with the fetch operation: ', error);
-    });
-};
-
-const token = () => {
-    return fetch(`${urlDB}/auth/users/me/`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
-        },
-        credentials: 'include',
+        //credentials: 'include',
+        body: JSON.stringify({ email, password })
     }).then(error);
 };
 
-const logout = () => {
-    return fetch(`${urlDB}/auth/users/me/delete/`, {
-        method: 'DELETE',
+const tokenRefresh = (refreshToken) => {
+    return fetch(`${urlDB}/auth/jwt/refresh/`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            //Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
-           //Authorization: //Authorization: `Bearer ${token}`
+            //Authorization: `Bearer ${token}`,
         },
         credentials: 'include',
+        body: JSON.stringify({ refresh: refreshToken })
+    }).then(error);
+};
+
+const tokenVerify = (accessToken) => {
+    return fetch(`${urlDB}/auth/jwt/verify/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            //Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+        body: JSON.stringify({ token: accessToken })
     }).then(error);
 };
 
@@ -73,6 +63,6 @@ const error = (res) => {
 export {
     auth,
     login,
-    token,
-    logout
+    tokenRefresh,
+    tokenVerify
 };

@@ -20,7 +20,7 @@ function Login({ onLogin, errorMessage }) {
                 <img className="login__logo app__button-opacity" src={logo} alt="Логотип сайта"/>
             </Link>
             <h2 className="login__text">Рады видеть!</h2>
-            <form className="login__form" onSubmit={handleSubmit} noValidate >
+            <form className="login__form" onSubmit={handleSubmit} noValidate>
                 <label className="login__label" htmlFor="email">E-mail
                     <input
                         value={values.email || ''}

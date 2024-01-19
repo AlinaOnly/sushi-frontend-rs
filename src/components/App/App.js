@@ -55,20 +55,16 @@ function App() {
    // errors state
   const [errorMessage, setErrorMessage] = useState('');
 
-  // JWT
-  let logInJwt = false;
-
 
   // functionality -- registration
   function handleRegister(first_name, last_name,  email, phone, password) {
     apiAuth.auth({ first_name, last_name, email, phone, password })
         .then((res) => {
             if (res !== 400) {
-                handleTokenCheck();
-                localStorage.setItem('logInJwt', JSON.stringify(true));
-                handleLogin(email, password); // login
+                //handleTokenCheck();
+                //handleLogin(email, password);
                 setCurrentUser(res);
-                navigate('/');
+                navigate('/auth/jwt/create/');
             }
         }).catch(err => {
             if (err === 'Ошибка: 409') {
@@ -85,17 +81,17 @@ function App() {
   function handleLogin(email, password) {
     apiAuth.login({ email, password })
         .then((res) => {
-            if(res !== 400) {
+            if(res) { 
+                localStorage.setItem('logInJwt', res.access);
+                localStorage.setItem('logInJwtRefresh', res.refresh);
                 handleTokenCheck();
-                localStorage.setItem('logInJwt', JSON.stringify(res.token));
                 setLogIn(true);
-                navigate('/');
+                navigate('/auth/users/me/');
             }
         }).catch(err => {
             if (err === 'Ошибка: 401') {
                 setErrorMessage(WRONG_PASS);
-                //handleLogout();
-                //setLogIn(false); //
+                setLogIn(false);
             } else {
                 setErrorMessage(WRONG_TOKEN);
             }
@@ -106,9 +102,9 @@ function App() {
 
   // functionality -- update user info
   function handleUpdateProfile(first_name, last_name, phone, email) {
-        MainApi.changeUserInformation({ first_name, last_name, phone, email }).then((res) => {
+        MainApi.changeUserInformation({ first_name, last_name, phone, email })
+        .then((res) => {
             setCurrentUser(res);
-            handleTokenCheck();
             setErrorMessage('Ваши данные успешно изменены');
         }).catch(err => {
             if (err === 'Ошибка: 409') {
@@ -123,82 +119,89 @@ function App() {
 
 
   // functionality -- getting User Adress information
-  function getAdressApi() {
+  /*function getAdressApi() {
 
-  }
+  }*/
 
-   // functionality -- clear token
-  function handleLogout() {
-    apiAuth.logout().then((res) => {
-        if(res !== 400) {
-            localStorage.clear();
-            setLogIn(false);
-            //localStorage.removeItem('jwt');
-            //localStorage.removeItem('logInJwt');
-             // не работает!!!
-            setCurrentUser({});
-            navigate('/');
-        }
-    }).catch(err => {
-        console.log(err);
-    });
-  }
+  // functionality -- clear token and exit
+  const handleLogout = () => {
+    localStorage.removeItem('logInJwt');
+    localStorage.removeItem('logInJwtRefresh');
+    setLogIn(false);
+    setCurrentUser({});
+    navigate('/');
+  };
   //end
 
-  // checking token
+  // checking token проверка токена
   const handleTokenCheck = useCallback(() => {
-    const logInJwt = JSON.parse(localStorage.getItem('logInJwt'));
-        if(logInJwt) {
-            apiAuth.token()
-            .then((res) => {
-                if (res) {
-                    localStorage.setItem('logInJwt', JSON.stringify(res.access.token));
-                    setCurrentUser(res);
-                    setLogIn(true);
-                }
-            }).catch(err =>
-                console.log(err));
+    const logInJwt = localStorage.getItem('logInJwt');
+    const logInJwtRefresh = localStorage.getItem('logInJwtRefresh');
+    if (logInJwt) {
+      apiAuth.tokenVerify(logInJwt)
+        .then((res) => {
+          if (res.status === 401 && logInJwtRefresh) { // apiAuth.tokenVerify при недействительном токене возвращает res.status
+            apiAuth.tokenRefresh(logInJwtRefresh)
+              .then((res) => {
+                localStorage.setItem('logInJwt', res.access);
+                localStorage.setItem('logInJwtRefresh', res.refresh);
+                setLogIn(true);
+                setCurrentUser(res); // Нужно обновить данные пользователя, если они предоставлены в ответе на запрос
+              })
+              .catch((err) => {
+                console.log(err);
                 setLogIn(false);
-        }
+              });
+          } else {
+            setLogIn(true);
+            setCurrentUser(res); // Обновляем данные пользователя
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          setLogIn(false);
+        });
+    } else {
+      setLogIn(false);
+    }
   }, []);
   //end
 
    // functionality -- getting dishes from Api
-    function getDishesFromApi() {
-      if ((localStorage.getItem('dishes') ? false : true)) {
-        MainApi.getDishById().then((dishesItems) => {
+    /*function getDishes() {
+      if ((localStorage.getItem('dishes'))) {
+        MainApi.getDishesFromApi().then((dishesItems) => {
               setDishesItems(dishesItems);
               localStorage.setItem('dishes', JSON.stringify(dishesItems));
           }).catch(err => {
               console.log(err);
           });
       }
-}
+}*/
 //end
 
-  // useEffect
+  // useEffect ошибки
       useEffect(() => {
         setErrorMessage('');
     }, [setErrorMessage]);
+    //end
 
+    // Проверяю выполнял ли пользователь вход ранее
     useEffect(() => {
-     // handleTokenCheck();
-        logInJwt = JSON.parse(localStorage.getItem('logInJwt'));
-        if (logInJwt) {
-            handleTokenCheck();
-        }
-    }, [handleTokenCheck, logInJwt]);
+      handleTokenCheck();
+    }, [handleTokenCheck]);
+    //end
 
     useEffect(() => {
         if (logIn) {
-            Promise.all([MainApi.getUserId(), MainApi.getUserAdress(), MainApi.getDishById()])
-                .then(([userData, adressData, dishesData]) => {
+            Promise.all([MainApi.getUserId(/*localStorage.getItem('logInJwt')*/)])
+                .then(([userData]) => {
                     setCurrentUser(userData);
-                    getAdressApi(adressData);
-                    getDishesFromApi(dishesData);
-                    localStorage.getItem('dishesData', JSON.stringify(dishesData));
+                    //getAdressApi(adressData);
+                    //getDishes(dishesData);
+                    //localStorage.getItem('dishesData', JSON.stringify(dishesData));
                     //localStorage.getItem('logInJwt', JSON.stringify(userData));
-                    localStorage.getItem('adressData', JSON.stringify(adressData));
+                    //localStorage.getItem('adressData', JSON.stringify(adressData));
                 }).catch(err => {
                     console.log(err);
                 });
@@ -216,6 +219,7 @@ function App() {
     function handleDishClick(dish) {
       setSelectedDish(dish);
     }
+    //end
 
     function closePopup() {
       setSelectedDish({});
@@ -259,7 +263,7 @@ function App() {
       <Header/>
 
       <Routes>
-        <Route 
+        <Route
           path='/auth/users/'
           element={
             <Register
@@ -283,7 +287,7 @@ function App() {
             <Profile
               logIn={logIn}
               onUpdateProfile={handleUpdateProfile}
-              onLogout={handleLogout}
+              handleLogout={handleLogout}
               errorMessage={errorMessage}
             />}
         />

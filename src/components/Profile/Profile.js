@@ -7,21 +7,24 @@ import ProfileNav from '../ProfileNav/ProfileNav';
 import './Profile.css';
 //import { REGEX_MAIL } from '../../utils/consts';
 
-function Profile({ onUpdateProfile, onLogout, errorMessage }) {
+function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
     const currentUser = useContext(CurrentUserContext);
     const [isDisableInput, setDisableInput] = useState(true);
     const { values, isValid, errors, handleChange, setValues } = useFormValidation();
 
     useEffect(() => {
         setValues({
-            name: currentUser.name,
-            email: currentUser.email});
+            first_name: currentUser.first_name,
+            last_name: currentUser.last_name,
+            email: currentUser.email,
+            phone: currentUser.phone,
+        });
     }, [currentUser, setValues]);
 
     function handleSubmit(event) {
         event.preventDefault();
         onUpdateProfile(
-            values.name,
+            values.first_name,
             values.last_name,
             values.phone,
             values.email);
@@ -32,25 +35,25 @@ function Profile({ onUpdateProfile, onLogout, errorMessage }) {
         setDisableInput(false);
     }
 
-    function handleLogout() {
-        onLogout();
+    function handleLogOut() {
+        handleLogout();
     }
 
     return (
         <>
             <ProfileNav />
             <div className="profile">
-                <h2 className="profile__text">Привет, {currentUser.name}!</h2>
+                <h2 className="profile__text">Привет, {currentUser.first_name}!</h2>
                 <form className="profile__form" onSubmit={handleSubmit}>
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="name">Имя
+                        <label className="profile__label" htmlFor="first_name">Имя
                             <input
                                 disabled={isDisableInput}
-                                value={values.name || ''}
+                                value={values.first_name || ''}
                                 onChange={handleChange}
-                                id="name"
+                                id="first_name"
                                 className="profile__input"
-                                name="name"
+                                name="first_name"
                                 type="text"
                                 placeholder="Имя"
                                 minLength="2"
@@ -63,18 +66,18 @@ function Profile({ onUpdateProfile, onLogout, errorMessage }) {
                             </span>
                     </div>    
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="date">День рождения
+                        <label className="profile__label" htmlFor="last_name">Фамилия
                             <input
-                                id="date"
+                                disabled={isDisableInput}
+                                value={values.last_name || ''}
+                                onChange={handleChange}
+                                id="last_name"
                                 className="profile__input"
-                                name="date"
-                                type="date"
-                                autoComplete="off"
-                                placeholder="День рождения"
-                                minLength="8"
-                                maxLength="8"
-                                
-                                
+                                name="last_name"
+                                type="text"
+                                placeholder="Фамилия"
+                                minLength="2"
+                                maxLength="40"
                             /></label>
                             <span 
                                 className={`${errors.date ? "profile__error" : "profile__error_hidden"}`}>
@@ -105,6 +108,9 @@ function Profile({ onUpdateProfile, onLogout, errorMessage }) {
                     <div className="profile__container">
                         <label className="profile__label" htmlFor="phone">Телефон
                             <input
+                                disabled={isDisableInput}
+                                value={values.phone || ''}
+                                onChange={handleChange}
                                 id="phone"
                                 className="profile__input"
                                 name="phone"
@@ -126,7 +132,9 @@ function Profile({ onUpdateProfile, onLogout, errorMessage }) {
                             onClick={handleSubmit}
                             className={
                                 `app__text-opacity 
-                                ${isValid && (currentUser.name !== values.name || currentUser.email !== values.email)
+                                ${isValid && (currentUser.first_name !== values.first_name || currentUser.last_name !== values.last_name
+                                    || currentUser.email !== values.email || currentUser.phone !== values.phone
+                                )
                                 ? "profile__button-save" : "profile__button-save_disable"}`}
                             type="submit"
                             aria-label="Сохранить"
@@ -144,7 +152,7 @@ function Profile({ onUpdateProfile, onLogout, errorMessage }) {
                             <button 
                                 type="button" 
                                 className="profile__signout"
-                                onClick={handleLogout}>
+                                onClick={handleLogOut}>
                                     Выйти из аккаунта
                             </button>
                         </>

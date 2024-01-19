@@ -44,6 +44,12 @@
     color: #C2C2C2;
 }
 
+.adress__submit-button_disable {
+    cursor: default;
+    background: #F8F8F8;
+    color: #C2C2C2;
+}
+
 
 .adress__label {
     color: #A0A0A0;

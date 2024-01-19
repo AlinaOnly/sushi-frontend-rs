@@ -18,8 +18,10 @@ class Api {
     getUserId() {
         return fetch(`${this._url}/auth/users/me/`, {
             method: 'GET',
-            headers: this._headers,
-            Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
             credentials: 'include',
         }).then(this._mainApiError);
     }
@@ -27,23 +29,29 @@ class Api {
     changeUserInformation( {first_name, last_name, phone, email} ) {
         return fetch(`${this._url}/auth/users/me/`, {
             method: 'PATCH',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
             credentials: 'include',
-            body: JSON.stringify( {
+            body: JSON.stringify({
                 first_name: first_name,
                 last_name: last_name,
                 phone: phone,
-                email: email} ),
+                email: email }),
         }).then(this._mainApiError);
     }
 
     postUserAdress( {city, short_name, full_address, type} ) {
         return fetch(`${this._url}/me/my_addresses/`, {
             method: 'POST',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
             credentials: 'include',
-            body: JSON.stringify(
-                {   city: city,
+            body: JSON.stringify({
+                    city: city,
                     short_name: short_name,
                     full_address: full_address,
                     type: type
@@ -54,7 +62,10 @@ class Api {
     getUserAdress() {
         return fetch(`${this._url}/me/my_addresses/`, {
             method: 'GET',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
             credentials: 'include',
         }).then(this._mainApiError);
     }
@@ -62,7 +73,10 @@ class Api {
     deleteUserAdress(id) {
         return fetch(`${this._url}/me/my_addresses/${id}/`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
             credentials: 'include',
         }).then(this._mainApiError);
     }
@@ -70,26 +84,25 @@ class Api {
     getUserOrders() {
         return fetch(`${this._url}/me/my_orders/`, {
             method: 'GET',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
             credentials: 'include',
         }).then(this._mainApiError);
     }
 
-    getUserCoupons() {  // не готово на бэке
+    getUserCoupons() {
         return fetch(`${this._url}/me/my_coupons/`, {
             method: 'GET',
             headers: this._headers,
             credentials: 'include',
         }).then(this._mainApiError);
     }
-
-
-
-
     ///
 
     // dishes api
-    getDishById() {
+    getDishesFromApi() {
         return fetch(`${this._url}/menu/`, {
             method: 'GET',
             headers: this._headers,

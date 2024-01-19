@@ -125,6 +125,19 @@ function Delivery() {
                                     required
                                 /></label>
                         </div>
+                        <div className="delivery__container">
+                            <label className="delivery__label" htmlFor="region">Регион
+                                <input
+                                    id="region"
+                                    className="delivery__input"
+                                    name="region"
+                                    type="text"
+                                    placeholder="Ваш регион"
+                                    minLength="10"
+                                    maxLength="40"
+                                    required
+                                /></label>
+                        </div>
                         <div className="delivery__container">Количество приборов
                             <button
                                 onClick={handleDelete}
