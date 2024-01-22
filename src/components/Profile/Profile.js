@@ -2,7 +2,6 @@ import React, {useEffect, useState, useContext } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
 import { EMAIL, NAME, PHONE } from '../../utils/errors';
-//import { NavLink, Link } from "react-router-dom";
 import ProfileNav from '../ProfileNav/ProfileNav';
 import './Profile.css';
 //import { REGEX_MAIL } from '../../utils/consts';

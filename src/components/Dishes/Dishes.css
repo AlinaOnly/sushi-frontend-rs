@@ -15,10 +15,12 @@
 }
 
 .dishes__categories {
-    margin: 70px 70px 0;
+    margin-top: 0;
+    margin-bottom: 40px;
     border-bottom: solid 2px #FF3055;
     padding-bottom: 20px;
-    max-width: 150px;
+    padding-top: 20px;
+    max-width: 300px;
 }
 
 @media screen and (max-width: 550px) {

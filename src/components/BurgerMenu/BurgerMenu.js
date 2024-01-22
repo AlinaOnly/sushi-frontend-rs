@@ -17,23 +17,15 @@ function BurgerMenu({ isBurger, handleBurgerMenu }) {
                     <li className="burger-menu__list">
                         <NavLink 
                             onClick={handleBurgerMenu}
-                            to="/rols" 
+                            to="/tempura" 
                             className={({ isActive }) => (isActive ? "burger-menu__link-active" : "burger-menu__link app__button-opacity")}>
-                            Запеченые роллы
+                            Горячие роллы (темпура)
                         </NavLink>
                     </li>
                     <li className="burger-menu__list">
                         <NavLink 
                             onClick={handleBurgerMenu}
-                            to="/hot" 
-                            className={({ isActive }) => (isActive ? "burger-menu__link-active" : "burger-menu__link app__button-opacity")}>
-                            Горячие роллы/темпура
-                        </NavLink>
-                    </li>
-                    <li className="burger-menu__list">
-                        <NavLink 
-                            onClick={handleBurgerMenu}
-                            to="/sandvich" 
+                            to="/sandochi" 
                             className={({ isActive }) => (isActive ? "burger-menu__link-active" : "burger-menu__link app__button-opacity")}>
                             Сандочи
                         </NavLink>
@@ -41,9 +33,9 @@ function BurgerMenu({ isBurger, handleBurgerMenu }) {
                     <li className="burger-menu__list">
                         <NavLink 
                             onClick={handleBurgerMenu}
-                            to="/symphony" 
+                            to="/handrolls" 
                             className={({ isActive }) => (isActive ? "burger-menu__link-active" : "burger-menu__link app__button-opacity")}>
-                            Симфония
+                            Хэнд роллы
                         </NavLink>
                     </li>
                     <li className="burger-menu__list">
@@ -57,9 +49,17 @@ function BurgerMenu({ isBurger, handleBurgerMenu }) {
                     <li className="burger-menu__list">
                         <NavLink 
                             onClick={handleBurgerMenu}
-                            to="/gynkan" 
+                            to="/sushi" 
                             className={({ isActive }) => (isActive ? "burger-menu__link-active" : "burger-menu__link app__button-opacity")}>
                             Суши и гунканы
+                        </NavLink>
+                    </li>
+                    <li className="burger-menu__list">
+                        <NavLink 
+                            onClick={handleBurgerMenu}
+                            to="/woks" 
+                            className={({ isActive }) => (isActive ? "burger-menu__link-active" : "burger-menu__link app__button-opacity")}>
+                            Воки
                         </NavLink>
                     </li>
                     <li className="burger-menu__list">

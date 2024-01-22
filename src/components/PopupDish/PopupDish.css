@@ -29,14 +29,15 @@
 
 .popup__image {
     max-width: 300px;
-    object-fit: cover;
+    height: 300px;
+    object-fit: contain;
     object-position: left;
 }
 
 .popup__image-text {
     font-weight: 400;
     font-size: 24px;
-    line-height: 15px;
+    line-height: 30px;
     margin: 0 auto 30px auto;
 }
 
@@ -52,8 +53,12 @@
 }
 
 .popup__composition-span {
-    margin-top: 20px;
+    margin-top: 40px;
     margin-bottom: 20px;
+}
+
+.popup__composition-span:last-child {
+    margin-top: 0
 }
 
 .popup__price {
@@ -75,7 +80,7 @@
 .popup__title {
     font-size: 24px;
     line-height: 29px;
-    margin: 0 50px 54px;
+    margin: 0 50px 40px;
 }
 
 .popup-dishes__cart-button {

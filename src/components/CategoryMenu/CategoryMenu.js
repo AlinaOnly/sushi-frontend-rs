@@ -13,10 +13,10 @@ function CategoryMenu({ handleBurgerMenu }) {
                 to="/rolls">Роллы
             </NavLink>  
             <NavLink className={({ isActive }) => (isActive ? "burger-category__link-active" : "burger-category__link")}
-                to="/wok">Воки
+                to="/futomaki">Футомаки
             </NavLink>
             <NavLink className={({ isActive }) => (isActive ? "burger-category__link-active" : "burger-category__link")}
-                to="/futomaki">Футомаки
+                to="/backed">Запеченые ролы
             </NavLink>
                 <button 
                     onClick={handleBurgerMenu}

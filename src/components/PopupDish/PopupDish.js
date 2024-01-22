@@ -1,19 +1,19 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import './PopupDish.css';
 
 function PopupDish({ dish, onClose }) {
     return (
-        <div className={dish.poster ? "popup popup_background popup_open" : "popup"} id="PopupDish">
+        <div className={dish.image ? "popup popup_background popup_open" : "popup"} id="PopupDish">
             <div className="popup__container">
                 <div className="popup__container-column">
-                    <img src={dish.poster} alt={dish.name} className="popup__image" />
+                    <img src={dish.image} alt={dish.short_name_rus} className="popup__image" />
                     <div className="popup__title">
-                        <h2 className="popup__image-text">{dish.name}</h2>
-                        <p className="popup__composition">{dish.composition}.&nbsp;
+                        <h2 className="popup__image-text">{dish.short_name_rus}</h2>
+                        <p className="popup__composition">{dish.text_rus}.&nbsp;
                             <span className="popup__composition-span">В комплект входит васаби, имбирь, соевый соус.</span> 
                             <span className="popup__composition-span">При самовывозе - скидка 10%.</span>
                         </p>
-                        <p className="popup__price">{dish.price}</p>
+                        <p className="popup__price">{dish.final_price} RSD</p>
                     </div>
                 </div>     
                     <button 

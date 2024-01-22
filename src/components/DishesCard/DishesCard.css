@@ -1,5 +1,5 @@
 .dishes__card {
-    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 4px 30px rgba(0.08, 0.08, 0.08, 0.08);
     background-color: #FDFDFD;
     position: relative;
 }
@@ -21,7 +21,7 @@
 .dishes__title {
     font-weight: 500;
     font-size: 15px;
-    line-height: 18px;
+    line-height: 20px;
     padding: 14px 0 9px 0;
     margin: 0;
 }
@@ -29,7 +29,7 @@
 .dishes__composition {
     font-weight: 400;
     font-size: 11px;
-    line-height: 13px;
+    line-height: 15px;
     color: #A0A0A0;
     margin: 0;
 }
@@ -74,8 +74,9 @@
 
 .dishes__photo {
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
     cursor: pointer;
+    height: 300px;
 }
 
 .dishes__container {

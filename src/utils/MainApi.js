@@ -99,7 +99,18 @@ class Api {
             credentials: 'include',
         }).then(this._mainApiError);
     }
-    ///
+    //
+
+    // promo api
+    getPromoNews() {
+        return fetch(`${this._url}/promonews/`, {
+            method: 'GET',
+            headers: this._headers,
+            credentials: 'include',
+        }).then(this._mainApiError);
+
+    }
+    //
 
     // dishes api
     getDishesFromApi() {
