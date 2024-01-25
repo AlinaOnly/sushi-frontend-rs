@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import  useFormValidation from '../../utils/FormValidation';
-//import { REGEX_MAIL } from '../../utils/consts';
 import { EMAIL, PASS } from '../../utils/errors';
 import logo from '../../images/logo.jpeg';
 import './Login.css';
@@ -66,7 +65,7 @@ function Login({ onLogin, errorMessage }) {
                 </button>
             </form>
             <div className="login__signin-container">
-                <Link to="/auth/users/" className="login__signin app__text-opacity">Еще не зарегистрированы? 
+                <Link to="/registration" className="login__signin app__text-opacity">Еще не зарегистрированы? 
                     <p className="login__signin_red">Регистрация</p>
                 </Link>
                 <p className="register__error-text">{errorMessage}</p>

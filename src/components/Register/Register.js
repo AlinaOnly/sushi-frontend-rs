@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useFormValidation from '../../utils/FormValidation';
-//import { REGEX_MAIL, REGEX_PHONE } from '../../utils/consts';
 import { EMAIL, PASS, NAME, PHONE } from '../../utils/errors';
 import logo from '../../images/logo.jpeg';
 import './Register.css';
@@ -72,7 +71,6 @@ function Register({ onRegister, errorMessage }) {
                         maxLength="30"
                         pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$"
                         required
-                        
                     />
                     <span 
                         className={`${errors.email ? "register__error" : "register__error_hidden"}`}>
@@ -91,7 +89,6 @@ function Register({ onRegister, errorMessage }) {
                         maxLength="14"
                         pattern="^((8|\+3)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,13}$"
                         required
-                        
                     />
                     <span 
                         className={`${errors.phone ? "register__error" : "register__error_hidden"}`}>
@@ -108,7 +105,7 @@ function Register({ onRegister, errorMessage }) {
                         type="password"
                         minLength="8"
                         maxLength="40"
-                        //pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$"
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$"
                         required
                     />
                     <span 
@@ -124,10 +121,9 @@ function Register({ onRegister, errorMessage }) {
                     aria-label="Зарегистрироваться">
                         Зарегистрироваться
                 </button>
-                
             </form>
             <div className="register__signup-container">
-                <Link to="/auth/jwt/create/" className="register__signup app__text-opacity">Уже зарегистрированы? 
+                <Link to="/login" className="register__signup app__text-opacity">Уже зарегистрированы? 
                     <p className="register__signup_red">Войти</p>
                 </Link>
                 <p className="register__error-text">{errorMessage}</p>

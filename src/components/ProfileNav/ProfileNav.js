@@ -4,16 +4,16 @@ import './ProfileNav.css';
 
 function ProfileNav() {
     const location = useLocation();
-    const profileLocation = location.pathname === '/auth/users/me/';
-    const myOrdersLocation = location.pathname === '/auth/users/me/my_orders/';
-    const myAdressesLocation = location.pathname === '/auth/users/me/my_addresses/';
-    const myCouponsLocation = location.pathname === '/auth/users/me/my_coupons/';
+    const profileLocation = location.pathname === '/profile';
+    const myOrdersLocation = location.pathname === '/profile/orders';
+    const myAdressesLocation = location.pathname === '/profile/adresses';
+    const myCouponsLocation = location.pathname === '/profile/coupons';
 
     return (
         <>
             <div className="profile-nav">
                 <NavLink className="profile-nav__link"
-                    to="/auth/users/me/">
+                    to="/profile">
                     <button
                         type="submit"
                         aria-label="Профиль"
@@ -22,7 +22,7 @@ function ProfileNav() {
                     </button>
                 </NavLink>
                 <NavLink className="profile-nav__link" 
-                    to="/auth/users/me/my_orders/">
+                    to="/profile/orders">
                     <button 
                         type="submit"
                         aria-label="Заказы"
@@ -31,7 +31,7 @@ function ProfileNav() {
                     </button>
                 </NavLink>
                 <NavLink className="profile-nav__link" 
-                    to="/auth/users/me/my_addresses/">
+                    to="/profile/adresses">
                     <button 
                         type="submit"
                         aria-label="Адреса"
@@ -40,7 +40,7 @@ function ProfileNav() {
                     </button>
                 </NavLink>
                 <NavLink className="profile-nav__link" 
-                    to="/auth/users/me/my_coupons/">
+                    to="/profile/coupons">
                     <button 
                         type="submit"
                         aria-label="Купоны"

@@ -5,6 +5,8 @@
 
 .delivery__container {
     margin-bottom: 30px;
+    display: flex;
+    align-items: center;
 }
 
 .delivery__input {
@@ -66,3 +68,112 @@
     padding: 0;
     margin: 50px 0;
 }
+
+.delivery__btn-product_add {
+    background-image: url(../../images/minus.svg);
+    width: 55px;
+    height: 55px;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.delivery__btn-product_delete {
+    background-image: url(../../images/plus.svg);
+    width: 55px;
+    height: 55px;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.delivery__product-count {
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 20px;
+    margin: 0 10px;
+}
+
+.delivery__btn-save_disable {
+    cursor: default;
+    background: #F8F8F8;
+    color: #C2C2C2;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 395px;
+    height: 45px;
+    padding: 0;
+    margin: 50px 0;
+}
+
+
+
+
+input[type="radio"]:checked, 
+input[type="radio"]:not(:checked) 
+{
+    position: absolute;
+    left: -9999px;
+}
+
+
+input[type="radio"]:checked + label, 
+input[type="radio"]:not(:checked) + label {
+    display: inline-block;
+    position: relative;
+    padding-left: 28px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+input[type="radio"]:checked + label:before, 
+input[type="radio"]:not(:checked) + label:before {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+}
+
+input[type="radio"]:checked + label:before, 
+input[type="radio"]:not(:checked) + label:before {
+    border-radius: 100%;
+}
+
+input[type="radio"]:checked + label:after, 
+input[type="radio"]:not(:checked) + label:after {
+    content: "";
+    position: absolute;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+input[type="radio"]:checked + label:after, 
+input[type="radio"]:not(:checked) + label:after {
+    left: 5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: #FF3055;
+}
+
+input[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+}
+
+input[type="radio"]:checked + label:after {
+    opacity: 1;
+}
+

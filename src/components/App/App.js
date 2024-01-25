@@ -32,6 +32,7 @@ import Sushi from '../Sushi/Sushi';
 import Soups from '../Soups/Soups';
 import Tempura from '../Tempura/Tempura';
 import Woks from '../Woks/Woks';
+import Vegan from '../Vegan/Vegan';
 
 import Promo from '../Promo/Promo';
 import Contacts from '../Contact/Contact';
@@ -53,6 +54,11 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [logIn, setLogIn] = useState(false);
   const [isAdresses, setAdresses] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [coupons, setCoupons] = useState([]);
+
+  // Promo news Items state
+  const [promoNews, setPromoNews] = useState([]);
 
   // dishes Items
   const [dishes, setDishesItems] = useState([]);
@@ -73,7 +79,7 @@ function App() {
         .then((res) => {
             if (res !== 400) {
                 setCurrentUser(res);
-                navigate('/auth/jwt/create/');
+                navigate('/login');
             }
         }).catch(err => {
             if (err === 'Ошибка: 409') {
@@ -95,7 +101,7 @@ function App() {
                 localStorage.setItem('logInJwtRefresh', res.refresh);
                 handleTokenCheck();
                 setLogIn(true);
-                navigate('/auth/users/me/');
+                navigate('/profile');
             }
         }).catch(err => {
             if (err === 'Ошибка: 401') {
@@ -126,10 +132,41 @@ function App() {
   }
   //end
 
+  // functionality -- update user adress info
+  function handlePostUserAdress(city, short_name, full_address, type) {
+        MainApi.postUserAdress({ city, short_name, full_address, type })
+        .then((res) => {
+            setCurrentUser(res);
+            setErrorMessage('Ваши данные успешно изменены');
+        }).catch(err => {
+            if (err === 'Ошибка: 409') {
+                setErrorMessage(CONFLICT_REG);
+            } else {
+                setErrorMessage(''); // не придумала сюда ошибку
+            }
+            console.log(err);
+        });
+  }
+  //end
+
+  // functionality -- delete adress
+  function handleDeleteAdress(id) {
+    handleTokenCheck();
+    console.log(id);
+    MainApi.deleteUserAdress(id)
+      .then(() => {
+        const updatedAdress = isAdresses.filter((i) => i.id !== id);
+        setAdresses(updatedAdress);
+        localStorage.setItem('updatedAdress', JSON.stringify(updatedAdress));
+    }).catch(err => {
+        console.log(err);
+    });
+  }
+  //end
 
   // functionality -- getting User Adress information
   function getAdressApi() {
-    MainApi. getUserAdress()
+    MainApi.getUserAdress()
         .then((adresses) => {
               setAdresses(adresses);
               localStorage.setItem('adresses', JSON.stringify(adresses));
@@ -137,12 +174,56 @@ function App() {
               console.log(err);
           });
   }
+  // end
+
+  // functionality -- update adress
+  function handleChangeAdress(city, short_name, full_address, type) {
+    MainApi.changeAdress({ city, short_name, full_address, type })
+    .then((res) => {
+        setCurrentUser(res);
+        setErrorMessage('Ваши данные успешно изменены');
+    }).catch(err => {
+        if (err === 'Ошибка: 409') {
+            setErrorMessage(CONFLICT_REG);
+        } else {
+            setErrorMessage(ERR_REGISTER);
+        }
+        console.log(err);
+    });
+}
+//end
+
+  // functionality -- getting User Last Orders
+  function getOrdersApi() {
+    MainApi.getUserOrders()
+        .then((orders) => {
+              setOrders(orders);
+              localStorage.setItem('orders', JSON.stringify(orders));
+          }).catch(err => {
+              console.log(err);
+          });
+  }
+  // end
+
+  // functionality -- getting User Coupons
+  function getCoupons() {
+    MainApi.getUserCoupons()
+        .then((coupons) => {
+              setCoupons(coupons);
+              localStorage.setItem('coupons', JSON.stringify(coupons));
+          }).catch(err => {
+              console.log(err);
+          });
+  }
+  // end
 
   // functionality -- clear token and exit
   const handleLogout = () => {
     localStorage.removeItem('logInJwt');
     localStorage.removeItem('logInJwtRefresh');
     localStorage.removeItem('adresses');
+    localStorage.removeItem('orders');
+    localStorage.removeItem('coupons');
     setLogIn(false);
     setCurrentUser({});
     navigate('/');
@@ -195,32 +276,48 @@ function App() {
     }
   //end
 
+  // functionality -- getting news from Api
+  function getNews() {
+    MainApi.getPromoNews()
+    .then((promoNews) => {
+          setPromoNews(promoNews);
+      }).catch(err => {
+          console.log(err);
+      });
+  }
+  //end
+
   // useEffect ошибки
       useEffect(() => {
         setErrorMessage('');
     }, [setErrorMessage]);
     //end
 
-    // Проверяю выполнял ли пользователь вход ранее
+    // Проверяю, выполнял ли пользователь вход ранее
     useEffect(() => {
       handleTokenCheck();
     }, [handleTokenCheck]);
     //end
 
 
-    // отрисовка меню
+    // отрисовка меню, новостей
     useEffect(() => {
       getDishes();
+      getNews();
     }, []);
     //end
 
     useEffect(() => {
         if (logIn) {
             Promise.all([MainApi.getUserId()])
-                .then(([userData, adressData]) => {
+                .then(([userData, adressData, ordersData, couponsData]) => {
                     setCurrentUser(userData);
                     getAdressApi(adressData);
+                    getOrdersApi(ordersData);
+                    getCoupons(couponsData)
                     localStorage.getItem('adressData', JSON.stringify(adressData));
+                    localStorage.getItem('ordersData', JSON.stringify(ordersData));
+                    localStorage.getItem('couponsData', JSON.stringify(couponsData));
                 }).catch(err => {
                     console.log(err);
                 });
@@ -278,238 +375,257 @@ function App() {
 
   return (
     <>
-    <CurrentUserContext.Provider value={currentUser}>
+      <CurrentUserContext.Provider value={currentUser}>
 
-    <BurgerMenu isBurger={isBurger} handleBurgerMenu={handleBurgerMenu} />
+      <BurgerMenu isBurger={isBurger} handleBurgerMenu={handleBurgerMenu} />
 
-      <Header/>
+        <Header/>
 
-      <Routes>
-        <Route
-          path='/auth/users/'
-          element={
-            <Register
-              onRegister={handleRegister}
-              errorMessage={errorMessage}
-            />}
-        />
-
-        <Route 
-          path='/auth/jwt/create/'
-          element={
-            <Login
-              onLogin={handleLogin}
-              errorMessage={errorMessage}
-            />}
-        />
-
-        <Route 
-          path='/auth/users/activation/:uid/:token'
-          element={ActivationPage}
-        />
-
-        <Route 
-          path='/auth/users/me/'
-          element={
-            <ProtectedRoute path='/auth/users/me/' logIn={logIn}>
-              <Profile
-                logIn={logIn}
-                onUpdateProfile={handleUpdateProfile}
-                handleLogout={handleLogout}
+        <Routes>
+          <Route
+            path='/registration'
+            element={
+              <Register
+                onRegister={handleRegister}
                 errorMessage={errorMessage}
-              />
-            </ProtectedRoute>
-          }
-        />
+              />}
+          />
 
-        <Route 
-          path='/auth/users/me/my_orders/'
-          element={
-            <ProtectedRoute path='/auth/users/me/my_orders/' logIn={logIn}>
-              <MyOrders
-                logIn={logIn}
-              />
-            </ProtectedRoute>
-          }
-        />
+          <Route 
+            path='/registration/activation/:uid/:token'
+            element={ActivationPage}
+          />
 
-        <Route 
-          path='/auth/users/me/my_addresses/'
-          element={
-              <ProtectedRoute path='/auth/users/me/my_addresses/' logIn={logIn}>
-                <MyAdress
+          <Route 
+            path='/login'
+            element={
+              <Login
+                onLogin={handleLogin}
+                errorMessage={errorMessage}
+              />}
+          />
+
+          <Route 
+            path='/profile'
+            element={
+              <ProtectedRoute logIn={logIn}>
+                <Profile
                   logIn={logIn}
-                  isAdresses={isAdresses}
+                  onUpdateProfile={handleUpdateProfile}
+                  handleLogout={handleLogout}
+                  errorMessage={errorMessage}
                 />
               </ProtectedRoute>
             }
-        />
+          />
 
-        <Route 
-          path='/auth/users/me/my_coupons/'
-          element={
-            <ProtectedRoute path='/auth/users/me/my_coupons/' logIn={logIn}>
-              <MyCoupons
-                logIn={logIn}
+          <Route 
+            path='/profile/orders'
+            element={
+              <ProtectedRoute logIn={logIn}>
+                <MyOrders
+                  logIn={logIn}
+                  orders={orders}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route 
+            path='/profile/adresses'
+            element={
+                <ProtectedRoute logIn={logIn}>
+                  <MyAdress
+                    logIn={logIn}
+                    isAdresses={isAdresses}
+                    onPostUserAdress={handlePostUserAdress}
+                    onDeleteAdress={handleDeleteAdress}
+                    onChangeAdress={handleChangeAdress}
+                  />
+                </ProtectedRoute>
+              }
+          />
+
+          <Route 
+            path='/profile/coupons'
+            element={
+              <ProtectedRoute logIn={logIn}>
+                <MyCoupons
+                  logIn={logIn}
+                  coupons={coupons}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route 
+            path='/'
+            element={
+              <Dishes
+                selectedDish={selectedDish}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+                dishes={dishes}
+              />}
+          />
+
+          <Route 
+            path='/rolls' 
+            element={
+              <Rolls
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/futomaki' 
+            element={
+              <Futomaki
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/backed' 
+            element={
+              <Backed
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/tempura' 
+            element={
+              <Tempura
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/sandochi' 
+            element={
+              <Sandochi
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/handrolls' 
+            element={
+              <Handrolls
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/maki' 
+            element={
+              <Maki
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/sushi' 
+            element={
+              <Sushi
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/woks' 
+            element={
+              <Woks
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/soups' 
+            element={
+              <Soups
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/vegan'
+            element={
+              <Vegan
+                dishes={dishes}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
+            path='/cart' 
+            element={<Cart/>} 
+          />
+
+          <Route 
+            path='/delivery' 
+            element={<Delivery/>} 
+          />
+
+          <Route 
+            path='/pickup' 
+            element={<CashnCarry/>} 
+          />
+
+          <Route 
+            path='/payment' 
+            element={<Payment/>} 
+          />
+
+          <Route 
+            path='/contacts'
+            element={<Contacts/>}
+          />
+
+          <Route 
+            path='/promo'
+            element={
+              <Promo
+                promoNews={promoNews}
               />
-            </ProtectedRoute>
-          }
-        />
+            }
+          />
+          
+          <Route 
+            path='*'
+            element={<NotFound/>}
+          />
+        </Routes>
 
-        <Route 
-          path='/'
-          element={
-            <Dishes
-              selectedDish={selectedDish}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-              dishes={dishes}
-            />}
-        />
-
-        <Route 
-          path='/rolls' 
-          element={
-            <Rolls
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/futomaki' 
-          element={
-            <Futomaki
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/backed' 
-          element={
-            <Backed
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/tempura' 
-          element={
-            <Tempura
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/sandochi' 
-          element={
-            <Sandochi
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/handrolls' 
-          element={
-            <Handrolls
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/maki' 
-          element={
-            <Maki
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/sushi' 
-          element={
-            <Sushi
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/woks' 
-          element={
-            <Woks
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/soups' 
-          element={
-            <Soups
-              dishes={dishes}
-              onDishClick={handleDishClick}
-              handleBurgerMenu={handleBurgerMenu}
-            />} 
-        />
-
-        <Route 
-          path='/cart' 
-          element={<Cart/>} 
-        />
-
-        <Route 
-          path='/delivery' 
-          element={<Delivery/>} 
-        />
-
-        <Route 
-          path='/pickup' 
-          element={<CashnCarry/>} 
-        />
-
-        <Route 
-          path='/payment' 
-          element={<Payment/>} 
-        />
-
-        <Route 
-          path='/contacts'
-          element={<Contacts/>}
-        />
-
-        <Route 
-          path='/promo'
-          element={<Promo/>}
+        <PopupDish
+            dish={selectedDish} 
+            onClose={closePopup}
         />
         
-        <Route 
-          path='*'
-          element={<NotFound/>}
-        />
-      </Routes>
-
-      <PopupDish
-          dish={selectedDish} 
-          onClose={closePopup}
-      />
-      
-      <Footer/>
-    </CurrentUserContext.Provider>
+        <Footer/>
+      </CurrentUserContext.Provider>
     </>
   );
 }

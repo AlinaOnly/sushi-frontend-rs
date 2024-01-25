@@ -1,10 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import useFormValidation from '../../utils/FormValidation';
 import './Delivery.css';
 
 function Delivery() {
+    //состояние кнопки radio
     const [isChecked, setIsChecked] = useState(false);
+    //каунтер до 10 приборов
     const [count, setCount] = useState(1);
+
+    //если залогинился юзер - вписать автоматически его данные
+    const currentUser = useContext(CurrentUserContext);
+    const { values, isValid, errors, setValues, handleChange } = useFormValidation();
+
+    useEffect(() => {
+        setValues({
+            first_name: currentUser.first_name,
+            phone: currentUser.phone,
+            adress: currentUser.adress,
+        });
+    }, [currentUser, setValues]);
+
+    function handleSubmit(event) {
+        event.preventDefault();
+    }
+    //end
+
 
     // Счетчик столовых приборов
     const handleAdd = () => {
@@ -30,31 +52,27 @@ function Delivery() {
     };
     //end
 
-    // Функция для создания массива временных интервалов, начиная с 10:30
+    // Функция для создания массива временных интервалов, начиная с 11:30
     const generateTimeOptions = () => {
         const intervals = [];
-        for (let hour = 10; hour < 23; hour++) {
-            // Установить начальные минуты в 30, если это первый цикл (10:30)
-            let minute = hour === 10 ? 30 : 0;
-            do {
-                const time = `${hour < 10 ? '0' : ''}${hour}:${minute === 0 ? '00' : minute}`;
-                intervals.push(time);
-                // Прибавляем 30 минут
-                minute += 30;
-                // Если минуты достигли 60, увеличиваем час на единицу и сбрасываем минуты
-                if(minute === 60) {
-                    minute = 0;
-                    break; // Прерываем внутренний цикл, чтобы начать следующий час
-                }
-            } while (minute <= 30);
 
-            // Условие для остановки цикла после добавления 22:30
-            if (hour === 22 && minute === 0) {
-                    break;
-                }
+        // Определяем начальные и конечные часы
+        const startHour = 11;
+        const endHour = 22;
+
+        for (let hour = startHour; hour <= endHour; hour++) {
+            // Для первого часа начинаем с 30 минут, иначе с 0.
+            let startMinute = hour === startHour ? 30 : 0;
+
+            // Добавляем интервалы по 30 минут
+            intervals.push(`${hour}:${startMinute === 0 ? '00' : startMinute}`);
+            if (startMinute === 30 || hour < endHour) {
+                intervals.push(`${hour}:30`);
+            }
         }
         return intervals;
     };
+
     const timeOptions = generateTimeOptions();
     //end
 
@@ -62,46 +80,65 @@ function Delivery() {
     // Функция для вывода дня и месяца
     const generateDateOptions = () => {
         const today = new Date();
-        const currentYear = today.getFullYear();
-        const currentMonth = today.getMonth(); // Месяцы начинаются с 0 в JavaScript
         const monthNames = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
         const dates = ["Как можно быстрее"];
 
-        // Получить количество дней в текущем месяце
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        // Определяем дату на месяц вперед от сегодня
+        const oneMonthFromNow = new Date();
+        oneMonthFromNow.setMonth(today.getMonth() + 1);
 
-        for (let day = today.getDate(); day <= daysInMonth; day++) {
+        let dateIterator = new Date(today);
+        while (dateIterator <= oneMonthFromNow) {
+            const day = dateIterator.getDate();
+            const month = dateIterator.getMonth();
+            const year = dateIterator.getFullYear(); // Если нужно, можно добавить год
+
             // Форматируем число, добавляя ведущий ноль, если нужно
             const formattedDay = day < 10 ? `0${day}` : day;
-            const monthName = monthNames[currentMonth];
-            const date = `${formattedDay} ${monthName}`;
+            const monthName = monthNames[month];
+
+            const date = `${formattedDay} ${monthName}`; // ${year}, если нужен год
             dates.push(date);
+
+            // Переходим к следующему дню
+            dateIterator.setDate(dateIterator.getDate() + 1);
         }
+
         return dates;
     };
+
     const dateOptions = generateDateOptions();
     //end
 
     return (
         <>
             <div className="delivery">
-                <form className="delivery__form">
+                <form className="delivery__form" onSubmit={handleSubmit}>
                         <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="name">Ваше имя
+                            <label className="delivery__label" htmlFor="first_name">Ваше имя
                                 <input
-                                    id="name"
+                                    value={values.first_name || ''}
+                                    onChange={handleChange}
+                                    id="first_name"
                                     className="delivery__input"
-                                    name="name"
+                                    name="first_name"
                                     type="text"
                                     placeholder="Имя"
                                     minLength="2"
                                     maxLength="40"
                                     required
-                                /></label>
+                                />
+                                <span 
+                                    className={`${errors.first_name ? "login__error" : "login__error_hidden"}`}>
+                                        Поле обязательно для ввода
+                                </span>
+                            </label>
                         </div>    
                         <div className="delivery__container">
                             <label className="delivery__label" htmlFor="phone">Ваш телефон
                                 <input
+                                    value={values.phone || ''}
+                                    onChange={handleChange}
                                     id="phone"
                                     className="delivery__input"
                                     name="phone"
@@ -110,20 +147,32 @@ function Delivery() {
                                     minLength="10"
                                     maxLength="14"
                                     required
-                                /></label>
+                                />
+                                <span 
+                                    className={`${errors.phone ? "login__error" : "login__error_hidden"}`}>
+                                        Поле обязательно для ввода
+                                </span>
+                            </label>
                         </div>    
                         <div className="delivery__container">
                             <label className="delivery__label" htmlFor="adress">Адрес доставки
                                 <input
+                                    value={values.adress || ''}
+                                    onChange={handleChange}
                                     id="adress"
                                     className="delivery__input"
                                     name="adress"
                                     type="text"
                                     placeholder="Ваш адрес"
-                                    minLength="10"
+                                    minLength="2"
                                     maxLength="40"
                                     required
-                                /></label>
+                                />
+                                <span 
+                                    className={`${errors.adress ? "login__error" : "login__error_hidden"}`}>
+                                        Поле обязательно для ввода
+                                </span>
+                            </label>
                         </div>
                         <div className="delivery__container">
                             <label className="delivery__label" htmlFor="region">Регион
@@ -135,7 +184,7 @@ function Delivery() {
                                     placeholder="Ваш регион"
                                     minLength="10"
                                     maxLength="40"
-                                    required
+                                    //required
                                 /></label>
                         </div>
                         <div className="delivery__container">Количество приборов
@@ -143,81 +192,88 @@ function Delivery() {
                                 onClick={handleDelete}
                                 aria-label="Минус"
                                 type="button"
-                                className="cart__btn-product_delete app__button-opacity">
+                                className="delivery__btn-product_delete app__button-opacity">
                             </button>
-                            <span className="cart__product-count">{count}</span>
+                            <span className="delivery__product-count">{count}</span>
                             <button
                                 onClick={handleAdd}
                                 aria-label="Плюс"
                                 type="button"
-                                className="cart__btn-product_add app__button-opacity">
+                                className="delivery__btn-product_add app__button-opacity">
                             </button>
                         </div>
                         <div className="delivery__container">
                             <input
+                                id="rd"
                                 className="delivery__input-radio"
                                 type="radio"
-                                name="toggleableRadio"
+                                name="togglRadio"
                                 checked={isChecked}
                                 onChange={handleRadioChange}
                                 onClick={handleRadioClick}
                             />
-                            <label className="delivery__label" onClick={handleRadioClick}>
+                            <label id="rd" className="delivery__label" onClick={handleRadioClick}>
                                 Частный дом
                             </label>
                         </div>
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="home">Дом
-                                <input
-                                    id="home"
-                                    className="delivery__input"
-                                    name="home"
-                                    type="text"
-                                    placeholder="Дом"
-                                    minLength="1"
-                                    maxLength="6"
-                                    required
-                                /></label>
-                        </div>  
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="flat">Квартира
-                                <input
-                                    id="flat"
-                                    className="delivery__input"
-                                    name="flat"
-                                    type="text"
-                                    placeholder="Квартира"
-                                    minLength="1"
-                                    maxLength="1000"
-                                    required
-                                /></label>
-                        </div> 
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="floor">Этаж
-                                <input
-                                    id="floor"
-                                    className="delivery__input"
-                                    name="floor"
-                                    type="text"
-                                    placeholder="Этаж"
-                                    minLength="1"
-                                    maxLength="100"
-                                    required
-                                /></label>
-                        </div> 
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="homephone">Домофон
-                                <input
-                                    id="homephone"
-                                    className="delivery__input"
-                                    name="homephone"
-                                    type="text"
-                                    placeholder="Домофон"
-                                    minLength="1"
-                                    maxLength="1000"
-                                    required
-                                /></label>
-                        </div>
+                        { isChecked &&
+                            <div className="delivery__container">
+                                <label className="delivery__label" htmlFor="home">Дом
+                                    <input
+                                        id="home"
+                                        className="delivery__input"
+                                        name="home"
+                                        type="text"
+                                        placeholder="Дом"
+                                        minLength="1"
+                                        maxLength="6"
+                                        //required
+                                    /></label>
+                            </div>
+                        }
+                        { !isChecked && 
+                            <>
+                                <div className="delivery__container">
+                                    <label className="delivery__label" htmlFor="flat">Квартира
+                                        <input
+                                            id="flat"
+                                            className="delivery__input"
+                                            name="flat"
+                                            type="text"
+                                            placeholder="Квартира"
+                                            minLength="1"
+                                            maxLength="1000"
+                                            //required
+                                        /></label>
+                                </div> 
+                                <div className="delivery__container">
+                                    <label className="delivery__label" htmlFor="floor">Этаж
+                                        <input
+                                            id="floor"
+                                            className="delivery__input"
+                                            name="floor"
+                                            type="text"
+                                            placeholder="Этаж"
+                                            minLength="1"
+                                            maxLength="100"
+                                            //required
+                                            /></label>
+                                </div> 
+                                <div className="delivery__container">
+                                    <label className="delivery__label" htmlFor="homephone">Домофон
+                                        <input
+                                            id="homephone"
+                                            className="delivery__input"
+                                            name="homephone"
+                                            type="text"
+                                            placeholder="Домофон"
+                                            minLength="1"
+                                            maxLength="1000"
+                                            //required
+                                        /></label>
+                                </div>
+                            </>
+                        }
                         <div className="delivery__container">
                             <label className="delivery__label">Комментарий к заказу
                                 <textarea
@@ -242,14 +298,18 @@ function Delivery() {
                                 ))}
                             </select>
                         </div>
+                        <Link to="/payment">
+                            <button 
+                                //onClick={handleSubmit}
+                                className=
+                                {`delivery__btn ${!isValid ? "delivery__btn-save_disable" : "app__button-opacity"}`}
+                                disabled={!isValid}
+                                type="submit"
+                                aria-label="Выберете способ оплаты">
+                                    Выберете способ оплаты
+                            </button>
+                        </Link>
                     </form>
-                    <Link to="/payment">
-                        <button 
-                            aria-label="Выберете способ оплаты"
-                            type="submit"
-                            className="delivery__btn app__button-opacity">Выберете способ оплаты
-                        </button>
-                    </Link>
             </div>
         </>
     );

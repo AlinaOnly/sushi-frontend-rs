@@ -42,6 +42,24 @@ class Api {
         }).then(this._mainApiError);
     }
 
+
+    // апи с адресами
+    changeAdress( {city, short_name, full_address, type} ) {
+        return fetch(`${this._url}/auth/users/me/`, {
+            method: 'PATCH',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                city: city,
+                short_name: short_name,
+                full_address: full_address,
+                type: type }),
+        }).then(this._mainApiError);
+    }
+
     postUserAdress( {city, short_name, full_address, type} ) {
         return fetch(`${this._url}/me/my_addresses/`, {
             method: 'POST',
@@ -80,6 +98,7 @@ class Api {
             credentials: 'include',
         }).then(this._mainApiError);
     }
+    // end
 
     getUserOrders() {
         return fetch(`${this._url}/me/my_orders/`, {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import logo from '../../images/logo-footer.jpeg';
 import instagram from '../../images/instagram.svg';
 import telegram from '../../images/telegram.svg';
@@ -10,7 +10,9 @@ import './Footer.css';
 function Footer() {
     return (
         <footer className="footer">
-            <img src={logo} alt="Логотип сайта Sushi" className="footer__logo" />
+            <Link to="/">
+                <img src={logo} alt="Логотип сайта Sushi" className="footer__logo app__button-opacity" />
+            </Link>
             <div className="footer__container">
             <NavLink className={({ isActive }) => (isActive ? "footer__link-active" : "footer__link")}
                 to="/">Меню

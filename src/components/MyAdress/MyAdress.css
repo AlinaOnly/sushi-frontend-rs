@@ -20,6 +20,7 @@
 
 .adress__text {
     margin: 0;
+    line-height: 30px;
 }
 
 .adress__submit-button{

@@ -1,14 +1,24 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import {React, useContext, useEffect, useState } from 'react';
+import { NavLink, Link } from 'react-router-dom';
 import logo from '../../images/logo.jpeg';
 import account from '../../images/account.svg';
 import cart from '../../images/cart.svg';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import useFormValidation from '../../utils/FormValidation';
 import './Header.css';
 
 function Headers() {
+    const currentUser = useContext(CurrentUserContext);
+    const { values, setValues } = useFormValidation();
+
+    useEffect(() => {
+        setValues({
+            first_name: currentUser.first_name,
+        });
+    }, [currentUser, setValues]);
+
     return (
         <header className="header">
-        
             <div className="header__container-links">
                 <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
                     to="/">Меню
@@ -19,34 +29,34 @@ function Headers() {
                 <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
                     to="/promo">Промо
                 </NavLink>
-                
+                    <p className="header__phone">
+                        <a  
+                            className="header__phone-ref app__text-opacity"
+                            href="tel:+381612714798"
+                            target="_blank"
+                            rel="noreferrer noopener">
+                            +381 61 2714798
+                        </a>
+                    </p> 
             </div>
-            
-            <div className="header__logo-container">
-                <img src={logo} alt="Логотип сайта Sushi" className="header__logo"/>
-            </div>
-
+            <Link to="/">
+                <div className="header__logo-container app__button-opacity">
+                    <img src={logo} alt="Логотип сайта Sushi" className="header__logo"/>
+                </div>
+            </Link>
             <div className="header__container-select">
                 <select className="header__select" id="city" name="selectedCity">
                 <option className="header__select-city" value="beograd">Beograd</option>
             </select>
-            <p className="header__phone">
-                    <a  
-                        className="header__phone-ref app__text-opacity"
-                        href="tel:+381612714798"
-                        target="_blank"
-                        rel="noreferrer noopener">
-                        +381 61 2714798
-                    </a>
-            </p> 
             <select className="header__select" id="language" name="selectedLanguage">
                 <option className="header__select-language" value="sr">Sr</option>
                 <option className="header__select-language" value="ru">Ru</option>
                 <option className="header__select-language" value="en">En</option>
             </select>
-            <NavLink className={({ isActive }) => (isActive ? "header__link-acc header__link-active" : "header__link-acc header__link")}
-                to="/auth/users/me/">
-                Аккаунт
+            <NavLink 
+                className={({ isActive }) => (isActive ? "header__link-acc header__link-active" : "header__link-acc header__link")}
+                to="/profile">
+                    {values.first_name || 'Аккаунт'}
                 <img src={account} alt="Логотип аккаунта" className="header__account-logo app__button-opacity"/>
             </NavLink>
             <NavLink className="header__link-button" to="/cart">
@@ -54,7 +64,7 @@ function Headers() {
                     className="header__cart-button app__button-opacity" 
                     type="submit"
                     aria-label="Корзина">
-                    Корзина
+                        Корзина
                     <img src={cart} alt="Логотип корзины" className="header__image-button-cart"/>
                     <p className="header__submit-button-counters">0</p>
                 </button>

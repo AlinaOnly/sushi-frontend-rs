@@ -8,7 +8,6 @@ const auth = ({ first_name, last_name, email, phone, password }) =>{ //const reg
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            //Authorization: 'Bearer realm="api"', // Authorization: `Bearer ${token}`
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -34,7 +33,6 @@ const tokenRefresh = (refreshToken) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            //Authorization: `Bearer ${token}`,
         },
         credentials: 'include',
         body: JSON.stringify({ refresh: refreshToken })
@@ -46,7 +44,6 @@ const tokenVerify = (accessToken) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            //Authorization: `Bearer ${token}`,
         },
         credentials: 'include',
         body: JSON.stringify({ token: accessToken })

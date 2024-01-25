@@ -4,7 +4,6 @@ import useFormValidation from '../../utils/FormValidation';
 import { EMAIL, NAME, PHONE } from '../../utils/errors';
 import ProfileNav from '../ProfileNav/ProfileNav';
 import './Profile.css';
-//import { REGEX_MAIL } from '../../utils/consts';
 
 function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
     const currentUser = useContext(CurrentUserContext);
@@ -96,7 +95,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 placeholder="Email"
                                 minLength="6"
                                 maxLength="40"
-                                //pattern={REGEX_MAIL}
+                                pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$"
                                 required
                             /></label>
                             <span 
@@ -117,6 +116,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 placeholder="+"
                                 minLength="12"
                                 maxLength="13"
+                                pattern="^((8|\+3)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,13}$"
                                 required
                             /></label>
                             <span 
