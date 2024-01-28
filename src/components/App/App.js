@@ -4,6 +4,8 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute';
 import Header from '../Header/Header';
+import HeaderBurger from '../HeaderBurger/HeaderBurger';
+import Menu from '../Menu/Menu';
 
 import Dishes from '../Dishes/Dishes';
 import PopupDish from '../PopupDish/PopupDish';
@@ -41,19 +43,32 @@ import Footer from '../Footer/Footer';
 
 import MainApi from '../../utils/MainApi';
 import * as apiAuth from '../../utils/apiAuth';
+import Preloader from '../Preloader/Preloader';
 import { CONFLICT_REG, ERR_REGISTER, WRONG_PASS, WRONG_TOKEN } from '../../utils/errors';
 import './App.css';
+
+/*import { setTranslations, setDefaultLanguage, useTranslation } from 'react-multi-lang'
+import pt from 'pt.json';
+import en from 'en.json';
+
+// Do this two lines only when setting up the application
+setTranslations({pt, en});
+setDefaultLanguage('en');*/
 
 
 
 function App() {
+  //const t = useTranslation();
+
   // location
   const navigate = useNavigate();
 
   // users state
   const [currentUser, setCurrentUser] = useState({});
   const [logIn, setLogIn] = useState(false);
-  const [isAdresses, setAdresses] = useState([]);
+  //const [isAdresses, setAddresses] = useState([]);
+  const [addresses, setAddresses] = useState([]);
+
   const [orders, setOrders] = useState([]);
   const [coupons, setCoupons] = useState([]);
 
@@ -68,18 +83,25 @@ function App() {
 
   // burgeropen state
   const [isBurger, setIsBurger] = useState(false);
+  // burgeropen state
+  const [burgerHeader, setBurgerHeader] = useState(false);
 
    // errors state
   const [errorMessage, setErrorMessage] = useState('');
 
+  // preloader state
+  const [isPreloader, setPreloader] = useState(false);
+
 
   // functionality -- registration
   function handleRegister(first_name, last_name,  email, phone, password) {
+    setPreloader(true);
     apiAuth.auth({ first_name, last_name, email, phone, password })
         .then((res) => {
             if (res !== 400) {
                 setCurrentUser(res);
                 navigate('/login');
+                setPreloader(false);
             }
         }).catch(err => {
             if (err === 'Ошибка: 409') {
@@ -88,12 +110,14 @@ function App() {
                 setErrorMessage(ERR_REGISTER);
             }
             console.log(err);
+            setPreloader(false);
     });
   }
   //end
 
   // functionality -- login
   function handleLogin(email, password) {
+    setPreloader(true);
     apiAuth.login({ email, password })
         .then((res) => {
             if(res) { 
@@ -102,6 +126,7 @@ function App() {
                 handleTokenCheck();
                 setLogIn(true);
                 navigate('/profile');
+                setPreloader(false);
             }
         }).catch(err => {
             if (err === 'Ошибка: 401') {
@@ -111,16 +136,19 @@ function App() {
                 setErrorMessage(WRONG_TOKEN);
             }
             console.log(err);
+            setPreloader(false);
         });
   }
   //end
 
   // functionality -- update user info
   function handleUpdateProfile(first_name, last_name, phone, email) {
+      setPreloader(true);
         MainApi.changeUserInformation({ first_name, last_name, phone, email })
         .then((res) => {
             setCurrentUser(res);
             setErrorMessage('Ваши данные успешно изменены');
+            setPreloader(false);
         }).catch(err => {
             if (err === 'Ошибка: 409') {
                 setErrorMessage(CONFLICT_REG);
@@ -128,12 +156,13 @@ function App() {
                 setErrorMessage(ERR_REGISTER);
             }
             console.log(err);
+            setPreloader(false);
         });
   }
   //end
 
   // functionality -- update user adress info
-  function handlePostUserAdress(city, short_name, full_address, type) {
+  /*function handlePostUserAdress(city, short_name, full_address, type) {
         MainApi.postUserAdress({ city, short_name, full_address, type })
         .then((res) => {
             setCurrentUser(res);
@@ -146,42 +175,47 @@ function App() {
             }
             console.log(err);
         });
-  }
-  //end
+  }*/
 
-  // functionality -- delete adress
-  function handleDeleteAdress(id) {
-    handleTokenCheck();
-    console.log(id);
-    MainApi.deleteUserAdress(id)
-      .then(() => {
-        const updatedAdress = isAdresses.filter((i) => i.id !== id);
-        setAdresses(updatedAdress);
-        localStorage.setItem('updatedAdress', JSON.stringify(updatedAdress));
-    }).catch(err => {
+  function handlePostUserAdress(addressData) {
+    setPreloader(true);
+    MainApi.postUserAdress(addressData)
+      .then((addedAddress) => {
+        // Добавляем адрес в массив и обновляем состояние и localStorage
+        const updatedAddresses = [...addresses, addedAddress];
+        setAddresses(updatedAddresses);
+        localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
+        setPreloader(false);
+      })
+      .catch(err => {
         console.log(err);
-    });
+        setPreloader(false);
+      });
   }
   //end
 
   // functionality -- getting User Adress information
   function getAdressApi() {
+    setPreloader(true);
     MainApi.getUserAdress()
-        .then((adresses) => {
-              setAdresses(adresses);
-              localStorage.setItem('adresses', JSON.stringify(adresses));
+        .then((addresses) => {
+            setAddresses(addresses);
+            localStorage.setItem('addresses', JSON.stringify(addresses));
+            setPreloader(false);
           }).catch(err => {
               console.log(err);
+              setPreloader(false);
           });
   }
   // end
 
   // functionality -- update adress
   function handleChangeAdress(city, short_name, full_address, type) {
+    setPreloader(true);
     MainApi.changeAdress({ city, short_name, full_address, type })
     .then((res) => {
         setCurrentUser(res);
-        setErrorMessage('Ваши данные успешно изменены');
+        setPreloader(false);
     }).catch(err => {
         if (err === 'Ошибка: 409') {
             setErrorMessage(CONFLICT_REG);
@@ -189,33 +223,92 @@ function App() {
             setErrorMessage(ERR_REGISTER);
         }
         console.log(err);
+        setPreloader(false);
     });
-}
-//end
+  }
+  //end
+
+  // functionality -- delete adress
+  function handleDeleteAdress(id) {
+    setPreloader(true);
+    MainApi.deleteUserAdress(id)
+      .then(() => {
+        //setAddresses((currentAddresses) => currentAddresses.filter((address) => address.id !== id));
+        /*setAddresses((currentAddresses) => {
+          const updatedAddresses = currentAddresses.filter((address) => address.id !== id);
+          localStorage.setItem('addresses', JSON.stringify(updatedAddresses)); // Используем обновленный массив
+          return updatedAddresses;
+        });*/
+        const updatedAddresses = addresses.filter((address) => address.id !== id);
+        setAddresses(updatedAddresses);
+        localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
+        //localStorage.setItem('addresses');
+        setPreloader(false);
+    }).catch(err => {
+        console.log(err);
+        setPreloader(false);
+    });
+  }
+  //end
 
   // functionality -- getting User Last Orders
   function getOrdersApi() {
+    setPreloader(true);
     MainApi.getUserOrders()
         .then((orders) => {
               setOrders(orders);
               localStorage.setItem('orders', JSON.stringify(orders));
+              setPreloader(false);
           }).catch(err => {
               console.log(err);
+              setPreloader(false);
           });
   }
   // end
 
   // functionality -- getting User Coupons
   function getCoupons() {
+    setPreloader(true);
     MainApi.getUserCoupons()
         .then((coupons) => {
               setCoupons(coupons);
               localStorage.setItem('coupons', JSON.stringify(coupons));
+              setPreloader(false);
           }).catch(err => {
               console.log(err);
+              setPreloader(false);
           });
   }
   // end
+
+  // functionality -- getting news from Api
+  function getNews() {
+    setPreloader(true);
+    MainApi.getPromoNews()
+    .then((promoNews) => {
+          setPromoNews(promoNews);
+          setPreloader(false);
+      }).catch(err => {
+          console.log(err);
+          setPreloader(false);
+      });
+  }
+  //end
+
+  // functionality -- getting dishes from Api
+  function getDishes() {
+    setPreloader(true);
+    MainApi.getDishesFromApi()
+    .then((dishes) => {
+          setDishesItems(dishes);
+          localStorage.setItem('dishes', JSON.stringify(dishes));
+          setPreloader(false);
+      }).catch(err => {
+          console.log(err);
+          setPreloader(false);
+      });
+  }
+  //end
 
   // functionality -- clear token and exit
   const handleLogout = () => {
@@ -264,29 +357,6 @@ function App() {
   }, []);
   //end
 
-   // functionality -- getting dishes from Api
-    function getDishes() {
-        MainApi.getDishesFromApi()
-        .then((dishes) => {
-              setDishesItems(dishes);
-              localStorage.setItem('dishes', JSON.stringify(dishes));
-          }).catch(err => {
-              console.log(err);
-          });
-    }
-  //end
-
-  // functionality -- getting news from Api
-  function getNews() {
-    MainApi.getPromoNews()
-    .then((promoNews) => {
-          setPromoNews(promoNews);
-      }).catch(err => {
-          console.log(err);
-      });
-  }
-  //end
-
   // useEffect ошибки
       useEffect(() => {
         setErrorMessage('');
@@ -310,14 +380,18 @@ function App() {
     useEffect(() => {
         if (logIn) {
             Promise.all([MainApi.getUserId()])
-                .then(([userData, adressData, ordersData, couponsData]) => {
+                .then(([userData, orders, coupons, addresses]) => {
+                 //console.log(localStorage.getItem('coupons', JSON.stringify(coupons)));
+
                     setCurrentUser(userData);
-                    getAdressApi(adressData);
-                    getOrdersApi(ordersData);
-                    getCoupons(couponsData)
-                    localStorage.getItem('adressData', JSON.stringify(adressData));
-                    localStorage.getItem('ordersData', JSON.stringify(ordersData));
-                    localStorage.getItem('couponsData', JSON.stringify(couponsData));
+                    getAdressApi(addresses);
+                    //handlePostUserAdress(); // Получите адреса пользователя
+                    getOrdersApi(orders);
+                    getCoupons(coupons);
+                    localStorage.getItem('addresses');
+                    //localStorage.getItem('adresses', JSON.stringify(adresses));
+                   // localStorage.getItem('orders', JSON.stringify(orders));
+                    //localStorage.getItem('coupons', JSON.stringify(coupons));
                 }).catch(err => {
                     console.log(err);
                 });
@@ -328,6 +402,10 @@ function App() {
     // functionality -- burger
     function handleBurgerMenu() {
       setIsBurger(!isBurger);
+    }
+
+    function handleBurgerHeader() {
+      setBurgerHeader(!burgerHeader);
     }
     //end
 
@@ -340,13 +418,15 @@ function App() {
     function closePopup() {
       setSelectedDish({});
       setIsBurger(isBurger);
+      setBurgerHeader(burgerHeader);
     }
     // end popup
 
     // Функция закрытия окна на оверлей
     useEffect(() => {
       function handleOverlayClick(evt) {
-        if (evt.target.classList.contains("burger-menu") || evt.target.classList.contains("popup")) {
+        if (evt.target.classList.contains("header-burger-menu") || evt.target.classList.contains("burger-menu") 
+          || evt.target.classList.contains("popup")) {
             closePopup();
         }
       }
@@ -375,11 +455,18 @@ function App() {
 
   return (
     <>
+
       <CurrentUserContext.Provider value={currentUser}>
 
       <BurgerMenu isBurger={isBurger} handleBurgerMenu={handleBurgerMenu} />
 
+      <HeaderBurger burgerHeader={burgerHeader} handleBurgerHeader={handleBurgerHeader} />
+
+      <Menu handleBurgerHeader={handleBurgerHeader} />
+
         <Header/>
+
+        <Preloader isPreloader={isPreloader} />
 
         <Routes>
           <Route
@@ -414,6 +501,7 @@ function App() {
                   onUpdateProfile={handleUpdateProfile}
                   handleLogout={handleLogout}
                   errorMessage={errorMessage}
+                  handleBurgerHeader={handleBurgerHeader}
                 />
               </ProtectedRoute>
             }
@@ -437,9 +525,9 @@ function App() {
                 <ProtectedRoute logIn={logIn}>
                   <MyAdress
                     logIn={logIn}
-                    isAdresses={isAdresses}
-                    onPostUserAdress={handlePostUserAdress}
+                    addresses={addresses}
                     onDeleteAdress={handleDeleteAdress}
+                    onUpdateAdresses={handlePostUserAdress}
                     onChangeAdress={handleChangeAdress}
                   />
                 </ProtectedRoute>
@@ -466,6 +554,8 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 dishes={dishes}
+                isPreloader={isPreloader}
+                handleBurgerHeader={handleBurgerHeader}
               />}
           />
 

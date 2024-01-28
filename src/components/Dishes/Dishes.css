@@ -27,4 +27,8 @@
     .dishes__button{
         width: 240px;
     }
+
+    .dishes__categories {
+        padding-top: 0;
+    }
 }

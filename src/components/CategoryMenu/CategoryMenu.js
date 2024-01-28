@@ -15,9 +15,6 @@ function CategoryMenu({ handleBurgerMenu }) {
             <NavLink className={({ isActive }) => (isActive ? "burger-category__link-active" : "burger-category__link")}
                 to="/futomaki">Футомаки
             </NavLink>
-            <NavLink className={({ isActive }) => (isActive ? "burger-category__link-active" : "burger-category__link")}
-                to="/backed">Запеченые ролы
-            </NavLink>
                 <button 
                     onClick={handleBurgerMenu}
                     className="burger-category__button app__button-opacity" 

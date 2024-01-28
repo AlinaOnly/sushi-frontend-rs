@@ -28,10 +28,8 @@
 }
 
 .popup__image {
-    max-width: 300px;
     height: 300px;
     object-fit: contain;
-    object-position: left;
 }
 
 .popup__image-text {
@@ -68,7 +66,7 @@
 
 .popup__container {
     position: relative;
-    width: 900px;
+    max-width: 900px;
     height: 400px;
     background: #ffffff;
     box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
@@ -133,24 +131,73 @@
     outline: none;
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 820px) {
     .popup__container {
-        max-width: 282px;
+        max-width: 400px;
+        height: 600px;
         padding: 25px 22px;
+    }
+
+    .popup__container-column {
+        flex-direction: column;
     }
 
     .popup__title {
         font-size: 20px;
         line-height: 24px;
-        margin-bottom: 45px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 10px;
+        margin-bottom: 0px;
     }
 
     .popup__close-button {
-        top: -36px;
+        top: 10px;
+        margin-right: 10px;
         right: 0;
-        width: 20px;
-        height: 20px;
+        width: 40px;
+        height: 40px;
         background-size: contain;
+    }
+
+    .popup__image {
+        margin-left: 0px;
+        margin-right: 0px;
+        height: 280px;
+    }
+
+    .popup__image-text {
+        margin-bottom: 10px;
+    }
+
+    .popup-dishes__cart-button {
+        top: 525px;
+        right: 20px;
+    }
+
+    .popup__composition {
+        height: 120px;
+    }
+
+    .popup__composition-span {
+        margin-top: 20px;
     }
 }
 
+@media screen and (max-width: 420px) {
+    .popup__container {
+        max-width: 320px;
+        height: 600px;
+        padding: 25px 22px;
+    }
+
+    .popup__title {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .popup__composition {
+        height: 140px;
+    }
+    
+}

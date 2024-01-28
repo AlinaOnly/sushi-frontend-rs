@@ -18,7 +18,7 @@
     text-decoration: none;
     color: #000000;
     list-style: none;
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .header__link-acc {
@@ -30,7 +30,7 @@
     text-decoration: none;
     color: #FF3055;
     list-style: none;
-    margin-right: 2px;
+    margin-right: 10px;
     font-weight: 500;
 }
 
@@ -79,7 +79,7 @@
     color: #000000;
 }
 
-.header__cart-button{
+.header__cart-button {
     background: #FF3055;
     color: #ffffff;
     border-radius: 20px;
@@ -102,6 +102,11 @@
     margin: 0;
 }
 
+@media screen  and (max-width: 884px) {
+    .header {
+        display: none;
+    }
+}
 
 @media screen and (max-width: 768px) {
     .header {
