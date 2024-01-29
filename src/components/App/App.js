@@ -5,7 +5,7 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute';
 import Header from '../Header/Header';
 import HeaderBurger from '../HeaderBurger/HeaderBurger';
-import Menu from '../Menu/Menu';
+import HeaderMenu from '../HeaderMenu/HeaderMenu';
 
 import Dishes from '../Dishes/Dishes';
 import PopupDish from '../PopupDish/PopupDish';
@@ -462,7 +462,7 @@ function App() {
 
       <HeaderBurger burgerHeader={burgerHeader} handleBurgerHeader={handleBurgerHeader} />
 
-      <Menu handleBurgerHeader={handleBurgerHeader} />
+      <HeaderMenu handleBurgerHeader={handleBurgerHeader} />
 
         <Header/>
 

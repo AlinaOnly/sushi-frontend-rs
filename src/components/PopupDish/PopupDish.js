@@ -17,10 +17,11 @@ function PopupDish({ dish, onClose }) {
                     </div>
                 </div>     
                     <button 
+                        onClick={onClose}
                         className="popup-dishes__cart-button"
                         type="submit"
                         aria-label="Корзина">
-                        В корзину
+                            В корзину
                     </button>
                     <button 
                         onClick={onClose} 

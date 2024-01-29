@@ -15,7 +15,7 @@
 }
 
 .popup_background {
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(5, 5, 5, 0.8);
 }
 
 .popup_open {
@@ -37,6 +37,7 @@
     font-size: 24px;
     line-height: 30px;
     margin: 0 auto 30px auto;
+    height: 90px;
 }
 
 .popup__composition {
@@ -66,9 +67,8 @@
 
 .popup__container {
     position: relative;
-    max-width: 900px;
-    height: 400px;
-    background: #ffffff;
+    max-width: 820px;
+    background-color: #f7efef;
     box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
     border-radius: 10px;
     padding: 50px 36px 50px 36px;
@@ -78,7 +78,7 @@
 .popup__title {
     font-size: 24px;
     line-height: 29px;
-    margin: 0 50px 40px;
+    margin: 0 0 0 30px;
 }
 
 .popup-dishes__cart-button {
@@ -97,7 +97,7 @@
     font-size: 16px;
     position: absolute;
     right: 35px;
-    bottom: 47px;
+    bottom: 65px;
 }
 
 .popup-dishes__cart-button:active {
@@ -126,8 +126,8 @@
     cursor: pointer;
     padding: 0;
     position: absolute;
-    top: 50px;
-    right: 34px;
+    top: 10px;
+    right: 10px;
     outline: none;
 }
 
@@ -153,7 +153,6 @@
 
     .popup__close-button {
         top: 10px;
-        margin-right: 10px;
         right: 0;
         width: 40px;
         height: 40px;
@@ -168,10 +167,11 @@
 
     .popup__image-text {
         margin-bottom: 10px;
+        height: 70px;
     }
 
     .popup-dishes__cart-button {
-        top: 525px;
+        bottom: 25px;
         right: 20px;
     }
 
@@ -186,7 +186,7 @@
 
 @media screen and (max-width: 420px) {
     .popup__container {
-        max-width: 320px;
+        max-width: 300px;
         height: 600px;
         padding: 25px 22px;
     }
@@ -198,6 +198,11 @@
 
     .popup__composition {
         height: 140px;
+    }
+
+    .popup-dishes__cart-button {
+        bottom: 10px;
+        right: 20px;
     }
     
 }

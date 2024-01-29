@@ -7,7 +7,7 @@ function Payment() {
             <section className="payment">
                 <div className="payment__container">
                     <div className="payment__container-title">
-                        <h2 className="payment__title">Сумма Вашего заказа</h2>
+                        <h2 className="payment__title">Сумма заказа</h2>
                         <p className="payment__price">3000 RSD</p>
                     </div>
                     <div className="payment__checkbox">

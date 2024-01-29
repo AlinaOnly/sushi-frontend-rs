@@ -66,11 +66,8 @@
     margin-right: 20px;
 }
 
-
-
 @media screen and (max-width: 768px) {
     .footer {
-        background-color: #FFFFFF;
         max-width:768px;
     }
 
@@ -83,8 +80,7 @@
 
 @media screen and (max-width: 550px) {
     .footer {
-        background-color: #FFFFFF;
-        margin: 0 auto 27px;
+        margin: 0 auto;
     }
 
     .footer__logo {
@@ -97,14 +93,14 @@
     }
 
     .footer__container {
-        margin: 21px 10px 0;
+        margin: 20px 10px 0;
         flex-direction: column-reverse;
         align-items: center;
         text-align: center;
     }
 
     .footer__copyright {
-        margin-top: 20px;
+        margin-top: 30px;
         font-size: 12px;
         line-height: 15px;
         max-width: 48px;
@@ -114,7 +110,8 @@
     .footer__list {
         flex-direction: column;
         padding: 0;
-        margin: 0;
+        margin-bottom: 10px;
+        margin-top: 30px;
         margin-left: 0;
         font-size: 12px;
         line-height: 15px;

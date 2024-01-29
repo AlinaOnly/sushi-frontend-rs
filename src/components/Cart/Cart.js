@@ -12,7 +12,7 @@ function Cart({ dish }) {
     return (
         <>
             <div className="cart">
-                <h2 className="cart__title">В Вашей корзине пусто!</h2>
+                <h2 className="cart__title">В корзине пусто!</h2>
                 <img src={empty} className="cart__img-empty" alt="Пустая корзина"/>
                 <p className="cart__text">Добавьте что-нибудь из нашего меню!</p>
                 <button 

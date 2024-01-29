@@ -6,11 +6,11 @@ import './Promo.css';
 function Promo ({ promoNews }) {
     const responsive = {
         desktop: {
-            breakpoint: { max: 3000, min: 1024 },
-            items: 2
+            breakpoint: { max: 3000, min: 900 },
+            items: 1
         },
         tablet: {
-            breakpoint: { max: 1024, min: 464 },
+            breakpoint: { max: 900, min: 464 },
             items: 1
         },
         mobile: {

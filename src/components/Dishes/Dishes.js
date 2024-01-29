@@ -12,6 +12,8 @@ import More from '../More/More';
 import './Dishes.css';
 
 function Dishes({ dishes, onDishClick, handleBurgerMenu, isPreloader }) {
+
+    // сколько карточек показывать при определенном размере окна
     const [isSize, setSize] = useState(window.innerWidth);
     const [moviesRow, setMoviesRow] = useState(SHOW_DISH_LAPTOP);
     const [moreButton, setMoreButton] = useState(false);

@@ -24,24 +24,40 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader }) {
                     type="button"
                     className="header-burger-menu__close app__button-opacity">
                 </button>
-                <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
-                    to="/">Меню
-                </NavLink>
-                <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
-                    to="/contacts">Kонтакты
-                </NavLink>  
-                <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
-                    to="/promo">Промо
-                </NavLink>
-                    <p className="header__phone">
+                <div className="header-burger-menu__lists">
+                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active" : "header-burger__link")}
+                        to="/"
+                        onClick={handleBurgerHeader}>
+                            Меню
+                    </NavLink>
+                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active" : "header-burger__link")}
+                        to="/contacts"
+                        onClick={handleBurgerHeader}>
+                        Kонтакты
+                    </NavLink>  
+                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active" : "header-burger__link")}
+                        to="/promo"
+                        onClick={handleBurgerHeader}>
+                        Промо
+                    </NavLink>
+                    <select className="header-burger__select" id="language" name="selectedLanguage">
+                        <option className="header-burger__select-language" value="sr">Sr</option>
+                        <option className="header-burger__select-language" value="ru">Ru</option>
+                        <option className="header-burger__select-language" value="en">En</option>
+                    </select>
+                    <select className="header-burger__select" id="city" name="selectedCity">
+                        <option className="header-burger__select-city" value="beograd">Beograd</option>
+                    </select>
+                    <p className="header-burger__phone">
                         <a  
                             className="header__phone-ref app__text-opacity"
                             href="tel:+381612714798"
                             target="_blank"
                             rel="noreferrer noopener">
-                            +381 61 2714798
+                                +381 61 2714798
                         </a>
                     </p>
+                </div>
                     <Link to="/profile" className="header-burger-menu__profile">
                         <button
                             onClick={handleBurgerHeader}
@@ -49,7 +65,7 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader }) {
                             className="header-burger-menu__profile-button app__button-opacity">
                                 {values.first_name || 'Аккаунт'}
                                 <img src={account} alt="Логотип аккаунта" className="header__account-logo app__button-opacity"/>
-                            </button>
+                        </button>
                     </Link>
             </div>
         </section>

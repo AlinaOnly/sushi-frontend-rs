@@ -1,14 +1,22 @@
 .carousel {
-    max-width: 600px;
-    height: 450px;
-    border: 1px solid #FF3055;
+    
     border-radius: 30px;
-    margin-left: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
+    background-color: #E8E8E8;
 }
+
+.react-multiple-carousel__arrow {
+    background: rgb(255, 48, 85);
+}
+
+.react-multiple-carousel__arrow:hover {
+    background: rgb(255, 48, 85);
+}
+
+
 
 .promo {
     max-width: 1140px;
@@ -24,6 +32,10 @@
     max-width: 300px;
 }
 
+.carousel__city {
+    margin-top: 0;
+}
+
 .carousel__title {
     font-size: 25px;
     font-weight: 500;
@@ -34,14 +46,37 @@
 
 .carousel__text {
     text-align: center;
-    height: 200px;
+    height: 50px;
     margin-top: 0;
     margin-bottom: 10px;
 }
 
 .carousel__image {
-    width: 200px;
-    height: 200px;
     margin-bottom: 10px;
+    height: 200px;
 }
 
+.carousel__date {
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: 30px;
+}
+
+
+@media screen and (max-width: 768px) {
+    .promo {
+        margin: 0 30px;
+    }
+
+}
+
+@media screen and (max-width: 550px) {
+    .promo {
+        margin: 0 10px;
+    }
+
+    .carousel__image {
+        margin-bottom: 10px;
+        height: 100px;
+    }
+}

@@ -169,10 +169,10 @@ function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
                                         <p className="adress__field">Тип: {address.type}</p>
                                         <button 
                                             onClick={() => handleDelete(address.id)}
-                                            className="app__text-opacity profile__submit-button"
+                                            className="app__text-opacity adress__delete-button"
                                             type="button"
                                             aria-label="Удалить выбранный адрес">
-                                                Удалить
+                                                Удалить этот адрес
                                         </button>
                                     </div>)) 
                         )}

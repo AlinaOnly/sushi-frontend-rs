@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 70px;
+    margin-bottom: 50px;
 }
 
 .profile__text {
@@ -101,7 +101,7 @@
 }
 
 .profile__submit-button {
-    margin-top: 204px;
+    margin-top: 200px;
     background-color: #FFFFFF;
     outline: none;
     border: none;
@@ -140,16 +140,16 @@
 
 @media screen and (max-width: 768px) {
     .profile {
-        margin-bottom: 269px;
+        margin-bottom: 50px;
     }
 
     .profile__text {
-        margin-top: 216px;
+        margin-top: 50px;
         margin-bottom: 79px;
     }
 
     .profile__submit-button {
-        margin-top: 194px;
+        margin-top: 200px;
     }
 
     .profile__button-save {
@@ -159,11 +159,11 @@
 
 @media screen and (max-width: 550px) {
     .profile {
-        margin-bottom: 40px;
+        margin-bottom: 50px;
     }
 
     .profile__text {
-        margin-top: 56px;
+        margin-top: 50px;
         margin-bottom: 63px;
     }
 
@@ -172,7 +172,7 @@
     }
 
     .profile__submit-button {
-        margin-top: 363px;
+        margin-top: 200px;
         font-size: 12px;
         line-height: 15px;
     }

@@ -46,13 +46,13 @@ function Headers() {
             </Link>
             <div className="header__container-select">
                 <select className="header__select" id="city" name="selectedCity">
-                <option className="header__select-city" value="beograd">Beograd</option>
-            </select>
-            <select className="header__select" id="language" name="selectedLanguage">
-                <option className="header__select-language" value="sr">Sr</option>
-                <option className="header__select-language" value="ru">Ru</option>
-                <option className="header__select-language" value="en">En</option>
-            </select>
+                    <option className="header__select-city" value="beograd">Beograd</option>
+                </select>
+                <select className="header__select" id="language" name="selectedLanguage">
+                    <option className="header__select-language" value="sr">Sr</option>
+                    <option className="header__select-language" value="ru">Ru</option>
+                    <option className="header__select-language" value="en">En</option>
+                </select>
             <NavLink 
                 className={({ isActive }) => (isActive ? "header__link-acc header__link-active" : "header__link-acc header__link")}
                 to="/profile">

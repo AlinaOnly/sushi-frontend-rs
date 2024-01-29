@@ -1,3 +1,7 @@
+.not-found {
+    max-width: 1280px;
+    margin: 0 70px 20px;
+}
 
 .not-found__container {
     display: flex;
@@ -32,15 +36,23 @@
     cursor: pointer;
 }
 
+.not-found__image {
+    max-width: 300px;
+}
+
 @media screen and (max-width: 768px) {
-    .not-found__container {
-        margin: 408px 184px 222px;
+    .not-found {
+        margin: 0 30px;
     }
 }
 
 @media screen and (max-width: 550px) {
+    .not-found {
+        margin: 0 10px;
+    }
+
     .not-found__container {
-        margin: 329px auto 30px;
+        margin: 100px auto 30px;
     }
 
     .not-found__title {
@@ -51,7 +63,7 @@
     .not-found__subtitle {
         font-size: 12px;
         line-height: 15px;
-        margin: 10px auto 284px;
+        margin: 10px auto 200px;
     }
 
     .not-found__button {

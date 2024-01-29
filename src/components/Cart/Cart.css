@@ -22,12 +22,12 @@
 .cart__text {
     font-size: 25px;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 30px;
     margin: 100px 0;
 }
 
 .cart__img-empty {
-    width: 330px;
+    max-width: 300px;
     height: 335px;
     margin: 0 auto;
 }
@@ -208,4 +208,16 @@
     cursor: pointer;
     padding: 0;
     margin-bottom: 50px;
+}
+
+@media screen and (max-width: 768px) {
+    .cart {
+        margin: 0 30px;
+    }
+} 
+
+@media screen and (max-width: 550px) {
+    .cart {
+        margin: 0 10px;
+    }
 }

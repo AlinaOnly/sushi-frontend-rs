@@ -19,16 +19,17 @@
 .payment__title {
     font-size: 30px;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 35px;
     margin: 0 0 30px 0;
 }
 
 .payment__price {
     font-size: 30px;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 35px;
     margin: 0 0 30px 0;
     color: #FF3055;
+    text-align: end;
 }
 
 .payment__checkbox {
@@ -48,7 +49,7 @@
     text-align: center;
     font-size: 30px;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 35px;
 }
 
 .payment__area {
@@ -60,7 +61,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 50px;
 }
 
 .payment__btn-cash {
@@ -88,6 +88,7 @@
 .payment__btn-text {
     margin-bottom: 0px;
     font-weight: 500;
+    margin-right: 30px;
 }
 
 input[type="checkbox"]:checked, 
@@ -155,4 +156,41 @@ input[type="checkbox"]:not(:checked) + label:after {
 
 input[type="checkbox"]:checked + label:after {
     opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+    .payment {
+        margin: 50px 30px;
+    }
+
+    .payment__container {
+        margin: 30px;
+    }
+
+    .payment__area-box { 
+        margin: 0;
+    }
+
+    .payment__btn-text {
+        margin-right: 20px;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .payment {
+        margin: 50px 10px;
+    }
+
+    .payment__container {
+        margin: 20px;
+    }
+
+    .payment__area-box { 
+        margin: 0;
+    }
+
+    .payment__btn-text {
+        margin-right: 10px;
+        text-align: center;
+    }
 }

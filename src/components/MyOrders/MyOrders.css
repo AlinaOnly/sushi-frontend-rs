@@ -1,7 +1,6 @@
 .orders {
     max-width: 1140px;
-    margin: 0 70px 0;
-    min-height: calc(100vh - 100px);
+    margin: 0 70px 50px;
     text-align: center;
 }
 
@@ -15,4 +14,16 @@
 
 .orders__text {
     margin: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .orders {
+        margin: 0 30px 50px;
+    }
+}    
+
+@media screen and (max-width: 550px) {
+    .orders {
+        margin: 0 10px 50px;
+    }
 }

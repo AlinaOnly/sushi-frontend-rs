@@ -1,7 +1,8 @@
 .dishes__card {
-    box-shadow: 0px 4px 30px rgba(0.08, 0.08, 0.08, 0.08);
-    background-color: #FDFDFD;
+    box-shadow: 5px 5px 15px rgba(0.08, 0.08, 0.08, 0.08);
+    background-color: #f9f0f0b0;
     position: relative;
+    border-radius: 10px;
 }
 
 .dishes__description {
@@ -72,10 +73,15 @@
 }
 
 .dishes__photo {
-    width: 100%;
+    width: 97%;
+    padding: 5px 5px 0 5px;
     object-fit: cover;
     cursor: pointer;
     height: 300px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .dishes__container {

@@ -8,7 +8,7 @@ function MyOrders({ orders }) {
         <>
             <ProfileNav />
             <section className="orders" >
-                <h2 className="orders__title">История Ваших заказов</h2>
+                <h2 className="orders__title">История заказов</h2>
                 <div className="orders__container">
                     <p className="orders__text">У Вас пока нет заказов</p>
                 </div>

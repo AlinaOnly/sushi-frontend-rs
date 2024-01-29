@@ -1,7 +1,6 @@
 .contacts {
     max-width: 1140px;
     margin: 0 70px 0;
-    min-height: calc(100vh - 100px);
 }
 
 .contacts__title {
@@ -18,17 +17,39 @@
 
 .contacts__article {
     font-weight: 400;
-    line-height: 30px;
+    line-height: 40px;
     font-size: 16px;
 }
 
 .contacts__description {
     font-weight: 400;
-    line-height: 30px;
+    line-height: 40px;
     font-size: 16px;
 }
 
 .contacts__image {
-    width:1140px;
+    width: 100%;
     margin-bottom: 50px;
+}
+
+@media screen and (max-width: 768px) {
+    .contacts {
+        margin: 0 30px;
+    }
+
+    .contacts__image {
+        margin-bottom: 50px;
+    }
+
+}
+
+@media screen and (max-width: 550px) {
+    .contacts {
+        margin: 0 10px;
+    }
+
+    .contacts__image {
+        margin-bottom: 50px;
+    }
+    
 }

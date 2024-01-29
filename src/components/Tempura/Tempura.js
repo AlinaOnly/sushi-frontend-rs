@@ -10,7 +10,7 @@ function Tempura({dishes, handleBurgerMenu, onDishClick}) {
             <CategoryMenu handleBurgerMenu={handleBurgerMenu}/>
             <section className="dishes__cards">
                 <div className="dishes__card-lists">
-                    <p className="dishes__categories">Горячие роллы (темпура)🔥</p>
+                    <p className="dishes__categories">Горячие роллы/темпура🔥</p>
                     <ul className="dishes__card-list">
                         {tempuraDishes.map(dish => (
                             <DishesCard

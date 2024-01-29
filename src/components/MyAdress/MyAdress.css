@@ -1,7 +1,6 @@
-.adress{
+.adress {
     max-width: 1140px;
-    margin: 0 70px 0;
-    min-height: calc(100vh - 100px);
+    margin: 0 70px 50px;
     text-align: center;
 }
 
@@ -15,7 +14,7 @@
     font-weight: 500;
     line-height: 29px;
     margin-top: 50px;
-    margin-bottom: 106px;
+    margin-bottom: 50px;
 }
 
 .adress__text {
@@ -50,7 +49,6 @@
     background: #F8F8F8;
     color: #C2C2C2;
 }
-
 
 .adress__label {
     color: #A0A0A0;
@@ -89,10 +87,38 @@
     color: #C2C2C2;
 }
 
+.adress__delete-button {
+    margin-top: 10px;
+    margin-bottom: 50px;
+    background-color: #FFFFFF;
+    color: #FF3055;
+    outline: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 16px;
+}
+
+@media screen and (max-width: 768px) {
+    .adress {
+        margin: 0 30px 50px;
+    }
+} 
 
 @media screen and (max-width: 550px) {
-    .adress__form {
-        max-width: 260px;
+    .adress {
+        margin: 0 10px 50px;
+    }
+
+    .adress__displayed {
+        max-width: 300px;
+        text-align: start;
+    }
+
+    .adress__container {
+        max-width: 300px;
     }
 
     .adress__input {
@@ -100,8 +126,7 @@
     }
     
     .adress__submit-button {
-        margin-top: 274px;
-        width: 260px;
+        margin-top: 50px;
         font-size: 12px;
         line-height: 15px;
     }
