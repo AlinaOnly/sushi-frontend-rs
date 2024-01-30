@@ -21,11 +21,9 @@ function Cart({ dish }) {
                     type="button"
                     className="cart__btn-back app__button-opacity">Назад в меню
                 </button>
-            </div> 
+            </div>
 
-
-
-            <div className="cart">
+            {/* <div className="cart">
                 <h2 className="cart__title">В Вашей корзине</h2>
                 <div className="cart__products">
                     <img className="cart__product-image" src={imbir} alt="Фото заказанного товара" />
@@ -71,7 +69,7 @@ function Cart({ dish }) {
                     </button>
                 </div>
                 <div className="cart__results">
-                    <p className="cart__text-price">Итого заказ: </p>
+                    <p className="cart__text-price">Итого: </p>
                     <p className="cart__product-price">3000 RSD</p>
                 </div>
                 <div className="cart__delivery">
@@ -91,7 +89,7 @@ function Cart({ dish }) {
                         </button>
                     </Link>
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }

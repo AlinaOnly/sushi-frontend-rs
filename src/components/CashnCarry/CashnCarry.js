@@ -94,7 +94,7 @@ function CashnCarry() {
         <>
             <div className="delivery">
                 <form className="delivery__form" onSubmit={handleSubmit}>
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <label className="delivery__label" htmlFor="first_name">Ваше имя
                                 <input
                                     value={values.first_name || ''}
@@ -114,7 +114,7 @@ function CashnCarry() {
                                 </span>
                             </label>
                         </div>    
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <label className="delivery__label" htmlFor="phone">Ваш телефон
                                 <input
                                     value={values.phone || ''}
@@ -134,20 +134,45 @@ function CashnCarry() {
                                 </span>
                             </label>
                         </div>    
-                        <div className="delivery__container">
-                            <label className="delivery__label" htmlFor="adress">Пункт самовывоза
+                        <div className="delivery__description">
+                            <label className="delivery__label" htmlFor="adress">Адрес доставки
                                 <input
+                                    value={values.adress || ''}
+                                    onChange={handleChange}
                                     id="adress"
                                     className="delivery__input"
                                     name="adress"
                                     type="text"
-                                    placeholder="Пункт самовывоза"
-                                    minLength="1"
+                                    placeholder="Ваш адрес"
+                                    minLength="2"
+                                    maxLength="40"
+                                    required
+                                />
+                                <span 
+                                    className={`${errors.adress ? "login__error" : "login__error_hidden"}`}>
+                                        Поле обязательно для ввода
+                                </span>
+                            </label>
+                        </div>
+                        <div className="delivery__description">
+                            <label className="delivery__label" htmlFor="region">Регион
+                                <input
+                                    id="region"
+                                    className="delivery__input"
+                                    name="region"
+                                    type="text"
+                                    placeholder="Ваш регион"
+                                    minLength="10"
                                     maxLength="40"
                                     //required
-                                /></label>
+                                />
+                                <span 
+                                    className={`${errors.region ? "login__error" : "login__error_hidden"}`}>
+                                        Поле обязательно для ввода
+                                </span>
+                            </label>
                         </div>
-                        <div className="delivery__container">Количество приборов
+                        <div className="delivery__description">Количество приборов
                             <button
                                 onClick={handleDelete}
                                 aria-label="Минус"
@@ -162,7 +187,7 @@ function CashnCarry() {
                                 className="delivery__btn-product_add app__button-opacity">
                             </button>
                         </div>
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <label className="delivery__label">Комментарий к заказу
                                 <textarea
                                     className="delivery__textarea"
@@ -170,33 +195,37 @@ function CashnCarry() {
                                 />
                             </label>
                         </div>
-                        <div className="delivery__container">Укажите дату и время
-                            <select className="delivery__select" id="month" name="selectedMonth">
-                                {dateOptions.map((date, index) => (
-                                    <option key={index} value={date} className="delivery__select-month">
-                                        {date}
-                                    </option>
-                                ))}
-                            </select>
-                            <select className="delivery__select" id="time" name="selectedTime">
-                                {timeOptions.map((time, index) => (
-                                    <option key={index} value={time} className="delivery__select-time">
-                                        {time}
-                                    </option>
-                                ))}
-                            </select>
+                        <div className="delivery__container">
+                            Укажите дату и время
+                                <select className="delivery__select" id="month" name="selectedMonth">
+                                    {dateOptions.map((date, index) => (
+                                        <option key={index} value={date} className="delivery__select-month">
+                                            {date}
+                                        </option>
+                                    ))}
+                                </select>
+                                <select className="delivery__select" id="time" name="selectedTime">
+                                    {timeOptions.map((time, index) => (
+                                        <option key={index} value={time} className="delivery__select-time">
+                                            {time}
+                                        </option>
+                                    ))}
+                                </select>
+                            
                         </div>
+                        
                         <Link to="/payment">
                             <button 
-                                aria-label="Выберете способ оплаты"
-                                type="submit"
-                                disabled={!isValid}
+                                //onClick={handleSubmit}
                                 className=
-                                    {`delivery__btn ${!isValid ? "delivery__btn-save_disable" : "app__button-opacity"}`}>
+                                {`delivery__btn ${!isValid ? "delivery__btn-save_disable" : "app__button-opacity"}`}
+                                disabled={!isValid}
+                                type="submit"
+                                aria-label="Выберете способ оплаты">
                                     Выберете способ оплаты
                             </button>
                         </Link>
-                </form>
+                    </form>
             </div>
         </>
     );

@@ -114,7 +114,7 @@ function Delivery() {
         <>
             <div className="delivery">
                 <form className="delivery__form" onSubmit={handleSubmit}>
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <label className="delivery__label" htmlFor="first_name">Ваше имя
                                 <input
                                     value={values.first_name || ''}
@@ -134,7 +134,7 @@ function Delivery() {
                                 </span>
                             </label>
                         </div>    
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <label className="delivery__label" htmlFor="phone">Ваш телефон
                                 <input
                                     value={values.phone || ''}
@@ -154,7 +154,7 @@ function Delivery() {
                                 </span>
                             </label>
                         </div>    
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <label className="delivery__label" htmlFor="adress">Адрес доставки
                                 <input
                                     value={values.adress || ''}
@@ -174,7 +174,7 @@ function Delivery() {
                                 </span>
                             </label>
                         </div>
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <label className="delivery__label" htmlFor="region">Регион
                                 <input
                                     id="region"
@@ -185,9 +185,14 @@ function Delivery() {
                                     minLength="10"
                                     maxLength="40"
                                     //required
-                                /></label>
+                                />
+                                <span 
+                                    className={`${errors.region ? "login__error" : "login__error_hidden"}`}>
+                                        Поле обязательно для ввода
+                                </span>
+                            </label>
                         </div>
-                        <div className="delivery__container">Количество приборов
+                        <div className="delivery__description">Количество приборов
                             <button
                                 onClick={handleDelete}
                                 aria-label="Минус"
@@ -202,7 +207,7 @@ function Delivery() {
                                 className="delivery__btn-product_add app__button-opacity">
                             </button>
                         </div>
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <input
                                 id="rd"
                                 className="delivery__input-radio"
@@ -217,7 +222,7 @@ function Delivery() {
                             </label>
                         </div>
                         { isChecked &&
-                            <div className="delivery__container">
+                            <div className="delivery__description">
                                 <label className="delivery__label" htmlFor="home">Дом
                                     <input
                                         id="home"
@@ -228,12 +233,17 @@ function Delivery() {
                                         minLength="1"
                                         maxLength="6"
                                         //required
-                                    /></label>
+                                    />
+                                <span 
+                                    className={`${errors.home ? "login__error" : "login__error_hidden"}`}>
+                                        Поле обязательно для ввода
+                                </span>
+                                </label>
                             </div>
                         }
                         { !isChecked && 
                             <>
-                                <div className="delivery__container">
+                                <div className="delivery__description">
                                     <label className="delivery__label" htmlFor="flat">Квартира
                                         <input
                                             id="flat"
@@ -244,9 +254,14 @@ function Delivery() {
                                             minLength="1"
                                             maxLength="1000"
                                             //required
-                                        /></label>
+                                        />
+                                    <span 
+                                        className={`${errors.flat ? "login__error" : "login__error_hidden"}`}>
+                                            Поле обязательно для ввода
+                                    </span>
+                                    </label>
                                 </div> 
-                                <div className="delivery__container">
+                                <div className="delivery__description">
                                     <label className="delivery__label" htmlFor="floor">Этаж
                                         <input
                                             id="floor"
@@ -257,9 +272,14 @@ function Delivery() {
                                             minLength="1"
                                             maxLength="100"
                                             //required
-                                            /></label>
+                                            />
+                                        <span 
+                                            className={`${errors.floor ? "login__error" : "login__error_hidden"}`}>
+                                                Поле обязательно для ввода
+                                        </span>
+                                    </label>
                                 </div> 
-                                <div className="delivery__container">
+                                <div className="delivery__description">
                                     <label className="delivery__label" htmlFor="homephone">Домофон
                                         <input
                                             id="homephone"
@@ -270,11 +290,16 @@ function Delivery() {
                                             minLength="1"
                                             maxLength="1000"
                                             //required
-                                        /></label>
+                                        />
+                                        <span 
+                                            className={`${errors.homephone ? "login__error" : "login__error_hidden"}`}>
+                                                Поле обязательно для ввода
+                                        </span>
+                                    </label>
                                 </div>
                             </>
                         }
-                        <div className="delivery__container">
+                        <div className="delivery__description">
                             <label className="delivery__label">Комментарий к заказу
                                 <textarea
                                     className="delivery__textarea"
@@ -282,22 +307,25 @@ function Delivery() {
                                 />
                             </label>
                         </div>
-                        <div className="delivery__container">Укажите дату и время
-                            <select className="delivery__select" id="month" name="selectedMonth">
-                                {dateOptions.map((date, index) => (
-                                    <option key={index} value={date} className="delivery__select-month">
-                                        {date}
-                                    </option>
-                                ))}
-                            </select>
-                            <select className="delivery__select" id="time" name="selectedTime">
-                                {timeOptions.map((time, index) => (
-                                    <option key={index} value={time} className="delivery__select-time">
-                                        {time}
-                                    </option>
-                                ))}
-                            </select>
+                        <div className="delivery__container">
+                            Укажите дату и время
+                                <select className="delivery__select" id="month" name="selectedMonth">
+                                    {dateOptions.map((date, index) => (
+                                        <option key={index} value={date} className="delivery__select-month">
+                                            {date}
+                                        </option>
+                                    ))}
+                                </select>
+                                <select className="delivery__select" id="time" name="selectedTime">
+                                    {timeOptions.map((time, index) => (
+                                        <option key={index} value={time} className="delivery__select-time">
+                                            {time}
+                                        </option>
+                                    ))}
+                                </select>
+                            
                         </div>
+                        
                         <Link to="/payment">
                             <button 
                                 //onClick={handleSubmit}

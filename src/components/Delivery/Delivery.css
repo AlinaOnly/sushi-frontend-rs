@@ -1,16 +1,22 @@
 .delivery {
-    margin: 50px 70px 0;
+    margin: 50px 70px;
     max-width: 1140px;
 }
 
-.delivery__container {
-    margin-bottom: 30px;
+.delivery__description {
+    margin-top: 20px;
     display: flex;
     align-items: center;
 }
 
+.delivery__container {
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+}
+
 .delivery__input {
-    margin: 0 10px 0 ;
+    margin: 10px 0 0 0;
     padding: 10px;
     width: 250px;
     height: 22px;
@@ -30,9 +36,9 @@
 }
 
 .delivery__textarea {
-    margin: 20px 0 0 0;
+    margin: 20px 0;
     padding: 10px;
-    width: 1000px;
+    width: 450px;
     height: 150px;
     border-radius: 10px;
     background-color: #F9F9F9;
@@ -66,7 +72,7 @@
     height: 45px;
     cursor: pointer;
     padding: 0;
-    margin: 50px 0;
+    margin: 50px 0 0 0;
 }
 
 .delivery__btn-product_add {
@@ -109,11 +115,17 @@
     width: 395px;
     height: 45px;
     padding: 0;
-    margin: 50px 0;
+    margin: 50px 0 0 0;
 }
 
+.delivery__label { 
+    display: flex;
+    flex-direction: column;
+}
 
-
+.delivery__input-radio {
+    margin: 20px 0;
+}
 
 input[type="radio"]:checked, 
 input[type="radio"]:not(:checked) 
@@ -175,5 +187,64 @@ input[type="radio"]:not(:checked) + label:after {
 
 input[type="radio"]:checked + label:after {
     opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+    .delivery {
+        margin: 50px 30px;
+    }
+
+    .delivery__container {
+        align-items: start;
+    }
+} 
+
+@media screen and (max-width: 550px) {
+    .delivery {
+        margin: 50px 10px;
+    }
+
+    .delivery__description {
+        margin: 10px 0;
+    }
+
+    .delivery__container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .delivery__select {
+        margin: 10px 0;
+    }
+
+    .delivery__input {
+        margin: 10px 0 0 0;
+    }
+
+    .delivery__btn-product_delete {
+        width: 45px;
+        height: 45px;
+        border-radius: 50px;
+        margin-left: 5px;
+    }
+
+    .delivery__product-count {
+        margin: 0 5px;
+    }
+
+    .delivery__btn-product_add {
+        width: 45px;
+        height: 45px;
+        border-radius: 50px;
+    }
+
+    .delivery__textarea {
+        margin-top: 10px;
+        max-width: 250px;
+    }
+
+    .delivery__btn {
+        width: 300px;
+    }
 }
 
