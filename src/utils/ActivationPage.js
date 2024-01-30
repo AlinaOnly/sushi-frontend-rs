@@ -1,13 +1,16 @@
 //хук для активации юзера с почты
 
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import Preloader from '../components/Preloader/Preloader';
+import '../components/App/App.css';
 
-const ActivationPage = () => {
+const ActivationPage = ({ isPreloader }) => {
     const { uid, token } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/v1/auth/users/activation/`, {
+        fetch('http://127.0.0.1:8000/api/v1/auth/users/activation/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -16,7 +19,7 @@ const ActivationPage = () => {
         })
         .then((response) => {
             if (response.ok) {
-                return response.json();
+                return response.text().then(text => text ? JSON.parse(text) : {});
             } else {
                 throw new Error('Ошибка активации');
             }
@@ -24,17 +27,18 @@ const ActivationPage = () => {
         .then((data) => {
             // Обработка успешной активации, например, переадресация на страницу входа
             console.log('Аккаунт активирован!', data);
+            navigate('/login');
         })
         .catch((error) => {
             // Обработка ошибок активации
-            console.error('Ошибка активации: ', error);
+            console.error(error);
         });
-    }, [uid, token]); // Зависимости useEffect, чтобы он выполнялся один раз при монтировании компонента
+    }, [uid, token, navigate]); // Зависимости useEffect, чтобы он выполнялся один раз при монтировании компонента
 
     return (
         <div>
-            <h1>Активация...</h1>
-            {/* Возможно, показать спиннер или индикатор загрузки */}
+            <h1 className='activation'>Активация...</h1>
+            {isPreloader && <Preloader/>}
         </div>
     );
 };

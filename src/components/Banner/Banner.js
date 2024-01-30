@@ -5,7 +5,13 @@ function Banner() {
     return (
         <section className="banner">
             <p className="banner__title">Уважаемые пользователи, на сайте ведутся технические работы, прием заказов через сайт не доступен.
-                Заказы принимаются через телефон и телеграм @YUME_SUSHI_bot.</p>
+                Заказы принимаются через телефон и
+                <a className="banner__href"
+                    target="_blank"
+                    href="https://t.me/YUME_SUSHI_bot"
+                    rel="noreferrer noopener">&nbsp;телеграм 
+                </a>
+            </p>
         </section>
     );
 }

@@ -1,4 +1,3 @@
-
 .app__button-opacity:hover {
     opacity: 0.8;
     transition: 1s ease;
@@ -17,8 +16,13 @@
     transition: 1s ease;
 }
 
-.app__broken-img:after {
-    content: "Мы сожалеем, но эта картинка не загрузилась";
-    background-image: url(../../images/404.jpeg);
-    
+.activation {
+    color: #FF3055;
+    font-size: 30px;
+    font-weight: 500;
+    display: flex;
+    max-width: 1280px;
+    margin: 0 70px 20px;
+    text-align: center;
+    justify-content: center;
 }

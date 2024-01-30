@@ -314,7 +314,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('logInJwt');
     localStorage.removeItem('logInJwtRefresh');
-    localStorage.removeItem('adresses');
+    localStorage.removeItem('addresses');
     localStorage.removeItem('orders');
     localStorage.removeItem('coupons');
     setLogIn(false);
@@ -389,7 +389,7 @@ function App() {
                     getOrdersApi(orders);
                     getCoupons(coupons);
                     localStorage.getItem('addresses');
-                    //localStorage.getItem('adresses', JSON.stringify(adresses));
+                    //localStorage.getItem('addresses', JSON.stringify(addresses));
                    // localStorage.getItem('orders', JSON.stringify(orders));
                     //localStorage.getItem('coupons', JSON.stringify(coupons));
                 }).catch(err => {
@@ -481,8 +481,9 @@ function App() {
           />
 
           <Route 
-            path='/registration/activation/:uid/:token'
-            element={ActivationPage}
+            path='/activation/:uid/:token'
+            element={
+              <ActivationPage />}
           />
 
           <Route 

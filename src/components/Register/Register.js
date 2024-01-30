@@ -105,7 +105,7 @@ function Register({ onRegister, errorMessage }) {
                         type="password"
                         minLength="8"
                         maxLength="40"
-                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$"
+                        //pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$"
                         required
                     />
                     <span 

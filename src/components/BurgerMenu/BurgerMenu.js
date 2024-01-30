@@ -19,7 +19,7 @@ function BurgerMenu({ isBurger, handleBurgerMenu }) {
                             onClick={handleBurgerMenu}
                             to="/backed"
                             className={({ isActive }) => (isActive ? "burger-menu__link-active" : "burger-menu__link app__button-opacity")}>
-                            Запеченые ролы
+                            Запеченые роллы
                         </NavLink>
                     </li>
                     <li className="burger-menu__list">

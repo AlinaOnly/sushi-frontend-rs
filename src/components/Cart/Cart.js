@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Carousel from '../Carousel/Carousel';
 import empty from '../../images/empty-cart.svg';
-import imbir from '../../images/imbir.jpg';
+//import imbir from '../../images/imbir.jpg';
 import './Cart.css';
 
 
@@ -26,10 +26,10 @@ function Cart({ dish }) {
             {/* <div className="cart">
                 <h2 className="cart__title">В Вашей корзине</h2>
                 <div className="cart__products">
-                    <img className="cart__product-image" src={imbir} alt="Фото заказанного товара" />
-                    <p className="cart__product-name">Умаки</p>
+                    <img className="cart__product-image" src={dish.image} alt="Фото заказанного товара" />
+                    <p className="cart__product-name">{dish.short_name_rus}</p>
                     <div className="cart__container-count">
-                        <p className="cart__product-price">1000 RSD</p>
+                        <p className="cart__product-price">{dish.final_price} RSD</p>
                         <button
                             aria-label="Плюс"
                             type="button"
@@ -70,7 +70,7 @@ function Cart({ dish }) {
                 </div>
                 <div className="cart__results">
                     <p className="cart__text-price">Итого: </p>
-                    <p className="cart__product-price">3000 RSD</p>
+                    <p className="cart__product-price">{dish.final_price} RSD</p>
                 </div>
                 <div className="cart__delivery">
                     <p className="cart__order-text">Оформить заказ</p>

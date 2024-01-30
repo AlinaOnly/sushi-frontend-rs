@@ -30,7 +30,7 @@ function DishesCard({ dish, onDishClick }) {
                     className="dishes__cart-button"
                     type="submit"
                     aria-label="Корзина">
-                    В корзину
+                        В корзину
                 </button>
                 <p className="dishes__price">{dish.final_price} RSD</p>
             </div>
