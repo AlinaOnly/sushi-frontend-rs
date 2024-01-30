@@ -47,6 +47,8 @@ import Preloader from '../Preloader/Preloader';
 import { CONFLICT_REG, ERR_REGISTER, WRONG_PASS, WRONG_TOKEN } from '../../utils/errors';
 import './App.css';
 
+import Banner from '../Banner/Banner'; // удалить позже
+
 /*import { setTranslations, setDefaultLanguage, useTranslation } from 'react-multi-lang'
 import pt from 'pt.json';
 import en from 'en.json';
@@ -54,8 +56,6 @@ import en from 'en.json';
 // Do this two lines only when setting up the application
 setTranslations({pt, en});
 setDefaultLanguage('en');*/
-
-
 
 function App() {
   //const t = useTranslation();
@@ -465,6 +465,8 @@ function App() {
       <HeaderMenu handleBurgerHeader={handleBurgerHeader} />
 
         <Header/>
+
+        <Banner />
 
         <Preloader isPreloader={isPreloader} />
 
