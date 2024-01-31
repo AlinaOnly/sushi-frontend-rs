@@ -9,7 +9,7 @@ function More({ handleMoreButton }) {
                         className="dishes__button app__button-opacity"
                         type="button"
                         aria-label="Ещё">
-                        Ещё
+                            Ещё
                     </button> 
             </div>
     );

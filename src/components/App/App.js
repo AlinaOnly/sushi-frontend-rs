@@ -49,16 +49,7 @@ import './App.css';
 
 import Banner from '../Banner/Banner'; // удалить позже
 
-/*import { setTranslations, setDefaultLanguage, useTranslation } from 'react-multi-lang'
-import pt from 'pt.json';
-import en from 'en.json';
-
-// Do this two lines only when setting up the application
-setTranslations({pt, en});
-setDefaultLanguage('en');*/
-
 function App() {
-  //const t = useTranslation();
 
   // location
   const navigate = useNavigate();
@@ -389,8 +380,10 @@ function App() {
                     getOrdersApi(orders);
                     getCoupons(coupons);
                     localStorage.getItem('addresses');
+                    //setAddresses(updatedAddresses);
+                    //localStorage.getItem('addresses', JSON.stringify(updatedAddresses));
                     //localStorage.getItem('addresses', JSON.stringify(addresses));
-                   // localStorage.getItem('orders', JSON.stringify(orders));
+                    //localStorage.getItem('orders', JSON.stringify(orders));
                     //localStorage.getItem('coupons', JSON.stringify(coupons));
                 }).catch(err => {
                     console.log(err);

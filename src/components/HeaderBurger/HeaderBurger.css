@@ -58,7 +58,7 @@
     cursor: pointer;
     padding: 0;
     position: absolute;
-    right: 22px;
+    right: 35px;
 }
 
 .header-burger-menu__lists {
@@ -87,6 +87,14 @@
 }
 
 .header-burger__select {
+    -webkit-border: none;
+    -webkit-background: #ffffff;
+    -webkit-cursor: pointer;
+    -webkit-padding: 0;
+    -webkit-margin-bottom: 30px;
+    -webkit-height: fit-content;
+    -webkit-color: #000000;
+    color: #000000;
     border: none;
     background: #ffffff;
     cursor: pointer;
@@ -137,7 +145,8 @@
     }
 
     .header-burger-menu__close { 
-        right: 13px;
+        right: 30px;
+        top: 30px;
     }
 
     .header-burger-menu__lists {

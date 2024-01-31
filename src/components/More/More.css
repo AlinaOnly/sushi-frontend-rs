@@ -7,6 +7,8 @@
 .dishes__button:hover {
     border-radius: 9px;
     box-shadow: 1pt 1pt 1pt 1pt #FF3055;
+    -webkit-border-radius: 9px;
+    -webkit-box-shadow: 1pt 1pt 1pt 1pt #FF3055;
 }
 
 @media screen and (max-width: 768px) {
