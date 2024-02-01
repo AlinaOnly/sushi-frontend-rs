@@ -3,7 +3,7 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Sushi({dishes, handleBurgerMenu, onDishClick}) {
-    const sushiDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Суши и гунканы🍣"));
+    const sushiDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "sushi"));
 
     return (
         <>

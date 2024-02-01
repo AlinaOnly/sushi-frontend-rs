@@ -3,7 +3,7 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Rolls({ dishes, handleBurgerMenu, onDishClick }) {
-    const rollsDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Роллы🥢"));
+    const rollsDishes = dishes.filter(dish => dish.category.some(cat => cat.slug=== "rolls"));
 
     return (
         <>

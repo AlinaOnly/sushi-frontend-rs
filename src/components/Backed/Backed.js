@@ -3,7 +3,7 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Backed({ dishes, handleBurgerMenu, onDishClick }) {
-    const backedDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Запеченые роллы🍘"));
+    const backedDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "backed"));
 
     return (
         <>

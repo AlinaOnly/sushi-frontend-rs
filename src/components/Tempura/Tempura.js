@@ -3,7 +3,7 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Tempura({dishes, handleBurgerMenu, onDishClick}) {
-    const tempuraDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Горячие роллы (темпура)🔥"));
+    const tempuraDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "tempura"));
 
     return (
         <>

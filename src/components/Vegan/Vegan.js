@@ -3,7 +3,7 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Vegan({ dishes, handleBurgerMenu, onDishClick }) {
-    const veganDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Веган"));
+    const veganDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "vegan"));
 
     return (
         <>

@@ -3,7 +3,7 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Maki({dishes, handleBurgerMenu, onDishClick}) {
-    const makiDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Маки 🐉🥒🦐🐟"));
+    const makiDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "maki"));
 
     return (
         <>

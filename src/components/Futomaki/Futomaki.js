@@ -3,7 +3,7 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Futomaki({dishes, handleBurgerMenu, onDishClick}) {
-    const futomakiDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Футомаки"));
+    const futomakiDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "futomaki"));
 
     return (
         <>

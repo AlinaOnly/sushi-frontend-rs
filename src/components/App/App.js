@@ -404,6 +404,7 @@ function App() {
 
     // popup dish
     function handleDishClick(dish) {
+      //console.log('In handleDishClick, short_name:', dish.translations.ru.short_name);
       setSelectedDish(dish);
     }
     //end
@@ -706,7 +707,7 @@ function App() {
         </Routes>
 
         <PopupDish
-            dish={selectedDish} 
+            dish={selectedDish}
             onClose={closePopup}
         />
         

@@ -3,7 +3,7 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Woks({dishes, handleBurgerMenu, onDishClick}) {
-    const woksDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Воки 🥡"));
+    const woksDishes = dishes.filter(dish => dish.category.some(cat => cat.slug));
 
     return (
         <>

@@ -2,8 +2,8 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Rolls({dishes, handleBurgerMenu, onDishClick}) {
-    const rollsDishes = dishes.filter(dish => dish.category.some(cat => cat.name_rus === "Супы🍲"));
+function Soups({dishes, handleBurgerMenu, onDishClick}) {
+    const rollsDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "soups"));
 
     return (
         <>
@@ -27,4 +27,4 @@ function Rolls({dishes, handleBurgerMenu, onDishClick}) {
     );
 }
 
-export default Rolls;
+export default Soups;
