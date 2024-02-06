@@ -26,7 +26,7 @@ class Api {
         }).then(this._mainApiError);
     }
 
-    changeUserInformation( {first_name, last_name, phone, email} ) {
+    changeUserInformation( {first_name, last_name, email, phone, date_of_birth, messenger} ) {
         return fetch(`${this._url}/auth/users/me/`, {
             method: 'PATCH',
             headers: {
@@ -37,8 +37,11 @@ class Api {
             body: JSON.stringify({
                 first_name: first_name,
                 last_name: last_name,
+                email: email,
                 phone: phone,
-                email: email }),
+                date_of_birth: date_of_birth,
+                messenger: messenger
+            }),
         }).then(this._mainApiError);
     }
 

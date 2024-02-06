@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import HeaderBurger from '../HeaderBurger/HeaderBurger';
-import logo from '../../images/logo.jpeg';
+import logo from '../../images/logo.png';
 import cart from '../../images/cart.svg';
 import './HeaderMenu.css';
 

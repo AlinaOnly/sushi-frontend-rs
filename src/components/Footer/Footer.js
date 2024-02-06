@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import logo from '../../images/logo-footer.jpeg';
+import logo from '../../images/logo.png';
 import instagram from '../../images/instagram.svg';
 import telegram from '../../images/telegram.svg';
 import viber from '../../images/viber.svg';
@@ -18,7 +18,7 @@ function Footer() {
                 to="/">Меню
             </NavLink>
             <NavLink className={({ isActive }) => (isActive ? "footer__link-active" : "footer__link")}
-                to="/contacts">Kонтакты
+                to="/contacts">О нас
             </NavLink>  
             <NavLink className={({ isActive }) => (isActive ? "footer__link-active" : "footer__link")}
                 to="/promo">Промо

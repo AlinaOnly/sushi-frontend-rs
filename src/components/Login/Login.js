@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import  useFormValidation from '../../utils/FormValidation';
 import { EMAIL, PASS } from '../../utils/errors';
-import logo from '../../images/logo.jpeg';
+import logo from '../../images/logo.png';
 import './Login.css';
 
 function Login({ onLogin, errorMessage }) {

@@ -1,13 +1,14 @@
-import {React, useContext, useEffect } from 'react';
+import {React, useContext, useEffect, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import logo from '../../images/logo.jpeg';
+import logo from '../../images/logo.png';
 import account from '../../images/account.svg';
 import cart from '../../images/cart.svg';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
 import './Header.css';
 
-function Headers() {
+function Headers({ language, onLanguageChange }) {
+
     const currentUser = useContext(CurrentUserContext);
     const { values, setValues } = useFormValidation();
 
@@ -17,6 +18,11 @@ function Headers() {
         });
     }, [currentUser, setValues]);
 
+    const handleLanguageChange = (event) => {
+        const selectedLanguage = event.target.value;
+        onLanguageChange(selectedLanguage);
+    };
+
     return (
         <header className="header">
             <div className="header__container-links">
@@ -24,7 +30,7 @@ function Headers() {
                     to="/">Меню
                 </NavLink>
                 <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
-                    to="/contacts">Kонтакты
+                    to="/contacts">О нас
                 </NavLink>  
                 <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
                     to="/promo">Промо
@@ -48,10 +54,15 @@ function Headers() {
                 <select className="header__select" id="city" name="selectedCity">
                     <option className="header__select-city" value="beograd">Beograd</option>
                 </select>
-                <select className="header__select" id="language" name="selectedLanguage">
-                    <option className="header__select-language" value="sr">Sr</option>
-                    <option className="header__select-language" value="ru">Ru</option>
-                    <option className="header__select-language" value="en">En</option>
+                <select 
+                    className="header__select" 
+                    id="language" 
+                    name="selectedLanguage" 
+                    value={language}
+                    onChange={handleLanguageChange}>
+                        <option className="header__select-language" value="ru">Ru</option>
+                        <option className="header__select-language" value="sr-latn">Sr</option>
+                        <option className="header__select-language" value="en">En</option>
                 </select>
             <NavLink 
                 className={({ isActive }) => (isActive ? "header__link-acc header__link-active" : "header__link-acc header__link")}

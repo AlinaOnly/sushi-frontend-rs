@@ -16,6 +16,8 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
             last_name: currentUser.last_name,
             email: currentUser.email,
             phone: currentUser.phone,
+            date_of_birth: currentUser.date_of_birth,
+            messenger: currentUser.messenger,
         });
     }, [currentUser, setValues]);
 
@@ -24,8 +26,11 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
         onUpdateProfile(
             values.first_name,
             values.last_name,
+            values.email,
             values.phone,
-            values.email);
+            values.date_of_birth,
+            values.messenger
+        );
         setDisableInput(true);
     }
 
@@ -59,7 +64,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 required
                             /></label>
                             <span 
-                                className={`${errors.name ? "profile__error" : "profile__error_hidden"}`}>
+                                className={`${errors.first_name ? "profile__error" : "profile__error_hidden"}`}>
                                         {NAME}
                             </span>
                     </div>    
@@ -123,7 +128,43 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 className={`${errors.phone ? "profile__error" : "profile__error_hidden"}`}>
                                         {PHONE}
                             </span>
-                    </div>      
+                    </div>
+                    <div className="profile__container">
+                        <label className="profile__label" htmlFor="date_of_birth">Дата рождения
+                            <input
+                                disabled={isDisableInput}
+                                value={values.date_of_birth || ''}
+                                onChange={handleChange}
+                                id="date_of_birth"
+                                className="profile__input"
+                                name="date_of_birth"
+                                type="date"
+                            /></label> 
+                            <span 
+                                className={`${errors.date_of_birth ? "profile__error" : "profile__error_hidden"}`}>
+                                        
+                            </span>
+                    </div> 
+                    <div className="profile__container">
+                        <label className="profile__label" htmlFor="messenger">Мессенджер
+                            <input
+                                disabled={isDisableInput}
+                                value={values.messenger || ''}
+                                onChange={handleChange}
+                                id="messenger"
+                                className="profile__input"
+                                name="messenger"
+                                //type="phone"
+                                placeholder="@"
+                                minLength="3"
+                                maxLength="50"
+                                //required
+                            /></label>
+                            <span 
+                                className={`${errors.messenger ? "profile__error" : "profile__error_hidden"}`}>
+
+                            </span>
+                    </div>               
                 </form>
                 { !isDisableInput
                     ? (<button 
@@ -132,7 +173,8 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                             className={
                                 `app__text-opacity 
                                 ${isValid && (currentUser.first_name !== values.first_name || currentUser.last_name !== values.last_name
-                                    || currentUser.email !== values.email || currentUser.phone !== values.phone
+                                    || currentUser.email !== values.email || currentUser.phone !== values.phone 
+                                    || currentUser.date_of_birth !== values.date_of_birth || currentUser.messenger !== values.messenger
                                 )
                                 ? "profile__button-save" : "profile__button-save_disable"}`}
                             type="submit"

@@ -43,7 +43,7 @@
     height: 100vh;
     width: 100%;
     background: #ffffff;
-    padding-top: 23px;
+    padding-top: 40px;
     box-sizing: border-box;
     margin-right: auto;
 }
@@ -68,7 +68,7 @@
     flex-direction: column;
     align-items:center;
     margin-top: 70px;
-    margin-bottom: 230px;
+    margin-bottom: 200px;
 }
 
 .header-burger__link {
@@ -140,17 +140,13 @@
 }
 
 @media screen and (max-width: 550px) {
-    .header-burger-menu__container {
-        padding-top: 13px; 
-    }
-
     .header-burger-menu__close { 
         right: 30px;
         top: 30px;
     }
 
     .header-burger-menu__lists {
-        margin-bottom: 250px;
+        margin-bottom: 200px;
     }
 
     .header__button-burger {

@@ -54,6 +54,8 @@ function App() {
   // location
   const navigate = useNavigate();
 
+  const [language, setLanguage] = useState('ru'); //начальный язык
+
   // users state
   const [currentUser, setCurrentUser] = useState({});
   const [logIn, setLogIn] = useState(false);
@@ -133,9 +135,11 @@ function App() {
   //end
 
   // functionality -- update user info
-  function handleUpdateProfile(first_name, last_name, phone, email) {
+  function handleUpdateProfile(first_name, last_name, email, phone, date_of_birth,
+    messenger) {
       setPreloader(true);
-        MainApi.changeUserInformation({ first_name, last_name, phone, email })
+        MainApi.changeUserInformation({ first_name, last_name, email, phone, date_of_birth,
+          messenger })
         .then((res) => {
             setCurrentUser(res);
             setErrorMessage('Ваши данные успешно изменены');
@@ -404,22 +408,21 @@ function App() {
 
     // popup dish
     function handleDishClick(dish) {
-      //console.log('In handleDishClick, short_name:', dish.translations.ru.short_name);
       setSelectedDish(dish);
     }
     //end
 
     function closePopup() {
       setSelectedDish({});
-      setIsBurger(isBurger);
-      setBurgerHeader(burgerHeader);
+      setIsBurger(false);
+      setBurgerHeader(false);
     }
     // end popup
 
     // Функция закрытия окна на оверлей
     useEffect(() => {
       function handleOverlayClick(evt) {
-        if (evt.target.classList.contains("header-burger-menu") || evt.target.classList.contains("burger-menu") 
+        if (evt.target.classList.contains("header-burger-menu") || evt.target.classList.contains("burger-menu")
           || evt.target.classList.contains("popup")) {
             closePopup();
         }
@@ -454,11 +457,21 @@ function App() {
 
       <BurgerMenu isBurger={isBurger} handleBurgerMenu={handleBurgerMenu} />
 
-      <HeaderBurger burgerHeader={burgerHeader} handleBurgerHeader={handleBurgerHeader} />
+      <HeaderBurger 
+        burgerHeader={burgerHeader} 
+        handleBurgerHeader={handleBurgerHeader} 
+        language={language} 
+        onLanguageChange={setLanguage}  
+      />
 
-      <HeaderMenu handleBurgerHeader={handleBurgerHeader} />
+      <HeaderMenu 
+        handleBurgerHeader={handleBurgerHeader} 
+      />
 
-        <Header/>
+        <Header 
+          language={language} 
+          onLanguageChange={setLanguage}
+        />
 
         <Banner />
 
@@ -553,6 +566,7 @@ function App() {
                 dishes={dishes}
                 isPreloader={isPreloader}
                 handleBurgerHeader={handleBurgerHeader}
+                language={language}
               />}
           />
 
@@ -561,6 +575,7 @@ function App() {
             element={
               <Rolls
                 dishes={dishes}
+                language={language}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
               />} 
@@ -573,6 +588,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -583,6 +599,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -593,6 +610,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -603,6 +621,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -613,6 +632,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -623,6 +643,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -633,6 +654,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -643,6 +665,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -653,6 +676,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -663,6 +687,7 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                language={language} 
               />} 
           />
 
@@ -709,6 +734,7 @@ function App() {
         <PopupDish
             dish={selectedDish}
             onClose={closePopup}
+            language={language}
         />
         
         <Footer/>

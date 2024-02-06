@@ -3,21 +3,25 @@ import vegan from '../../images/vegan.svg';
 import spicy from '../../images/spicy.svg';
 import './DishesCard.css';
 
+function DishesCard({ dish, onDishClick, language }) {
 
-function DishesCard({ dish, onDishClick }) {
-    //console.log('In DishesCard, short_name:', dish.translations);
-
-    function handleClick() {
+    function handleDishClick() {
         onDishClick(dish);
     }
 
+    if(!dish.translations[language]) {
+        console.error(`Перевод для блюда "${dish.id}" отсутствует для языка "${language}".`);
+        return null;
+    }
+
     // Используем регулярное выражение для удаления скобок и кавычек
-    const cleanShortName = dish.translations.ru.short_name.replace(/[{}'"]/g, '');
-    const text = dish.translations.ru.text;
+    //const cleanShortName = dish.translations[language].short_name.replace(/[{}'"]/g, '');
+    const cleanShortName = dish.translations[language].short_name;
+    const text = dish.translations[language].text;
 
     return (
         <li className="dishes__card">
-                <img onClick={handleClick}
+                <img onClick={handleDishClick}
                 className="dishes__photo" src={dish.image} alt={cleanShortName} />
             <div className="dishes__description">
                 <h3 className="dishes__title">{cleanShortName}</h3>

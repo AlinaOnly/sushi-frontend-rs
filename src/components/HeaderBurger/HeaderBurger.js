@@ -5,7 +5,7 @@ import useFormValidation from '../../utils/FormValidation';
 import account from '../../images/account.svg';
 import './HeaderBurger.css';
 
-function HeaderBurger({ burgerHeader, handleBurgerHeader }) {
+function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageChange }) {
     const currentUser = useContext(CurrentUserContext);
     const { values, setValues } = useFormValidation();
 
@@ -14,6 +14,11 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader }) {
             first_name: currentUser.first_name,
         });
     }, [currentUser, setValues]);
+
+    const handleLanguageChange = (event) => {
+        const selectedLanguage = event.target.value;
+        onLanguageChange(selectedLanguage);
+    };
 
     return (
         <section className={burgerHeader ? `header-burger-menu header-burger-menu_open` : 'header-burger-menu'}>
@@ -33,17 +38,22 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader }) {
                     <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active" : "header-burger__link")}
                         to="/contacts"
                         onClick={handleBurgerHeader}>
-                        Kонтакты
+                            О нас
                     </NavLink>  
                     <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active" : "header-burger__link")}
                         to="/promo"
                         onClick={handleBurgerHeader}>
-                        Промо
+                            Промо
                     </NavLink>
-                    <select className="header-burger__select" id="language" name="selectedLanguage">
-                        <option className="header-burger__select-language" value="sr">Sr</option>
-                        <option className="header-burger__select-language" value="ru">Ru</option>
-                        <option className="header-burger__select-language" value="en">En</option>
+                    <select 
+                        className="header-burger__select" 
+                        id="language" 
+                        name="selectedLanguage" 
+                        value={language}
+                        onChange={handleLanguageChange}>
+                            <option className="header__select-language" value="ru">Ru</option>
+                            <option className="header__select-language" value="sr-latn">Sr</option>
+                            <option className="header__select-language" value="en">En</option>
                     </select>
                     <select className="header-burger__select" id="city" name="selectedCity">
                         <option className="header-burger__select-city" value="beograd">Beograd</option>

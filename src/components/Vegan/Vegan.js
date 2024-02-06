@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Vegan({ dishes, handleBurgerMenu, onDishClick }) {
+function Vegan({ dishes, handleBurgerMenu, onDishClick, language }) {
     const veganDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "vegan"));
 
     return (
@@ -18,6 +18,7 @@ function Vegan({ dishes, handleBurgerMenu, onDishClick }) {
                                 key={dish.id}
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
+                                language={language}
                             />
                         ))}
                     </ul>

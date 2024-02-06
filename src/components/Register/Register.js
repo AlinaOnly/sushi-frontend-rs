@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import useFormValidation from '../../utils/FormValidation';
 import { EMAIL, PASS, NAME, PHONE } from '../../utils/errors';
-import logo from '../../images/logo.jpeg';
+import logo from '../../images/logo.png';
 import './Register.css';
 
 function Register({ onRegister, errorMessage }) {

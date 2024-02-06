@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Maki({dishes, handleBurgerMenu, onDishClick}) {
+function Maki({ dishes, handleBurgerMenu, language, onDishClick }) {
     const makiDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "maki"));
 
     return (
@@ -18,6 +18,7 @@ function Maki({dishes, handleBurgerMenu, onDishClick}) {
                                 key={dish.id}
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
+                                language={language}
                             />
                         ))}
                     </ul>

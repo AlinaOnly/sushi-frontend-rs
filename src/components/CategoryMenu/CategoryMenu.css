@@ -20,15 +20,16 @@
 }
 
 .burger-category__button {
-    background-image: url(../../images/burger-category.svg);
-    width: 21px;
-    height: 16px;
+    
+    
+    
     background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 0; 
     align-items: start;
     display: flex;
+    background-repeat: no-repeat;
 }
 
 @media screen and (max-width: 768px) {

@@ -55,7 +55,7 @@
     flex-direction: column;
     align-items:center;
     margin-top: 105px;
-    margin-bottom: 321px;
+    margin-bottom: 200px;
 }
 
 .burger-menu__list {
@@ -115,9 +115,6 @@
 
     .burger-menu__close { 
         right: 13px;
-    }
-    .burger-menu__lists {
-        margin-bottom: 444px;
     }
 
     .burger-menu__list {

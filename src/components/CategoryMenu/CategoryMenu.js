@@ -18,7 +18,7 @@ function CategoryMenu({ handleBurgerMenu }) {
                 <button 
                     onClick={handleBurgerMenu}
                     className="burger-category__button app__button-opacity" 
-                    aria-label="Бургер">
+                    aria-label="Бургер">Ещё...
                 </button>
         </div>
     );

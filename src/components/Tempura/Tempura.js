@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Tempura({dishes, handleBurgerMenu, onDishClick}) {
+function Tempura({ dishes, handleBurgerMenu, onDishClick, language }) {
     const tempuraDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "tempura"));
 
     return (
@@ -18,6 +18,7 @@ function Tempura({dishes, handleBurgerMenu, onDishClick}) {
                                 key={dish.id}
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
+                                language={language}
                             />
                         ))}
                     </ul>

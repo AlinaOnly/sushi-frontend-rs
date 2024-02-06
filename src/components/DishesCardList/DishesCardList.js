@@ -2,7 +2,8 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import './DishesCardList.css';
 
-function DishesCardList({ dishes, onDishClick }) {
+function DishesCardList({ dishes, onDishClick, language }) {
+
     // Получаем уникальные категории блюд массивом уникальных данных
     const uniqueCategories = Array.from(new Set(dishes.flatMap(dish => dish.category.map(cat => cat.slug))));
 
@@ -17,7 +18,12 @@ function DishesCardList({ dishes, onDishClick }) {
     // Функция для получения имени категории на русском языке
     const getCategoryName = (categorySlug) => {
         const category = dishes.flatMap(dish => dish.category).find(cat => cat.slug === categorySlug);
-        return category.translations.ru.name;
+        // Проверяем, существует ли категория и соответствующий перевод
+        if (category && category.translations[language]) {
+            return category.translations[language].name;
+        }
+        // Если перевода нет, можно вернуть имя по-умолчанию или сообщение об ошибке
+        return 'Категория не найдена';
     };
 
     return (
@@ -31,6 +37,7 @@ function DishesCardList({ dishes, onDishClick }) {
                                 <DishesCard
                                     dish={dish}
                                     key={dish.id}
+                                    language={language}
                                     isCartDishes={dish.isCartDishes}
                                     onDishClick={onDishClick}
                                 />

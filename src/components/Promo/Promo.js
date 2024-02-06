@@ -19,7 +19,6 @@ function Promo ({ promoNews }) {
         }
     };
 
-
     return (
         <section className="promo">
             <h1 className="promo__title">Новости и акции</h1>
@@ -27,9 +26,9 @@ function Promo ({ promoNews }) {
                     {promoNews.map(promo => (
                         <div className="carousel" key={promo.id}>
                             <h3 className="carousel__title">{promo.title_rus}</h3>
-                            <p className="carousel__city">{promo.city}</p>
                             <p className="carousel__text">{promo.full_text_rus}</p>
                             <img src={promo.image_rus} className="carousel__image" alt="Фото промо акций"/>
+                            <p className="carousel__city">{promo.city}</p>
                             <p className="carousel__date">{promo.created}</p>
                         </div>
                         ))

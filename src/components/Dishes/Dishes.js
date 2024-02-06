@@ -11,7 +11,7 @@ import { LAPTOP,
 import More from '../More/More';
 import './Dishes.css';
 
-function Dishes({ dishes, onDishClick, handleBurgerMenu, isPreloader }) {
+function Dishes({ dishes, onDishClick, handleBurgerMenu, isPreloader, language }) {
 
     // сколько карточек показывать при определенном размере окна
     const [isSize, setSize] = useState(window.innerWidth);
@@ -65,6 +65,7 @@ function Dishes({ dishes, onDishClick, handleBurgerMenu, isPreloader }) {
                 <DishesCardList
                     onDishClick={onDishClick}
                     dishes={dishes.slice(0, moviesRow.total)}
+                    language={language}
                 />
                 <More 
                     moreButton={moreButton}

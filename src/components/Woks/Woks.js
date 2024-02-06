@@ -2,8 +2,8 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Woks({dishes, handleBurgerMenu, onDishClick}) {
-    const woksDishes = dishes.filter(dish => dish.category.some(cat => cat.slug));
+function Woks({ dishes, handleBurgerMenu, onDishClick, language }) {
+    const woksDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "woks"));
 
     return (
         <>
@@ -18,6 +18,7 @@ function Woks({dishes, handleBurgerMenu, onDishClick}) {
                                 key={dish.id}
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
+                                language={language}
                             />
                         ))}
                     </ul>
