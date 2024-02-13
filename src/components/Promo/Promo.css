@@ -43,6 +43,8 @@
     line-height: 25px;
     margin-top: 50px;
     margin-bottom: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
     text-align: center;
 }
 
@@ -58,7 +60,7 @@
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-    width: 700px;
+    width: 600px;
     height: 90%;
 }
 
@@ -81,7 +83,6 @@
 
     .carousel__image {
         width: 500px;
-        height: 0;
     }
 
 }
@@ -98,6 +99,5 @@
     .carousel__image {
         margin-bottom: 10px;
         width: 300px;
-        height: 0;
     }
 }

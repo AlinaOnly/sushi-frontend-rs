@@ -29,7 +29,7 @@ function BurgerMenu({ isBurger, handleBurgerMenu, language, dishes }) {
                         <li key={slug} className="burger-menu__list">
                             <NavLink
                                 onClick={handleBurgerMenu}
-                                className={({ isActive }) => (isActive ? "burger-menu__link-active" : "burger-menu__link app__button-opacity")}
+                                className={({ isActive }) => (isActive ? "burger-menu__link-active app__text-opacity" : "burger-menu__link app__button-opacity app__text-opacity")}
                                 to={`/${slug}`}>
                                 {getCategoryName(slug)}
                             </NavLink>

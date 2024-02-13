@@ -30,23 +30,23 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageCh
                     className="header-burger-menu__close app__button-opacity">
                 </button>
                 <div className="header-burger-menu__lists">
-                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active" : "header-burger__link")}
+                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active app__text-opacity" : "header-burger__link app__text-opacity")}
                         to="/"
                         onClick={handleBurgerHeader}>
                             Меню
                     </NavLink>
-                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active" : "header-burger__link")}
+                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active app__text-opacity" : "header-burger__link app__text-opacity")}
                         to="/contacts"
                         onClick={handleBurgerHeader}>
                             О нас
                     </NavLink>  
-                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active" : "header-burger__link")}
+                    <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active app__text-opacity" : "header-burger__link app__text-opacity")}
                         to="/promo"
                         onClick={handleBurgerHeader}>
                             Промо
                     </NavLink>
                     <select 
-                        className="header-burger__select" 
+                        className="header-burger__select app__text-opacity" 
                         id="language" 
                         name="selectedLanguage" 
                         value={language}
@@ -55,7 +55,7 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageCh
                             <option className="header__select-language" value="sr-latn">Sr</option>
                             <option className="header__select-language" value="en">En</option>
                     </select>
-                    <select className="header-burger__select" id="city" name="selectedCity">
+                    <select className="header-burger__select app__text-opacity" id="city" name="selectedCity">
                         <option className="header-burger__select-city" value="beograd">Beograd</option>
                     </select>
                     <p className="header-burger__phone">

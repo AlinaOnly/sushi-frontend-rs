@@ -23,14 +23,19 @@
     line-height: 20px;
     padding: 14px 0 9px 0;
     margin: 0;
+    height: 40px;
 }
 
 .dishes__composition {
     font-weight: 400;
     font-size: 11px;
-    line-height: 15px;
+    line-height: 20px;
     color: #A0A0A0;
     margin: 0;
+}
+
+.dishes__type {
+    margin-left: 10px;
 }
 
 .dishes__cart-button {
@@ -84,7 +89,7 @@
 }
 
 .dishes__container {
-    margin: 0 14px 0;
+    margin: 15px 14px 0;
     display: flex;
     justify-content: space-between;
     border-top: 1px solid #FF3055;

@@ -21,20 +21,20 @@ function CategoryMenu({ handleBurgerMenu, language, dishes }) {
 
     return (
         <div className="burger-category">
-            <NavLink className={({ isActive }) => (isActive ? "burger-category__link-active" : "burger-category__link")}
+            <NavLink className={({ isActive }) => (isActive ? "burger-category__link-active app__text-opacity" : "burger-category__link app__text-opacity")}
                 to="/">Все меню
             </NavLink>
             {uniqueCategories.map(slug => (
                 <NavLink
                     key={slug}
-                    className={({ isActive }) => isActive ? "burger-category__link-active" : "burger-category__link"}
+                    className={({ isActive }) => isActive ? "burger-category__link-active app__text-opacity" : "burger-category__link app__text-opacity"}
                     to={`/${slug}`}>
                     {getCategoryName(slug)}
                 </NavLink>
             ))}
                 <button 
                     onClick={handleBurgerMenu}
-                    className="burger-category__button app__button-opacity" 
+                    className="burger-category__button app__button-opacity app__text-opacity" 
                     aria-label="Бургер">Ещё...
                 </button>
         </div>

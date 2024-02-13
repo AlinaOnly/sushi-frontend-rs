@@ -20,9 +20,6 @@
 }
 
 .burger-category__button {
-    
-    
-    
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -30,6 +27,8 @@
     align-items: start;
     display: flex;
     background-repeat: no-repeat;
+    color: #000000;
+    -webkit-color: #000000;
 }
 
 @media screen and (max-width: 768px) {

@@ -25,7 +25,7 @@ function DishesCard({ dish, onDishClick, language }) {
     return (
         <li className="dishes__card">
                 <img onClick={handleDishClick}
-                className="dishes__photo" src={dish.image} alt={cleanShortName} />
+                className="dishes__photo app__button-opacity" src={dish.image} alt={cleanShortName} />
             <div className="dishes__description">
                 <h3 className="dishes__title">{cleanShortName}</h3>
                 <div className="dishes__options">
@@ -41,7 +41,7 @@ function DishesCard({ dish, onDishClick, language }) {
             </div>
             <div className="dishes__container">
                 <button 
-                    className="dishes__cart-button"
+                    className="dishes__cart-button app__button-opacity"
                     type="submit"
                     aria-label="Корзина">
                         В корзину
