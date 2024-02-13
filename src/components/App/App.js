@@ -211,9 +211,9 @@ function App() {
   //end
 
   // functionality -- update adress - пока не нужно
-  /*function handleChangeAdress(city, short_name, full_address, type) {
+  /*function handleChangeAdress(address) {
     setPreloader(true);
-    MainApi.changeAdress({ city, short_name, full_address, type })
+    MainApi.changeAdress({ address })
     .then((res) => {
         setCurrentUser(res);
         setPreloader(false);

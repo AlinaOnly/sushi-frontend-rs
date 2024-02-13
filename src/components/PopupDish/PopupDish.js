@@ -23,7 +23,7 @@ function PopupDish({ dish, onClose, language }) {
                     <img src={dish.image} alt={cleanedShortName} className="popup__image" />
                     <div className="popup__title">
                         <h2 className="popup__image-text">{cleanedShortName}</h2>
-                        <p className="popup__composition">{text} {dish.weight_volume} {weightVolumeUnit}, {dish.units_in_set} {unitsInSetUnit}
+                        <p className="popup__composition">{text} <br /> {dish.weight_volume} {weightVolumeUnit}, {dish.units_in_set} {unitsInSetUnit}
                             <span className="popup__composition-span">В комплект входит васаби, имбирь, соевый соус.</span> 
                             <span className="popup__composition-span">При самовывозе - скидка 10%.</span>
                         </p>

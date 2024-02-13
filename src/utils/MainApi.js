@@ -55,9 +55,8 @@ class Api {
         }).then(this._mainApiError);
     }
 
-
     // апи с адресами
-    changeAdress( {city, short_name, full_address} ) {
+    changeAdress( {address} ) {
         return fetch(`${this._url}/auth/users/me/`, {
             method: 'PATCH',
             headers: {
@@ -66,14 +65,12 @@ class Api {
             },
             credentials: 'include',
             body: JSON.stringify({
-                    city: city,
-                    short_name: short_name,
-                    full_address: full_address
+                address: address
                 }),
         }).then(this._mainApiError);
     }
 
-    postUserAdress( {city, short_name, full_address} ) {
+    postUserAdress( {address} ) {
         return fetch(`${this._url}/me/my_addresses/`, {
             method: 'POST',
             headers: {
@@ -82,9 +79,7 @@ class Api {
             },
             credentials: 'include',
             body: JSON.stringify({
-                    city: city,
-                    short_name: short_name,
-                    full_address: full_address
+                address: address
             }),
         }).then(this._mainApiError);
     }

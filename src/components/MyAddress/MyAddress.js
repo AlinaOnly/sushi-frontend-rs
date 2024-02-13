@@ -22,9 +22,7 @@ function MyAddress({ addresses, onDeleteAddress, onPostAddress }) {
 
     useEffect(() => {
         setValues({
-            city: currentUser.city || '',
-            short_name: currentUser.short_name || '',
-            full_address: currentUser.full_address || '',
+            address: currentUser.address || '',
         });
     }, [currentUser, setValues]);
 
@@ -32,9 +30,7 @@ function MyAddress({ addresses, onDeleteAddress, onPostAddress }) {
         event.preventDefault();
         if (addresses.length < 3) {
             onPostAddress({
-                city: values.city  || '',
-                short_name: values.short_name || '',
-                full_address: values.full_address || ''
+                address: values.address || ''
             }, handleHideInput);
         } else {
             alert("Нельзя добавить более трех адресов");
@@ -66,55 +62,13 @@ function MyAddress({ addresses, onDeleteAddress, onPostAddress }) {
                         { isShownInputs && (
                             <form className="adress__form"  onSubmit={handleSubmit}>
                                 <div className="adress__container">
-                                    <label className="adress__label" htmlFor="city">
+                                    <label className="adress__label" htmlFor="address">
                                         <input
-                                            value={values.city || ''}
+                                            value={values.address || ''}
                                             onChange={handleChange}
-                                            id="city"
+                                            id="address"
                                             className="adress__input"
-                                            name="city"
-                                            type="text"
-                                            placeholder="Город"
-                                            minLength="2"
-                                            maxLength="40"
-                                            required
-                                        />
-                                        <span 
-                                            className={`${errors.city ? "profile__error" : "profile__error_hidden"}`}>
-                                                Введите Ваш город
-                                        </span>
-                                        </label> 
-                                </div> 
-
-                                <div className="adress__container">
-                                    <label className="adress__label" htmlFor="short_name">
-                                        <input
-                                            value={values.short_name || ''}
-                                            onChange={handleChange}
-                                            id="short_name"
-                                            className="adress__input"
-                                            name="short_name"
-                                            type="text"
-                                            placeholder="Название местоположения"
-                                            minLength="3"
-                                            maxLength="40"
-                                            required
-                                        />
-                                        <span 
-                                            className={`${errors.short_name ? "profile__error" : "profile__error_hidden"}`}>
-                                                Введите короткое название Вашего места
-                                        </span>
-                                        </label>
-                                </div>
-
-                                <div className="adress__container">
-                                    <label className="adress__label" htmlFor="full_address">
-                                        <input
-                                            value={values.full_address || ''}
-                                            onChange={handleChange}
-                                            id="full_address"
-                                            className="adress__input"
-                                            name="full_address"
+                                            name="address"
                                             type="text"
                                             placeholder="Полный адрес"
                                             minLength="5"
@@ -122,14 +76,13 @@ function MyAddress({ addresses, onDeleteAddress, onPostAddress }) {
                                             required
                                         />
                                         <span 
-                                            className={`${errors.full_address ? "profile__error" : "profile__error_hidden"}`}>
+                                            className={`${errors.address ? "profile__error" : "profile__error_hidden"}`}>
                                                 Введите Ваш полный адрес
                                         </span>
                                         </label> 
                                 </div>    
                                 <button 
                                     disabled={!isValid}
-                                    //onClick={handleSubmit}
                                     type="submit"
                                     aria-label="Сохранить адрес"
                                     className={`adress__submit-button ${!isValid ? "adress__submit-button_disable" : "app__button-opacity"}`}>
@@ -139,9 +92,7 @@ function MyAddress({ addresses, onDeleteAddress, onPostAddress }) {
                         { addresses.length >= 0 && !isShownInputs && (
                             addresses.map((address) => 
                                 (   <div key={address.id} className="adress__displayed">
-                                        <p className="adress__field">Город: {address.city}</p>
-                                        <p className="adress__field">Короткое название места: {address.short_name}</p>
-                                        <p className="adress__field">Адрес: {address.full_address}</p>
+                                        <p className="adress__field">Ваш Адрес: {address.address}</p>
                                         <button 
                                             onClick={() => handleDelete(address.id)}
                                             className="app__text-opacity adress__delete-button"

@@ -1,22 +1,17 @@
-import React, {StrictMode} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom'; 
 
-//import './utils/i18n';
+import './utils/i18n';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    //<StrictMode>
-
     <BrowserRouter>
         <App />
     </BrowserRouter>
-
-    //</StrictMode>
-  
 );
 
 // If you want to start measuring performance in your app, pass a function

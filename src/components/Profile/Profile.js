@@ -10,61 +10,31 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
     const [isDisableInput, setDisableInput] = useState(true);
     const { values, isValid, errors, handleChange, setValues,  formatDateToServer, formatDateToInput } = useFormValidation();
 
-    /*useEffect(() => {
-        setValues({
-            first_name: currentUser.first_name,
-            last_name: currentUser.last_name,
-            email: currentUser.email,
-            phone: currentUser.phone,
-            date_of_birth: currentUser.date_of_birth,
-            messenger: currentUser.messenger,
-        });
-    }, [currentUser, setValues]);*/
-
-    /*useEffect(() => {
-        setValues({
-            ...currentUser,
-            date_of_birth: currentUser.date_of_birth ? formatDate(currentUser.date_of_birth) : currentUser.date_of_birth,
-        });
-    }, [currentUser, setValues]);*/
-
     useEffect(() => {
         const inputData = {};
         if (currentUser) {
             Object.keys(currentUser).forEach(key => {
                 inputData[key] = key === 'date_of_birth'
-                ? formatDateToInput(currentUser['date_of_birth'])
+                ? formatDateToInput(currentUser['date_of_birth']) // Форматируем в YYYY-MM-DD для input
                 : currentUser[key];
             });
         }
         setValues(inputData);
     }, [currentUser, formatDateToInput]);
 
-    /*function handleSubmit(event) {
-        event.preventDefault();
-        onUpdateProfile(
-            values.first_name,
-            values.last_name,
-            values.email,
-            values.phone,
-            values.date_of_birth,
-            values.messenger
-        );
-        setDisableInput(true);
-    }*/
-
     function handleSubmit(event) {
-        // При отправке формы форматируем дату обратно для сервера
         event.preventDefault();
-        const dateOfBirth = values.date_of_birth.includes('-')
-            ? formatDateToServer(values.date_of_birth)
-            : values.date_of_birth;
+        let dateOfBirth = values.date_of_birth;
+        // Преобразуем дату только если она включает символ '-', предполагая, что формат YYYY-MM-DD
+        if (dateOfBirth.includes('-') && !dateOfBirth.includes('.')) {
+            dateOfBirth = formatDateToServer(values.date_of_birth);
+        }
         onUpdateProfile(
             values.first_name,
             values.last_name,
             values.email,
             values.phone,
-            dateOfBirth, // Используем значение в формате для сервера
+            dateOfBirth,
             values.messenger
         );
         setDisableInput(true);

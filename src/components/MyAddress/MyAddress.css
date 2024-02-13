@@ -87,9 +87,12 @@
     color: #C2C2C2;
 }
 
+.adress__field {
+    margin-top: 50px;
+}
+
 .adress__delete-button {
     margin-top: 10px;
-    margin-bottom: 50px;
     background-color: #FFFFFF;
     color: #FF3055;
     outline: none;

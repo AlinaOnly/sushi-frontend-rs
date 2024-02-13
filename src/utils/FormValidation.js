@@ -7,14 +7,22 @@ function useFormValidation() {
     const [isValid, setIsValid] = useState(false);
 
     const formatDateToServer = (date) => {
-      const [day, month, year ] = date.split('-');
-      return `${day}-${month}-${year}`;
+      if (!date) return '';
+      // Разбираем дату в формате YYYY-MM-DD
+      const [year, month, day] = date.split('-');
+      // Преобразуем дату в формат DD.MM.YYYY
+      return `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
     };
 
     const formatDateToInput = useCallback((date) => {
       if (!date) return '';
-      const [day, month, year] = date.split('-');
-      return `${day.padStart(2, "0")}-${month.padStart(2, "0")}-${year.padStart(4, "0")}`;
+      // Проверяем, содержит ли строка точки - если да, предполагаем формат DD.MM.YYYY
+      if (date.includes('.')) {
+        const [day, month, year] = date.split('.');
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+      }
+      // Иначе предпологаем, что дата уже в формате YYYY-MM-DD или другом необходимом формате
+      return date;
     }, []);
 
       const handleChange = (event) => {

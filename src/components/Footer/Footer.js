@@ -14,13 +14,13 @@ function Footer() {
                 <img src={logo} alt="Логотип сайта Sushi" className="footer__logo app__button-opacity" />
             </Link>
             <div className="footer__container">
-            <NavLink className={({ isActive }) => (isActive ? "footer__link-active" : "footer__link")}
+            <NavLink className={({ isActive }) => (isActive ? "footer__link-active app__text-opacity" : "footer__link app__text-opacity")}
                 to="/">Меню
             </NavLink>
-            <NavLink className={({ isActive }) => (isActive ? "footer__link-active" : "footer__link")}
+            <NavLink className={({ isActive }) => (isActive ? "footer__link-active app__text-opacity" : "footer__link app__text-opacity")}
                 to="/contacts">О нас
             </NavLink>  
-            <NavLink className={({ isActive }) => (isActive ? "footer__link-active" : "footer__link")}
+            <NavLink className={({ isActive }) => (isActive ? "footer__link-active app__text-opacity" : "footer__link app__text-opacity")}
                 to="/promo">Промо
             </NavLink>
                 <ul className="footer__list">

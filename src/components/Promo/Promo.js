@@ -27,11 +27,11 @@ function Promo({ promoNews, language }) {
 
         // Если текущий язык сербский латиница, ставим соответствующий ключ для получения изображения
         if (langKey === 'sr-latn') {
-            imageKey = 'image_sr'; // т.к. именно такой ключ приходит с бэкенда
+            imageKey = 'image_sr_latn'; // т.к. именно такой ключ приходит с бэкенда
         }
 
         const translation = promo.translations[langKey] || promo.translations.en;
-        const image = promo[imageKey] || promo.image_en;
+        const image = promo[imageKey] || promo.image_sr_latn;
 
         return {
             ...translation,

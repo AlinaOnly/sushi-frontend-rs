@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import resources from './locales/index.js';
-import { LanguageDetector } from 'i18next-browser-languagedetector';
+import resources from '../locales/index';
+import { default as LanguageDetector } from 'i18next-browser-languagedetector';
 import Backend from 'i18next-locize-backend';
 
 i18next

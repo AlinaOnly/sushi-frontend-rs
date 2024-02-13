@@ -30,7 +30,7 @@ function DishesCard({ dish, onDishClick, language }) {
                 <h3 className="dishes__title">{cleanShortName}</h3>
                 <div className="dishes__options">
                     <p className="dishes__composition">
-                        {text} {dish.weight_volume} {weightVolumeUnit}, {dish.units_in_set} {unitsInSetUnit}
+                        {text} <br /> {dish.weight_volume} {weightVolumeUnit}, {dish.units_in_set} {unitsInSetUnit}
                     </p>
                     {dish.vegan_icon === true ? 
                         (<img src={vegan} alt="Знак подходит для веганов" className="dishes__type" />)

@@ -5,6 +5,7 @@ import account from '../../images/account.svg';
 import cart from '../../images/cart.svg';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
+import i18next from '../../utils/i18n';
 import './Header.css';
 
 function Headers({ language, onLanguageChange }) {
@@ -23,19 +24,20 @@ function Headers({ language, onLanguageChange }) {
         if (selectedLanguage === 'sr') {
             selectedLanguage = 'sr-latn';
         }
+        i18next.changeLanguage(selectedLanguage); // Обновление текущего языка в i18next
         onLanguageChange(selectedLanguage);
     };
 
     return (
         <header className="header">
             <div className="header__container-links">
-                <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
+                <NavLink className={({ isActive }) => (isActive ? "header__link-active app__text-opacity" : "header__link app__text-opacity")}
                     to="/">Меню
                 </NavLink>
-                <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
+                <NavLink className={({ isActive }) => (isActive ? "header__link-active app__text-opacity" : "header__link app__text-opacity")}
                     to="/contacts">О нас
                 </NavLink>  
-                <NavLink className={({ isActive }) => (isActive ? "header__link-active" : "header__link")}
+                <NavLink className={({ isActive }) => (isActive ? "header__link-active app__text-opacity" : "header__link app__text-opacity")}
                     to="/promo">Промо
                 </NavLink>
                     <p className="header__phone">
@@ -54,11 +56,11 @@ function Headers({ language, onLanguageChange }) {
                 </div>
             </Link>
             <div className="header__container-select">
-                <select className="header__select" id="city" name="selectedCity">
+                <select className="header__select app__text-opacity" id="city" name="selectedCity">
                     <option className="header__select-city" value="beograd">Beograd</option>
                 </select>
                 <select
-                    className="header__select"
+                    className="header__select app__text-opacity"
                     id="language"
                     name="selectedLanguage"
                     value={language}
