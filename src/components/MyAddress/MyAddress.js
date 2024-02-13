@@ -2,53 +2,48 @@ import React, { useState, useContext, useEffect } from 'react';
 import  useFormValidation from '../../utils/FormValidation';
 import ProfileNav from '../ProfileNav/ProfileNav';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import './MyAdress.css';
+import './MyAddress.css';
 
 
-function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
+function MyAddress({ addresses, onDeleteAddress, onPostAddress }) {
     const currentUser = useContext(CurrentUserContext);
     const { values, isValid, errors, setValues, handleChange } = useFormValidation();
     const [isShownInputs, setShownInputs] = useState(false);
 
+    // Показывает форму ввода
+    function handleShowInput() {
+        setShownInputs(true);
+    }
+
+    // Скрывает форму ввода
+    function handleHideInput() {
+        setShownInputs(false);
+    }
+
     useEffect(() => {
         setValues({
-            city: currentUser.city,
-            short_name: currentUser.short_name,
-            full_address: currentUser.full_address,
-            type: currentUser.type,
+            city: currentUser.city || '',
+            short_name: currentUser.short_name || '',
+            full_address: currentUser.full_address || '',
         });
-        /*if (addresses && addresses.length) {
-            setAddresses(addresses.slice(0, 3));
-        }*/
     }, [currentUser, setValues]);
 
     function handleSubmit(event) {
         event.preventDefault();
-        // Проверка на максимум 3 адреса перед отправкой
         if (addresses.length < 3) {
-            onUpdateAdresses({
-            city: values.city,
-            short_name: values.short_name,
-            full_address: values.full_address,
-            type: values.type
-        });
+            onPostAddress({
+                city: values.city  || '',
+                short_name: values.short_name || '',
+                full_address: values.full_address || ''
+            }, handleHideInput);
         } else {
             alert("Нельзя добавить более трех адресов");
         }
     }
 
-    function handleHideInput() {
-        setShownInputs(!isShownInputs);
+    function handleDelete(id) {
+        onDeleteAddress(id);
     }
-
-    // Функция для удаления адреса
-    /*const handleDelete = (address) => {
-        onDeleteAdress(address.id); // передаем id адреса в функцию удаления
-    };*/
-
-    const handleDelete = (id) => {
-        onDeleteAdress(id);
-    };
 
     return (
             <>
@@ -56,11 +51,11 @@ function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
                 <section className="adress" >
                     <h2 className="adress__title">Ваши адреса</h2>
                     <div className="adress__container">
-                        {addresses.length === 0 && !isShownInputs && ( 
+                        { addresses.length === 0 && !isShownInputs && ( 
                                 <>
                                     <p className="adress__text">Нет добавленных адресов. Вы можете добавить три адреса.</p>
                                     <button 
-                                        onClick={handleHideInput}
+                                        onClick={handleShowInput}
                                         type="button"
                                         aria-label="Добавить адрес"
                                         className="adress__submit-button app__button-opacity">
@@ -68,7 +63,6 @@ function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
                                     </button>
                                 </>  
                         )}
-    
                         { isShownInputs && (
                             <form className="adress__form"  onSubmit={handleSubmit}>
                                 <div className="adress__container">
@@ -90,7 +84,8 @@ function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
                                                 Введите Ваш город
                                         </span>
                                         </label> 
-                                </div>    
+                                </div> 
+
                                 <div className="adress__container">
                                     <label className="adress__label" htmlFor="short_name">
                                         <input
@@ -111,6 +106,7 @@ function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
                                         </span>
                                         </label>
                                 </div>
+
                                 <div className="adress__container">
                                     <label className="adress__label" htmlFor="full_address">
                                         <input
@@ -130,43 +126,22 @@ function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
                                                 Введите Ваш полный адрес
                                         </span>
                                         </label> 
-                                </div>
-                                <div className="adress__container">
-                                    <label className="adress__label" htmlFor="type">
-                                        <input
-                                            value={values.type || ''}
-                                            onChange={handleChange}
-                                            id="type"
-                                            className="adress__input"
-                                            name="type"
-                                            type="text"
-                                            placeholder="Тип"
-                                            minLength="1"
-                                            maxLength="1"
-                                            required
-                                        />
-                                        <span 
-                                            className={`${errors.type ? "profile__error" : "profile__error_hidden"}`}>
-                                                Введите 1 или 2
-                                        </span>
-                                        </label> 
-                                </div>      
+                                </div>    
                                 <button 
                                     disabled={!isValid}
-                                    onClick={handleSubmit}
+                                    //onClick={handleSubmit}
                                     type="submit"
                                     aria-label="Сохранить адрес"
                                     className={`adress__submit-button ${!isValid ? "adress__submit-button_disable" : "app__button-opacity"}`}>
                                     Сохранить адрес
                                 </button>
                             </form>)} 
-                        { addresses.length > 0 && !isShownInputs && (
+                        { addresses.length >= 0 && !isShownInputs && (
                             addresses.map((address) => 
-                            ( <div key={address.id} className="adress__displayed">
+                                (   <div key={address.id} className="adress__displayed">
                                         <p className="adress__field">Город: {address.city}</p>
                                         <p className="adress__field">Короткое название места: {address.short_name}</p>
                                         <p className="adress__field">Адрес: {address.full_address}</p>
-                                        <p className="adress__field">Тип: {address.type}</p>
                                         <button 
                                             onClick={() => handleDelete(address.id)}
                                             className="app__text-opacity adress__delete-button"
@@ -179,7 +154,7 @@ function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
                         { addresses.length < 3 && addresses.length !== 0 && !isShownInputs && (
                             <>
                                 <button 
-                                    onClick={handleHideInput}
+                                    onClick={handleShowInput}
                                     type="button"
                                     aria-label="Добавить еще адрес"
                                     className="adress__submit-button app__button-opacity">
@@ -194,4 +169,4 @@ function MyAdress({ addresses, onDeleteAdress, onUpdateAdresses }) {
     }
     
 
-export default MyAdress;
+export default MyAddress;

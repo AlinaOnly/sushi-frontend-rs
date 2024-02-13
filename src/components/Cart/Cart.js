@@ -6,7 +6,7 @@ import empty from '../../images/empty-cart.svg';
 import './Cart.css';
 
 
-function Cart({ dish }) {
+function Cart({ dishes, dish }) {
     const navigate = useNavigate();
 
     return (

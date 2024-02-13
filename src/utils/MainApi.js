@@ -9,9 +9,19 @@ class Api {
 
     _mainApiError(res) {
         if (res.ok) {
-            return res.json();
+            // Проверяем, содержит ли ответ 'Content-Type': 'application/json' перед парсингом.
+            const contentType = res.headers.get('Content-Type');
+            if (contentType && contentType.includes('application/json')) {
+                return res.json();
+            }
+            // Aльтернативно можно вернуть просто res, чтобы не перегружать следующие обработчики.
+            return res;
         }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        // Возвращаем Promise.reject для неуспешных HTTP статусов.
+        return res.text().then((text) => {
+            const error = text ? JSON.parse(text) : { message: `Ошибка: ${res.status}` };
+            return Promise.reject(error);
+        });
     }
 
     // user api
@@ -47,7 +57,7 @@ class Api {
 
 
     // апи с адресами
-    changeAdress( {city, short_name, full_address, type} ) {
+    changeAdress( {city, short_name, full_address} ) {
         return fetch(`${this._url}/auth/users/me/`, {
             method: 'PATCH',
             headers: {
@@ -56,14 +66,14 @@ class Api {
             },
             credentials: 'include',
             body: JSON.stringify({
-                city: city,
-                short_name: short_name,
-                full_address: full_address,
-                type: type }),
+                    city: city,
+                    short_name: short_name,
+                    full_address: full_address
+                }),
         }).then(this._mainApiError);
     }
 
-    postUserAdress( {city, short_name, full_address, type} ) {
+    postUserAdress( {city, short_name, full_address} ) {
         return fetch(`${this._url}/me/my_addresses/`, {
             method: 'POST',
             headers: {
@@ -74,8 +84,7 @@ class Api {
             body: JSON.stringify({
                     city: city,
                     short_name: short_name,
-                    full_address: full_address,
-                    type: type
+                    full_address: full_address
             }),
         }).then(this._mainApiError);
     }
@@ -99,7 +108,15 @@ class Api {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-        }).then(this._mainApiError);
+        }).then(response => {
+            if (!response.ok) {
+                return response.json().then((error) => {
+                    throw new Error(error.message);
+                });
+            }
+            // В случае успешного ответа не пытаться разобрать JSON, вместо этого вернуть response
+            return response;
+        });
     }
     // end
 
@@ -114,13 +131,13 @@ class Api {
         }).then(this._mainApiError);
     }
 
-    getUserCoupons() {
+    /*getUserCoupons() {
         return fetch(`${this._url}/me/my_coupons/`, {
             method: 'GET',
             headers: this._headers,
             credentials: 'include',
         }).then(this._mainApiError);
-    }
+    }*/
     //
 
     // promo api
@@ -155,11 +172,22 @@ class Api {
     }
 
     deleteDish(id) {
-        return fetch(`${this._url}/menu/${id}/`, {
+        return fetch(`${this._url}/shopping_cart_delete/${id}/`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
             credentials: 'include',
-        }).then(this._mainApiError);
+        }).then(response => {
+            if (!response.ok) {
+                return response.json().then((error) => {
+                    throw new Error(error.message);
+                });
+            }
+            // В случае успешного ответа не пытаться разобрать JSON, вместо этого вернуть response
+            return response;
+        });
     }
 }
 

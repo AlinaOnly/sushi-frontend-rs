@@ -13,14 +13,20 @@ function MyOrders({ orders }) {
                     <p className="orders__text">У Вас пока нет заказов</p>
                 </div>
                 {orders.map(order => (
-                        <div className="carousel" key={order.id}>
-                            <h3 className="carousel__title">{order.status}</h3>
-                            <p className="carousel__city">{order.dishes}</p>
-                            <p className="carousel__text">{order.amount}</p>
-                            <p className="carousel__date">{order.created}</p>
+                        <div className="order" key={order.id}>
+                            <h3 className="order__status">{order.status}</h3>
+                            <p className="order__dishes">{order.dishes}</p>
+                            <p className="order__amount">{order.amount}</p>
+                            <p className="order__created">{order.created}</p>
+                        <button 
+                            className="app__text-opacity order__submit-button"
+                            type="submit"
+                            aria-label="Повторить этот заказ">
+                                Повторить этот заказ
+                            </button>
                         </div>
-                        ))
-                    }    
+                    ))
+                }    
             </section>
         </>
         

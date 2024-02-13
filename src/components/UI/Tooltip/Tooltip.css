@@ -1,0 +1,102 @@
+.tooltip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.7s, opacity ease 0.7s;
+  z-index: 1;
+}
+
+.tooltip_opened {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip__container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  max-width: 430px;
+  padding: 34px 36px 37px;
+  margin: auto 20px auto;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  /* background-color: white;
+    width: 520px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: -520px;
+    transition: transform 0.7s;
+    z-index: 1; */
+}
+
+/* .tooltip__content_opened {
+    transform: translateX(-520px);
+  } */
+
+.tooltip__close-btn {
+  background-image: url(../../../images/close-icon.svg);
+  background-color: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-position: center;
+}
+
+.tooltip__img {
+  width: 50px;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+}
+
+.tooltip__caption {
+  font-family: 'Inter', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+  text-rendering: optimizeLegibility;
+  text-decoration: none;
+  text-align: center;
+  letter-spacing: 0;
+  margin: 20px 0 0 0;
+  padding: 0;
+  color: #000;
+}
+
+.tooltip__ok-btn {
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 14px;
+    text-rendering: optimizeLegibility;
+    text-decoration: none;
+    letter-spacing: 0;
+    background-color: #FF3055;
+    color: #fff;
+    width: 200px;
+    height: 45px;
+    border: none;
+    border-radius: 10px;
+    margin: 40px 0 0 0;
+    padding: 0;
+    cursor: pointer;
+}

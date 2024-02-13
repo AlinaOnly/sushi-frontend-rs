@@ -27,7 +27,6 @@
 .burger-menu__container {
     position: relative;
     max-width: 400px;
-    height: 80vh;
     width: 100%;
     background: #ffffff;
     padding-top: 23px;
@@ -54,8 +53,8 @@
     display: flex;
     flex-direction: column;
     align-items:center;
-    margin-top: 105px;
-    margin-bottom: 200px;
+    margin-top: 50px;
+    margin-bottom: 20px;
 }
 
 .burger-menu__list {
@@ -83,6 +82,8 @@
     color: #FF3055;
     list-style: none;
     font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
 }
 
 .burger-menu__profile{

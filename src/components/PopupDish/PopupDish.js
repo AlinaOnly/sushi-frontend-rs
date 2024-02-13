@@ -12,6 +12,10 @@ function PopupDish({ dish, onClose, language }) {
     const cleanedShortName = dish.translations[language].short_name;
     const text = dish.translations[language].text;
 
+    // перевод для юнитов
+    const weightVolumeUnit = dish.weight_volume_uom.translations[language]?.text || dish.weight_volume_uom.translations["en"].text;
+    const unitsInSetUnit = dish.units_in_set_uom.translations[language]?.text || dish.units_in_set_uom.translations["en"].text;
+
     return (
         <div className={dish.image ? "popup popup_background popup_open" : "popup"} id="PopupDish">
             <div className="popup__container">
@@ -19,7 +23,7 @@ function PopupDish({ dish, onClose, language }) {
                     <img src={dish.image} alt={cleanedShortName} className="popup__image" />
                     <div className="popup__title">
                         <h2 className="popup__image-text">{cleanedShortName}</h2>
-                        <p className="popup__composition">{text}
+                        <p className="popup__composition">{text} {dish.weight_volume} {weightVolumeUnit}, {dish.units_in_set} {unitsInSetUnit}
                             <span className="popup__composition-span">В комплект входит васаби, имбирь, соевый соус.</span> 
                             <span className="popup__composition-span">При самовывозе - скидка 10%.</span>
                         </p>

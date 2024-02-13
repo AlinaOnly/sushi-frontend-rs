@@ -19,7 +19,10 @@ function Headers({ language, onLanguageChange }) {
     }, [currentUser, setValues]);
 
     const handleLanguageChange = (event) => {
-        const selectedLanguage = event.target.value;
+        let selectedLanguage = event.target.value;
+        if (selectedLanguage === 'sr') {
+            selectedLanguage = 'sr-latn';
+        }
         onLanguageChange(selectedLanguage);
     };
 
@@ -54,10 +57,10 @@ function Headers({ language, onLanguageChange }) {
                 <select className="header__select" id="city" name="selectedCity">
                     <option className="header__select-city" value="beograd">Beograd</option>
                 </select>
-                <select 
-                    className="header__select" 
-                    id="language" 
-                    name="selectedLanguage" 
+                <select
+                    className="header__select"
+                    id="language"
+                    name="selectedLanguage"
                     value={language}
                     onChange={handleLanguageChange}>
                         <option className="header__select-language" value="ru">Ru</option>

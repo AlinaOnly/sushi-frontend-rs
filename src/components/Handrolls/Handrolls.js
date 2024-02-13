@@ -3,14 +3,24 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Handrolls({ dishes, handleBurgerMenu, onDishClick, language }) {
+
     const handrollsDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "handrolls"));
+
+     // Получаем название категории, соответствующее текущему языку
+    const categoryName = handrollsDishes.length > 0
+        ? handrollsDishes[0].category.find(cat => cat.slug === "handrolls").translations[language]?.name || "Handrolls"
+        : "Handrolls";
 
     return (
         <>
-            <CategoryMenu handleBurgerMenu={handleBurgerMenu}/>
+            <CategoryMenu 
+                handleBurgerMenu={handleBurgerMenu}
+                language={language}
+                dishes={dishes}
+            />
             <section className="dishes__cards">
                 <div className="dishes__card-lists">
-                    <p className="dishes__categories">Хэнд роллы 🌯</p>
+                    <p className="dishes__categories">{categoryName}</p>
                     <ul className="dishes__card-list">
                         {handrollsDishes.map(dish => (
                             <DishesCard

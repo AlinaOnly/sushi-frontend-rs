@@ -3,16 +3,26 @@ import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
 function Soups({ dishes, handleBurgerMenu, onDishClick, language }) {
-    const rollsDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "soups"));
+
+    const soupsDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "soups"));
+
+     // Получаем название категории, соответствующее текущему языку
+    const categoryName = soupsDishes.length > 0
+        ? soupsDishes[0].category.find(cat => cat.slug === "soups").translations[language]?.name || "Soups"
+        : "Soups";
 
     return (
         <>
-            <CategoryMenu handleBurgerMenu={handleBurgerMenu}/>
+            <CategoryMenu 
+                handleBurgerMenu={handleBurgerMenu}
+                language={language}
+                dishes={dishes}
+            />
             <section className="dishes__cards">
                 <div className="dishes__card-lists">
-                    <p className="dishes__categories">Супы🍲</p>
+                    <p className="dishes__categories">{categoryName}</p>
                     <ul className="dishes__card-list">
-                        {rollsDishes.map(dish => (
+                        {soupsDishes.map(dish => (
                             <DishesCard
                                 dish={dish}
                                 key={dish.id}

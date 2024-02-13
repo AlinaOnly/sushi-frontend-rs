@@ -1,7 +1,6 @@
 .adress {
     max-width: 1140px;
     margin: 0 70px 50px;
-    text-align: center;
 }
 
 .adress__container {
@@ -15,6 +14,7 @@
     line-height: 29px;
     margin-top: 50px;
     margin-bottom: 50px;
+    text-align: center;
 }
 
 .adress__text {

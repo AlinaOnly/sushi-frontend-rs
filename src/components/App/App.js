@@ -3,26 +3,22 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute';
+
 import Header from '../Header/Header';
 import HeaderBurger from '../HeaderBurger/HeaderBurger';
 import HeaderMenu from '../HeaderMenu/HeaderMenu';
-
-import Dishes from '../Dishes/Dishes';
-import PopupDish from '../PopupDish/PopupDish';
-import BurgerMenu from '../BurgerMenu/BurgerMenu';
-
-import Cart from '../Cart/Cart';
-import Delivery from '../Delivery/Delivery';
-import CashnCarry from '../CashnCarry/CashnCarry';
-import Payment from '../Payment/Payment';
 
 import Register from '../Register/Register';
 import Login from '../Login/Login';
 import ActivationPage from '../../utils/ActivationPage';
 import Profile from '../Profile/Profile';
 import MyOrders from '../MyOrders/MyOrders';
-import MyAdress from '../MyAdress/MyAdress';
+import MyAddress from '../MyAddress/MyAddress';
 import MyCoupons from '../MyCoupons/MyCoupons';
+
+import Dishes from '../Dishes/Dishes';
+import PopupDish from '../PopupDish/PopupDish';
+import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
 import Rolls from '../Rolls/Rolls';
 import Backed from '../Backed/Backed';
@@ -36,6 +32,11 @@ import Tempura from '../Tempura/Tempura';
 import Woks from '../Woks/Woks';
 import Vegan from '../Vegan/Vegan';
 
+import Cart from '../Cart/Cart';
+import Delivery from '../Delivery/Delivery';
+import CashnCarry from '../CashnCarry/CashnCarry';
+import Payment from '../Payment/Payment';
+
 import Promo from '../Promo/Promo';
 import Contacts from '../Contact/Contact';
 import NotFound from '../NotFound/NotFound';
@@ -43,8 +44,11 @@ import Footer from '../Footer/Footer';
 
 import MainApi from '../../utils/MainApi';
 import * as apiAuth from '../../utils/apiAuth';
+
 import Preloader from '../Preloader/Preloader';
-import { CONFLICT_REG, ERR_REGISTER, WRONG_PASS, WRONG_TOKEN } from '../../utils/errors';
+import Tooltip from '../UI/Tooltip/Tooltip';
+
+import { CONFLICT_REG, ERR_REGISTER, WRONG_PASS, WRONG_TOKEN, ERR_CHANGE_INFO } from '../../utils/errors';
 import './App.css';
 
 import Banner from '../Banner/Banner'; // удалить позже
@@ -54,16 +58,19 @@ function App() {
   // location
   const navigate = useNavigate();
 
+  // language state
   const [language, setLanguage] = useState('ru'); //начальный язык
 
   // users state
   const [currentUser, setCurrentUser] = useState({});
+
   const [logIn, setLogIn] = useState(false);
-  //const [isAdresses, setAddresses] = useState([]);
+
   const [addresses, setAddresses] = useState([]);
 
   const [orders, setOrders] = useState([]);
-  const [coupons, setCoupons] = useState([]);
+
+  //const [coupons, setCoupons] = useState([]); нет на бэке
 
   // Promo news Items state
   const [promoNews, setPromoNews] = useState([]);
@@ -71,12 +78,13 @@ function App() {
   // dishes Items
   const [dishes, setDishesItems] = useState([]);
 
-  // dishes Items state
+  // dish Items state
   const [selectedDish, setSelectedDish] = useState({});
 
-  // burgeropen state
+  // burger open state
   const [isBurger, setIsBurger] = useState(false);
-  // burgeropen state
+
+  // burger header open state
   const [burgerHeader, setBurgerHeader] = useState(false);
 
    // errors state
@@ -84,6 +92,12 @@ function App() {
 
   // preloader state
   const [isPreloader, setPreloader] = useState(false);
+
+  const [isTooltipActive, setIsTooltipActive] = useState(false);
+  const [isInfoTooltipMessage, setIsInfoTooltipMessage] = useState({
+    image: '',
+    caption: '',
+  });
 
 
   // functionality -- registration
@@ -148,7 +162,7 @@ function App() {
             if (err === 'Ошибка: 409') {
                 setErrorMessage(CONFLICT_REG);
             } else {
-                setErrorMessage(ERR_REGISTER);
+                setErrorMessage(ERR_CHANGE_INFO);
             }
             console.log(err);
             setPreloader(false);
@@ -156,41 +170,8 @@ function App() {
   }
   //end
 
-  // functionality -- update user adress info
-  /*function handlePostUserAdress(city, short_name, full_address, type) {
-        MainApi.postUserAdress({ city, short_name, full_address, type })
-        .then((res) => {
-            setCurrentUser(res);
-            setErrorMessage('Ваши данные успешно изменены');
-        }).catch(err => {
-            if (err === 'Ошибка: 409') {
-                setErrorMessage(CONFLICT_REG);
-            } else {
-                setErrorMessage(''); // не придумала сюда ошибку
-            }
-            console.log(err);
-        });
-  }*/
-
-  function handlePostUserAdress(addressData) {
-    setPreloader(true);
-    MainApi.postUserAdress(addressData)
-      .then((addedAddress) => {
-        // Добавляем адрес в массив и обновляем состояние и localStorage
-        const updatedAddresses = [...addresses, addedAddress];
-        setAddresses(updatedAddresses);
-        localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
-        setPreloader(false);
-      })
-      .catch(err => {
-        console.log(err);
-        setPreloader(false);
-      });
-  }
-  //end
-
-  // functionality -- getting User Adress information
-  function getAdressApi() {
+  // functionality -- getting User Address information
+  function getAddressApi() {
     setPreloader(true);
     MainApi.getUserAdress()
         .then((addresses) => {
@@ -204,8 +185,33 @@ function App() {
   }
   // end
 
-  // functionality -- update adress
-  function handleChangeAdress(city, short_name, full_address, type) {
+  // functionality -- update user adress info
+  function handlePostUserAddress(newAddress, callback) {
+    setPreloader(true);
+    const addressExists = addresses.some((addressItem) => addressItem.id === newAddress.id);
+    if (addressExists) {
+      handleDeleteAddress(newAddress.id);
+    } else {
+      MainApi.postUserAdress(newAddress)
+        .then((savedAddress) => {
+          setAddresses((prevAddresses) => {
+            const updatedAddresses = [...prevAddresses, savedAddress];
+            localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
+            return updatedAddresses;
+          });
+          setPreloader(false);
+          if (callback) callback(); // если есть колбэк, вызываем его
+        })
+        .catch((err) => {
+          console.log(err);
+          setPreloader(false);
+        });
+    }
+  }
+  //end
+
+  // functionality -- update adress - пока не нужно
+  /*function handleChangeAdress(city, short_name, full_address, type) {
     setPreloader(true);
     MainApi.changeAdress({ city, short_name, full_address, type })
     .then((res) => {
@@ -220,31 +226,45 @@ function App() {
         console.log(err);
         setPreloader(false);
     });
-  }
+  }*/
   //end
 
-  // functionality -- delete adress
-  function handleDeleteAdress(id) {
+  // functionality -- delete address
+  function handleDeleteAddress(id) {
     setPreloader(true);
     MainApi.deleteUserAdress(id)
       .then(() => {
-        //setAddresses((currentAddresses) => currentAddresses.filter((address) => address.id !== id));
-        /*setAddresses((currentAddresses) => {
-          const updatedAddresses = currentAddresses.filter((address) => address.id !== id);
-          localStorage.setItem('addresses', JSON.stringify(updatedAddresses)); // Используем обновленный массив
+        setAddresses((prevAddresses) => {
+          const updatedAddresses = prevAddresses.filter((addressItem) => addressItem.id !== id);
+          if (Array.isArray(updatedAddresses)) {
+            // updatedAddresses действительно массив, теперь обновляем localStorage
+            localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
+          }
+          localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
           return updatedAddresses;
-        });*/
-        const updatedAddresses = addresses.filter((address) => address.id !== id);
-        setAddresses(updatedAddresses);
-        localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
-        //localStorage.setItem('addresses');
+        });
         setPreloader(false);
-    }).catch(err => {
-        console.log(err);
-        setPreloader(false);
-    });
+      })
+      .catch((err) => {
+          console.log(err);
+          setPreloader(false);
+      });
   }
-  //end
+
+  useEffect(() => {
+    const storedAddresses = localStorage.getItem('addresses');
+    if (storedAddresses) {
+      try {
+        const addresses = JSON.parse(storedAddresses);
+        setAddresses(addresses);
+      } catch (error) {
+        console.error('Не удалось разобрать addresses из localStorage:', error);
+        // удалить ключ 'addresses', чтобы исключить некорректное чтение в будущем
+        localStorage.removeItem('addresses');
+      }
+    }
+  }, []); //пустой массив зависимостей означает, что эффект выполнится один раз при монтировании компонента
+
 
   // functionality -- getting User Last Orders
   function getOrdersApi() {
@@ -261,8 +281,8 @@ function App() {
   }
   // end
 
-  // functionality -- getting User Coupons
-  function getCoupons() {
+  // functionality -- getting User Coupons нет на бэке
+  /*function getCoupons() {
     setPreloader(true);
     MainApi.getUserCoupons()
         .then((coupons) => {
@@ -273,7 +293,7 @@ function App() {
               console.log(err);
               setPreloader(false);
           });
-  }
+  }*/ 
   // end
 
   // functionality -- getting news from Api
@@ -307,11 +327,15 @@ function App() {
 
   // functionality -- clear token and exit
   const handleLogout = () => {
-    localStorage.removeItem('logInJwt');
-    localStorage.removeItem('logInJwtRefresh');
+    // Сначала удаляем специфичные для приложения ключи
     localStorage.removeItem('addresses');
     localStorage.removeItem('orders');
     localStorage.removeItem('coupons');
+    // Затем удаляем ключи авторизации
+    localStorage.removeItem('logInJwt');
+    localStorage.removeItem('logInJwtRefresh');
+    // А только после - очищаем всё остальное
+    window.localStorage.clear();
     setLogIn(false);
     setCurrentUser({});
     navigate('/');
@@ -352,18 +376,17 @@ function App() {
   }, []);
   //end
 
-  // useEffect ошибки
-      useEffect(() => {
-        setErrorMessage('');
-    }, [setErrorMessage]);
-    //end
-
-    // Проверяю, выполнял ли пользователь вход ранее
+  // Проверяю, выполнял ли пользователь вход ранее
     useEffect(() => {
       handleTokenCheck();
     }, [handleTokenCheck]);
     //end
 
+  // useEffect ошибки
+      useEffect(() => {
+        setErrorMessage('');
+    }, [setErrorMessage]);
+    //end
 
     // отрисовка меню, новостей
     useEffect(() => {
@@ -375,20 +398,11 @@ function App() {
     useEffect(() => {
         if (logIn) {
             Promise.all([MainApi.getUserId()])
-                .then(([userData, orders, coupons, addresses]) => {
-                 //console.log(localStorage.getItem('coupons', JSON.stringify(coupons)));
-
+                .then(([userData, orders, addresses]) => {
                     setCurrentUser(userData);
-                    getAdressApi(addresses);
-                    //handlePostUserAdress(); // Получите адреса пользователя
+                    getAddressApi(addresses);
                     getOrdersApi(orders);
-                    getCoupons(coupons);
-                    localStorage.getItem('addresses');
-                    //setAddresses(updatedAddresses);
-                    //localStorage.getItem('addresses', JSON.stringify(updatedAddresses));
-                    //localStorage.getItem('addresses', JSON.stringify(addresses));
-                    //localStorage.getItem('orders', JSON.stringify(orders));
-                    //localStorage.getItem('coupons', JSON.stringify(coupons));
+                   // getCoupons(coupons);
                 }).catch(err => {
                     console.log(err);
                 });
@@ -416,6 +430,7 @@ function App() {
       setSelectedDish({});
       setIsBurger(false);
       setBurgerHeader(false);
+      setIsTooltipActive(false);
     }
     // end popup
 
@@ -436,7 +451,6 @@ function App() {
     //end
 
     // Функция закрытия окон по esc
-    // eslint-disable-next-line
     useEffect(() => {
       const closeByEsc = (event) => {
         if (event.key === 'Escape') {
@@ -455,7 +469,12 @@ function App() {
 
       <CurrentUserContext.Provider value={currentUser}>
 
-      <BurgerMenu isBurger={isBurger} handleBurgerMenu={handleBurgerMenu} />
+      <BurgerMenu 
+        isBurger={isBurger} 
+        handleBurgerMenu={handleBurgerMenu}
+        dishes={dishes}
+        language={language}
+      />
 
       <HeaderBurger 
         burgerHeader={burgerHeader} 
@@ -533,12 +552,11 @@ function App() {
             path='/profile/adresses'
             element={
                 <ProtectedRoute logIn={logIn}>
-                  <MyAdress
+                  <MyAddress
                     logIn={logIn}
                     addresses={addresses}
-                    onDeleteAdress={handleDeleteAdress}
-                    onUpdateAdresses={handlePostUserAdress}
-                    onChangeAdress={handleChangeAdress}
+                    onDeleteAddress={handleDeleteAddress}
+                    onPostAddress={(newAddress, callback) => handlePostUserAddress(newAddress, callback)}
                   />
                 </ProtectedRoute>
               }
@@ -550,7 +568,7 @@ function App() {
               <ProtectedRoute logIn={logIn}>
                 <MyCoupons
                   logIn={logIn}
-                  coupons={coupons}
+                  //coupons={coupons}
                 />
               </ProtectedRoute>
             }
@@ -693,7 +711,9 @@ function App() {
 
           <Route 
             path='/cart' 
-            element={<Cart/>} 
+            element={<Cart
+              dishes={dishes}
+            />} 
           />
 
           <Route 
@@ -721,6 +741,7 @@ function App() {
             element={
               <Promo
                 promoNews={promoNews}
+                language={language}
               />
             }
           />
@@ -735,6 +756,14 @@ function App() {
             dish={selectedDish}
             onClose={closePopup}
             language={language}
+        />
+
+        <Tooltip
+          isTooltipActive={isTooltipActive}
+          //onOpenMenu={handleOpenMenu}
+          onClose={closePopup}
+          caption={isInfoTooltipMessage.caption}
+          image={isInfoTooltipMessage.image}
         />
         
         <Footer/>

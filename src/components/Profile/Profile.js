@@ -8,9 +8,9 @@ import './Profile.css';
 function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
     const currentUser = useContext(CurrentUserContext);
     const [isDisableInput, setDisableInput] = useState(true);
-    const { values, isValid, errors, handleChange, setValues } = useFormValidation();
+    const { values, isValid, errors, handleChange, setValues,  formatDateToServer, formatDateToInput } = useFormValidation();
 
-    useEffect(() => {
+    /*useEffect(() => {
         setValues({
             first_name: currentUser.first_name,
             last_name: currentUser.last_name,
@@ -19,9 +19,28 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
             date_of_birth: currentUser.date_of_birth,
             messenger: currentUser.messenger,
         });
-    }, [currentUser, setValues]);
+    }, [currentUser, setValues]);*/
 
-    function handleSubmit(event) {
+    /*useEffect(() => {
+        setValues({
+            ...currentUser,
+            date_of_birth: currentUser.date_of_birth ? formatDate(currentUser.date_of_birth) : currentUser.date_of_birth,
+        });
+    }, [currentUser, setValues]);*/
+
+    useEffect(() => {
+        const inputData = {};
+        if (currentUser) {
+            Object.keys(currentUser).forEach(key => {
+                inputData[key] = key === 'date_of_birth'
+                ? formatDateToInput(currentUser['date_of_birth'])
+                : currentUser[key];
+            });
+        }
+        setValues(inputData);
+    }, [currentUser, formatDateToInput]);
+
+    /*function handleSubmit(event) {
         event.preventDefault();
         onUpdateProfile(
             values.first_name,
@@ -29,6 +48,23 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
             values.email,
             values.phone,
             values.date_of_birth,
+            values.messenger
+        );
+        setDisableInput(true);
+    }*/
+
+    function handleSubmit(event) {
+        // При отправке формы форматируем дату обратно для сервера
+        event.preventDefault();
+        const dateOfBirth = values.date_of_birth.includes('-')
+            ? formatDateToServer(values.date_of_birth)
+            : values.date_of_birth;
+        onUpdateProfile(
+            values.first_name,
+            values.last_name,
+            values.email,
+            values.phone,
+            dateOfBirth, // Используем значение в формате для сервера
             values.messenger
         );
         setDisableInput(true);
@@ -83,7 +119,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 maxLength="40"
                             /></label>
                             <span 
-                                className={`${errors.date ? "profile__error" : "profile__error_hidden"}`}>
+                                className={`${errors.last_name ? "profile__error" : "profile__error_hidden"}`}>
                                         {NAME}
                             </span>
                     </div>    
@@ -117,7 +153,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 id="phone"
                                 className="profile__input"
                                 name="phone"
-                                type="phone"
+                                type="tel"
                                 placeholder="+"
                                 minLength="12"
                                 maxLength="13"
@@ -142,27 +178,28 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                             /></label> 
                             <span 
                                 className={`${errors.date_of_birth ? "profile__error" : "profile__error_hidden"}`}>
-                                        
+                                    ВВедите дату своего рождения
                             </span>
                     </div> 
                     <div className="profile__container">
                         <label className="profile__label" htmlFor="messenger">Мессенджер
                             <input
                                 disabled={isDisableInput}
-                                value={values.messenger || ''}
+                                value={values.messenger_type === 'tm' ? 
+                                    (values.messenger?.msngr_username || '') : 
+                                    (values.messenger?.msngr_phone || '')}
                                 onChange={handleChange}
                                 id="messenger"
                                 className="profile__input"
-                                name="messenger"
-                                //type="phone"
-                                placeholder="@"
-                                minLength="3"
+                                name={values.messenger_type === 'tm' ? 'msngr_username' : 'msngr_phone'}
+                                placeholder={values.messenger_type === 'tm' ? '@username' : 'Номер телефона'}
+                                minLength={values.messenger_type === 'wa' ? 10 : 3}
                                 maxLength="50"
                                 //required
                             /></label>
                             <span 
                                 className={`${errors.messenger ? "profile__error" : "profile__error_hidden"}`}>
-
+                                    Введите ник Telegram или номер Whatsapp
                             </span>
                     </div>               
                 </form>

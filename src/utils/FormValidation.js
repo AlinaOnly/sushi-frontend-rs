@@ -6,45 +6,61 @@ function useFormValidation() {
     const [errors, setErrors] = useState({});
     const [isValid, setIsValid] = useState(false);
 
-    // Функция преобразования формата даты в формат, ожидаемый сервером
-    const formatDate = (value) => {
-        const dateValue = new Date(value);
-        const day = `0${dateValue.getDate()}`.slice(-2);
-        const month = `0${dateValue.getMonth() + 1}`.slice(-2);
-        const year = dateValue.getFullYear();
-        return `${day}-${month}-${year}`;
+    const formatDateToServer = (date) => {
+      const [day, month, year ] = date.split('-');
+      return `${day}-${month}-${year}`;
     };
 
-    const handleChange = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
+    const formatDateToInput = useCallback((date) => {
+      if (!date) return '';
+      const [day, month, year] = date.split('-');
+      return `${day.padStart(2, "0")}-${month.padStart(2, "0")}-${year.padStart(4, "0")}`;
+    }, []);
 
-        // Для поля date_of_birth применяем специальное преобразование
-        const isBirthDate = name === "date_of_birth";
-        const newValue = isBirthDate ? formatDate(value) : value;
+      const handleChange = (event) => {
+        const {target} = event;
+        let {name, value} = target;
 
-        setValues({...values, [name]: newValue});
-        setErrors({...errors, [name]: target.validationMessage });
+        // Переформатирование даты при изменении
+        if (name === 'date_of_birth') value = formatDateToInput(value);
+
+        // Определите, как обновить состояние values – должны мы обновлять поля messenger или нет
+        if (name === 'msngr_phone' || name === 'msngr_username') {
+            // Обновим объект messenger, расширив его предыдущим состоянием
+            setValues({
+              ...values,
+              messenger: {
+                ...values.messenger,
+                [name]: value
+              }
+            });
+        } else {
+            // Если поле не относится к messenger, обновляем как обычно
+            setValues({ ...values, [name]: value });
+        }
+        // Обновляем ошибки и валидацию формы
+        setErrors({ ...errors, [name]: target.validationMessage });
         setIsValid(target.closest("form").checkValidity());
     };
 
-    const resetForm = useCallback(
-        (newValues = {}, newErrors = {}, newIsValid = false) => {
+  const resetForm = useCallback(
+      (newValues = {}, newErrors = {}, newIsValid = false) => {
           setValues(newValues);
           setErrors(newErrors);
           setIsValid(newIsValid);
-        },
-        [setValues, setErrors, setIsValid]
-      );
+      },
+      [setValues, setErrors, setIsValid]
+  );
 
     return { 
-        values,
-        setValues,
-        handleChange,
-        errors,
-        isValid,
-        resetForm };
+      values,
+      setValues,
+      handleChange,
+      errors,
+      isValid,
+      resetForm,
+      formatDateToServer, 
+      formatDateToInput };
 }
 
 export default useFormValidation;

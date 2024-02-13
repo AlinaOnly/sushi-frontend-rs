@@ -30,6 +30,10 @@
 .popup__image {
     height: 300px;
     object-fit: contain;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .popup__image-text {
@@ -37,7 +41,6 @@
     font-size: 24px;
     line-height: 30px;
     margin: 0 auto 30px auto;
-    height: 90px;
 }
 
 .popup__composition {

@@ -60,7 +60,11 @@ function Dishes({ dishes, onDishClick, handleBurgerMenu, isPreloader, language }
 
     return (
         <>
-            <CategoryMenu handleBurgerMenu={handleBurgerMenu}/>
+            <CategoryMenu
+                    handleBurgerMenu={handleBurgerMenu}
+                    language={language}
+                    dishes={dishes}
+            />
             {isPreloader && <Preloader/>}
                 <DishesCardList
                     onDishClick={onDishClick}

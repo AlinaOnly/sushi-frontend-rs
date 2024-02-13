@@ -15,9 +15,12 @@ function DishesCard({ dish, onDishClick, language }) {
     }
 
     // Используем регулярное выражение для удаления скобок и кавычек
-    //const cleanShortName = dish.translations[language].short_name.replace(/[{}'"]/g, '');
     const cleanShortName = dish.translations[language].short_name;
     const text = dish.translations[language].text;
+
+    // перевод для юнитов
+    const weightVolumeUnit = dish.weight_volume_uom.translations[language]?.text || dish.weight_volume_uom.translations["en"].text;
+    const unitsInSetUnit = dish.units_in_set_uom.translations[language]?.text || dish.units_in_set_uom.translations["en"].text;
 
     return (
         <li className="dishes__card">
@@ -26,7 +29,9 @@ function DishesCard({ dish, onDishClick, language }) {
             <div className="dishes__description">
                 <h3 className="dishes__title">{cleanShortName}</h3>
                 <div className="dishes__options">
-                    <p className="dishes__composition">{text}</p>
+                    <p className="dishes__composition">
+                        {text} {dish.weight_volume} {weightVolumeUnit}, {dish.units_in_set} {unitsInSetUnit}
+                    </p>
                     {dish.vegan_icon === true ? 
                         (<img src={vegan} alt="Знак подходит для веганов" className="dishes__type" />)
                         : dish.spicy_icon === true ?  (<img src={spicy} alt="Знак острое" className="dishes__type" />)
