@@ -3,9 +3,14 @@ import  { NavLink, Link } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
 import account from '../../images/account.svg';
+import i18next from '../../utils/i18n';
+import { useTranslation } from 'react-i18next';
 import './HeaderBurger.css';
 
 function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageChange }) {
+
+    const { t } = useTranslation();
+
     const currentUser = useContext(CurrentUserContext);
     const { values, setValues } = useFormValidation();
 
@@ -16,7 +21,11 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageCh
     }, [currentUser, setValues]);
 
     const handleLanguageChange = (event) => {
-        const selectedLanguage = event.target.value;
+        let selectedLanguage = event.target.value;
+        if (selectedLanguage === 'sr') {
+            selectedLanguage = 'sr-latn';
+        }
+        i18next.changeLanguage(selectedLanguage); // Обновление текущего языка в i18next
         onLanguageChange(selectedLanguage);
     };
 
@@ -33,17 +42,17 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageCh
                     <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active app__text-opacity" : "header-burger__link app__text-opacity")}
                         to="/"
                         onClick={handleBurgerHeader}>
-                            Меню
+                            {t('header-burger.menu', 'Меню')}
                     </NavLink>
                     <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active app__text-opacity" : "header-burger__link app__text-opacity")}
                         to="/contacts"
                         onClick={handleBurgerHeader}>
-                            О нас
+                            {t('header-burger.about', 'О нас')}
                     </NavLink>  
                     <NavLink className={({ isActive }) => (isActive ? "header-burger__link-active app__text-opacity" : "header-burger__link app__text-opacity")}
                         to="/promo"
                         onClick={handleBurgerHeader}>
-                            Промо
+                            {t('header-burger.promo', 'Промо')}
                     </NavLink>
                     <select 
                         className="header-burger__select app__text-opacity" 
@@ -73,7 +82,7 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageCh
                             onClick={handleBurgerHeader}
                             aria-label="Аккаунт"
                             className="header-burger-menu__profile-button app__button-opacity">
-                                {values.first_name || 'Аккаунт'}
+                                {values.first_name ? values.first_name : t('header-burger.account', 'Аккаунт')}
                                 <img src={account} alt="Логотип аккаунта" className="header__account-logo app__button-opacity"/>
                         </button>
                     </Link>

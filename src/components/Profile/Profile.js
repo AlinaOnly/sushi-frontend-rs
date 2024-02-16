@@ -3,9 +3,13 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
 import { EMAIL, NAME, PHONE } from '../../utils/errors';
 import ProfileNav from '../ProfileNav/ProfileNav';
+import { useTranslation } from 'react-i18next';
 import './Profile.css';
 
 function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
+
+    const { t } = useTranslation();
+
     const currentUser = useContext(CurrentUserContext);
     const [isDisableInput, setDisableInput] = useState(true);
     const { values, isValid, errors, handleChange, setValues,  formatDateToServer, formatDateToInput } = useFormValidation();
@@ -52,10 +56,10 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
         <>
             <ProfileNav />
             <div className="profile">
-                <h2 className="profile__text">Привет, {currentUser.first_name}!</h2>
+                <h2 className="profile__text">{t('profile.hello', 'Привет,')} {currentUser.first_name}!</h2>
                 <form className="profile__form" onSubmit={handleSubmit}>
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="first_name">Имя
+                        <label className="profile__label" htmlFor="first_name">{t('profile.first_name', 'Имя')}
                             <input
                                 disabled={isDisableInput}
                                 value={values.first_name || ''}
@@ -64,18 +68,18 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 className="profile__input"
                                 name="first_name"
                                 type="text"
-                                placeholder="Имя"
+                                placeholder={t('profile.first_name', 'Имя')}
                                 minLength="2"
                                 maxLength="40"
                                 required
                             /></label>
                             <span 
                                 className={`${errors.first_name ? "profile__error" : "profile__error_hidden"}`}>
-                                        {NAME}
+                                    {t('errors.enter_text_of_min_two_letters', 'Введите текст не менее двух букв')}
                             </span>
                     </div>    
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="last_name">Фамилия
+                        <label className="profile__label" htmlFor="last_name">{t('profile.last_name', 'Фамилия')}
                             <input
                                 disabled={isDisableInput}
                                 value={values.last_name || ''}
@@ -84,13 +88,13 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 className="profile__input"
                                 name="last_name"
                                 type="text"
-                                placeholder="Фамилия"
+                                placeholder={t('profile.last_name', 'Фамилия')}
                                 minLength="2"
                                 maxLength="40"
                             /></label>
                             <span 
                                 className={`${errors.last_name ? "profile__error" : "profile__error_hidden"}`}>
-                                        {NAME}
+                                    {t('errors.enter_text_of_min_two_letters', 'Введите текст не менее двух букв')}
                             </span>
                     </div>    
                     <div className="profile__container">
@@ -111,11 +115,11 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                             /></label>
                             <span 
                                 className={`${errors.email ? "profile__error" : "profile__error_hidden"}`}>
-                                        {EMAIL}
+                                    {t('errors.enter_valid_email', 'Введите валидную почту(name@mail.com)')}
                             </span>
                     </div>
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="phone">Телефон
+                        <label className="profile__label" htmlFor="phone">{t('profile.phone', 'Телефон')}
                             <input
                                 disabled={isDisableInput}
                                 value={values.phone || ''}
@@ -132,11 +136,11 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                             /></label>
                             <span 
                                 className={`${errors.phone ? "profile__error" : "profile__error_hidden"}`}>
-                                        {PHONE}
+                                    {t('errors.enter_valid_phone_starting_with_plus', 'Введите валидный телефон начиная с +')}
                             </span>
                     </div>
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="date_of_birth">Дата рождения
+                        <label className="profile__label" htmlFor="date_of_birth">{t('profile.date_of_birth', 'Дата рождения')}
                             <input
                                 disabled={isDisableInput}
                                 value={values.date_of_birth || ''}
@@ -148,11 +152,11 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                             /></label> 
                             <span 
                                 className={`${errors.date_of_birth ? "profile__error" : "profile__error_hidden"}`}>
-                                    ВВедите дату своего рождения
+                                    {t('profile.enter_birth_date', 'Введите дату своего рождения')}
                             </span>
                     </div> 
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="messenger">Мессенджер
+                        <label className="profile__label" htmlFor="messenger">Messenger
                             <input
                                 disabled={isDisableInput}
                                 value={values.messenger_type === 'tm' ? 
@@ -162,14 +166,14 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 id="messenger"
                                 className="profile__input"
                                 name={values.messenger_type === 'tm' ? 'msngr_username' : 'msngr_phone'}
-                                placeholder={values.messenger_type === 'tm' ? '@username' : 'Номер телефона'}
+                                placeholder={values.messenger_type === 'tm' ? '@username' : '+'}
                                 minLength={values.messenger_type === 'wa' ? 10 : 3}
                                 maxLength="50"
                                 //required
                             /></label>
                             <span 
                                 className={`${errors.messenger ? "profile__error" : "profile__error_hidden"}`}>
-                                    Введите ник Telegram или номер Whatsapp
+                                    {t('profile.enter_telegram_or_whatsapp', 'Введите ник Telegram или номер Whatsapp')}
                             </span>
                     </div>               
                 </form>
@@ -187,7 +191,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                             type="submit"
                             aria-label="Сохранить"
                         >
-                        Сохранить
+                            {t('profile.save', 'Сохранить')}
                     </button>)
                     : ( <>
                             <button 
@@ -195,18 +199,18 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 className="app__text-opacity profile__submit-button"
                                 type="button"
                                 aria-label="Редактировать">
-                                    Редактировать
+                                    {t('profile.edit', 'Редактировать')}
                             </button>
                             <button 
                                 type="button" 
                                 className="profile__signout"
                                 onClick={handleLogOut}>
-                                    Выйти из аккаунта
+                                    {t('profile.log_out', 'Выйти из аккаунта')}
                             </button>
                         </>
                     )
                 }
-                <p className="register__error-text">{errorMessage}</p>
+                <p className="register__error-text">{errorMessage && t(errorMessage)}</p>
             </div>
         </>
     );

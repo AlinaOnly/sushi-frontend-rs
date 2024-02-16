@@ -1,9 +1,12 @@
 import React from 'react';
 import Carousel from "react-multi-carousel";
+import { useTranslation } from 'react-i18next';
 import "react-multi-carousel/lib/styles.css";
 import './Promo.css';
 
 function Promo({ promoNews, language }) {
+
+    const { t } = useTranslation();
 
     const responsive = {
         desktop: {
@@ -41,7 +44,7 @@ function Promo({ promoNews, language }) {
 
     return (
             <section className="promo">
-                <h1 className="promo__title">Новости и акции</h1>
+                <h1 className="promo__title">{t('promo.title', 'Новости и акции')}</h1>
                 <Carousel responsive={responsive}>
                     {promoNews.map((promo) => {
                         const { title, full_text, image } = getLocalizedContent(promo);

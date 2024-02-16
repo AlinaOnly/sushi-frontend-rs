@@ -1,9 +1,12 @@
 import React from 'react';
 import vegan from '../../images/vegan.svg';
 import spicy from '../../images/spicy.svg';
+import { useTranslation } from 'react-i18next';
 import './DishesCard.css';
 
 function DishesCard({ dish, onDishClick, language }) {
+
+    const { t } = useTranslation();
 
     function handleDishClick() {
         onDishClick(dish);
@@ -44,7 +47,7 @@ function DishesCard({ dish, onDishClick, language }) {
                     className="dishes__cart-button app__button-opacity"
                     type="submit"
                     aria-label="Корзина">
-                        В корзину
+                        {t('dish.cart', 'В корзину')}
                 </button>
                 <p className="dishes__price">{dish.final_price} RSD</p>
             </div>

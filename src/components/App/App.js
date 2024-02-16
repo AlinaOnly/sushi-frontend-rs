@@ -48,7 +48,9 @@ import * as apiAuth from '../../utils/apiAuth';
 import Preloader from '../Preloader/Preloader';
 import Tooltip from '../UI/Tooltip/Tooltip';
 
-import { CONFLICT_REG, ERR_REGISTER, WRONG_PASS, WRONG_TOKEN, ERR_CHANGE_INFO } from '../../utils/errors';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '../../utils/i18n';
+
 import './App.css';
 
 import Banner from '../Banner/Banner'; // удалить позже
@@ -103,22 +105,22 @@ function App() {
   // functionality -- registration
   function handleRegister(first_name, last_name,  email, phone, password) {
     setPreloader(true);
-    apiAuth.auth({ first_name, last_name, email, phone, password })
-        .then((res) => {
-            if (res !== 400) {
-                setCurrentUser(res);
-                navigate('/login');
+      apiAuth.auth({ first_name, last_name, email, phone, password })
+          .then((res) => {
+              if (res !== 400) {
+                  setCurrentUser(res);
+                  navigate('/login');
+                  setPreloader(false);
+              }
+          }).catch(err => {
+                if (err === 'Ошибка: 409') {
+                  setErrorMessage('errors.user_already_exists');
+                } else {
+                  setErrorMessage('errors.error_during_registration');
+                }
+                console.log(err);
                 setPreloader(false);
-            }
-        }).catch(err => {
-            if (err === 'Ошибка: 409') {
-                setErrorMessage(CONFLICT_REG);
-            } else {
-                setErrorMessage(ERR_REGISTER);
-            }
-            console.log(err);
-            setPreloader(false);
-    });
+      });
   }
   //end
 
@@ -137,10 +139,10 @@ function App() {
             }
         }).catch(err => {
             if (err === 'Ошибка: 401') {
-                setErrorMessage(WRONG_PASS);
-                setLogIn(false);
+              setErrorMessage('errors.incorrect_email_or_password');
+              setLogIn(false);
             } else {
-                setErrorMessage(WRONG_TOKEN);
+              setErrorMessage('errors.error_during_login');
             }
             console.log(err);
             setPreloader(false);
@@ -160,9 +162,9 @@ function App() {
             setPreloader(false);
         }).catch(err => {
             if (err === 'Ошибка: 409') {
-                setErrorMessage(CONFLICT_REG);
+              setErrorMessage('errors.user_already_exists');
             } else {
-                setErrorMessage(ERR_CHANGE_INFO);
+              setErrorMessage('errors.error_during_data_change');
             }
             console.log(err);
             setPreloader(false);
@@ -466,6 +468,7 @@ function App() {
 
   return (
     <>
+      <I18nextProvider i18n={i18n}>
 
       <CurrentUserContext.Provider value={currentUser}>
 
@@ -768,6 +771,7 @@ function App() {
         
         <Footer/>
       </CurrentUserContext.Provider>
+      </I18nextProvider>
     </>
   );
 }

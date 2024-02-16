@@ -1,13 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useFormValidation from '../../utils/FormValidation';
-import { EMAIL, PASS, NAME, PHONE } from '../../utils/errors';
 import logo from '../../images/logo.png';
+import { useTranslation } from 'react-i18next';
 import './Register.css';
 
 function Register({ onRegister, errorMessage }) {
+
+    const { t } = useTranslation();
+
     const { values, isValid, errors, handleChange } = useFormValidation();
-    
+
     function handleSubmit(event) {
         event.preventDefault();
         onRegister(
@@ -23,9 +26,9 @@ function Register({ onRegister, errorMessage }) {
             <Link to="/" >
                 <img className="register__logo app__button-opacity" src={logo} alt="Логотип сайта"/>
             </Link>
-            <h2 className="register__text">Добро пожаловать!</h2>
+            <h2 className="register__text">{t('registr.welcome', 'Добро пожаловать!')}</h2>
             <form className="register__form" onSubmit={handleSubmit} noValidate >
-                <label className="register__label" htmlFor="first_name">Имя
+                <label className="register__label" htmlFor="first_name">{t('registr.first_name', 'Имя')}
                     <input
                         value={values.first_name || ''}
                         onChange={handleChange}
@@ -39,10 +42,10 @@ function Register({ onRegister, errorMessage }) {
                     />
                     <span 
                         className={`${errors.first_name ? "register__error" : "register__error_hidden"}`}>
-                            {NAME}
+                            {t('errors.enter_text_of_min_two_letters', 'Введите текст не менее двух букв')}
                     </span>
                 </label>
-                <label className="register__label" htmlFor="last_name">Фамилия
+                <label className="register__label" htmlFor="last_name">{t('registr.last_name', 'Фамилия')}
                     <input
                         value={values.last_name || ''}
                         onChange={handleChange}
@@ -56,7 +59,7 @@ function Register({ onRegister, errorMessage }) {
                     />
                     <span 
                         className={`${errors.last_name ? "register__error" : "register__error_hidden"}`}>
-                            {NAME}
+                            {t('errors.enter_text_of_min_two_letters', 'Введите текст не менее двух букв')}
                     </span>
                 </label>
                 <label className="register__label" htmlFor="email">E-mail
@@ -74,10 +77,10 @@ function Register({ onRegister, errorMessage }) {
                     />
                     <span 
                         className={`${errors.email ? "register__error" : "register__error_hidden"}`}>
-                            {EMAIL}
+                            {t('errors.enter_valid_email', 'Введите валидную почту(name@mail.com)')}
                     </span>
                 </label>
-                <label className="register__label" htmlFor="phone">Телефон
+                <label className="register__label" htmlFor="phone">{t('registr.phone', 'Телефон')}
                     <input
                         value={values.phone || ''}
                         onChange={handleChange}
@@ -92,10 +95,10 @@ function Register({ onRegister, errorMessage }) {
                     />
                     <span 
                         className={`${errors.phone ? "register__error" : "register__error_hidden"}`}>
-                            {PHONE}
+                            {t('errors.enter_valid_phone_starting_with_plus', 'Введите валидный телефон начиная с +')}
                     </span>
                 </label>
-                <label className="register__label" htmlFor="password">Пароль
+                <label className="register__label" htmlFor="password">{t('registr.password', 'Пароль')}
                     <input
                         value={values.password || ''}
                         onChange={handleChange}
@@ -110,7 +113,7 @@ function Register({ onRegister, errorMessage }) {
                     />
                     <span 
                         className={`${errors.password ? "register__error" : "register__error_hidden"}`}>
-                            {PASS}
+                            {t('errors.enter_password_of_min_8_chars', 'Введите пароль не менее 8 разных символов')}
                     </span>
                 </label> 
                 <button 
@@ -119,14 +122,14 @@ function Register({ onRegister, errorMessage }) {
                     disabled={!isValid}
                     type="submit"
                     aria-label="Зарегистрироваться">
-                        Зарегистрироваться
+                        {t('registr.register_account', 'Зарегистрироваться')}
                 </button>
             </form>
             <div className="register__signup-container">
-                <Link to="/login" className="register__signup app__text-opacity">Уже зарегистрированы? 
-                    <p className="register__signup_red">Войти</p>
+                <Link to="/login" className="register__signup app__text-opacity">{t('registr.already_registered', 'Уже зарегистрированы?')}
+                    <p className="register__signup_red">{t('registr.login', 'Войти')}</p>
                 </Link>
-                <p className="register__error-text">{errorMessage}</p>
+                <p className="register__error-text">{errorMessage && t(errorMessage)}</p>
             </div>
         </div>
     );

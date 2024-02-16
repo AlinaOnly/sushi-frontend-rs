@@ -139,6 +139,9 @@
 
     .register__text {
         margin-bottom: 80px;
+        margin-left: 20px;
+        margin-right: 20px;
+        text-align: center;
     }
 
     .register__form {

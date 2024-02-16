@@ -3,9 +3,13 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Preloader from '../components/Preloader/Preloader';
+import { useTranslation } from 'react-i18next';
 import '../components/App/App.css';
 
 const ActivationPage = ({ isPreloader }) => {
+
+    const { t } = useTranslation();
+
     const { uid, token } = useParams();
     const navigate = useNavigate();
 
@@ -37,7 +41,7 @@ const ActivationPage = ({ isPreloader }) => {
 
     return (
         <div>
-            <h1 className='activation'>Активация...</h1>
+            <h1 className='activation'>{t('activation.activating', 'Активация...')}</h1>
             {isPreloader && <Preloader/>}
         </div>
     );

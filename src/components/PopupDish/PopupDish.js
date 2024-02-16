@@ -1,7 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './PopupDish.css';
 
 function PopupDish({ dish, onClose, language }) {
+
+    const { t } = useTranslation();
 
     // Проверяем, что dish и его translations определены.
     if (!dish || !dish.translations || !dish.translations[language]) {
@@ -24,8 +27,8 @@ function PopupDish({ dish, onClose, language }) {
                     <div className="popup__title">
                         <h2 className="popup__image-text">{cleanedShortName}</h2>
                         <p className="popup__composition">{text} <br /> {dish.weight_volume} {weightVolumeUnit}, {dish.units_in_set} {unitsInSetUnit}
-                            <span className="popup__composition-span">В комплект входит васаби, имбирь, соевый соус.</span> 
-                            <span className="popup__composition-span">При самовывозе - скидка 10%.</span>
+                            <span className="popup__composition-span">{t('popup-dish.complect', 'В комплект входит васаби, имбирь, соевый соус.')}</span> 
+                            <span className="popup__composition-span">{t('popup-dish.discount', 'При самовывозе - скидка 10%.')}</span>
                         </p>
                         <p className="popup__price">{dish.final_price} RSD</p>
                     </div>
@@ -34,7 +37,7 @@ function PopupDish({ dish, onClose, language }) {
                         className="popup-dishes__cart-button"
                         type="submit"
                         aria-label="Корзина">
-                            В корзину
+                            {t('popup-dish.cart', 'В корзину')}
                     </button>
                     <button 
                         onClick={onClose} 

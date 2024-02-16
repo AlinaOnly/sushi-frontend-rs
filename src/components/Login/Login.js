@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import  useFormValidation from '../../utils/FormValidation';
-import { EMAIL, PASS } from '../../utils/errors';
 import logo from '../../images/logo.png';
+import { useTranslation } from 'react-i18next';
 import './Login.css';
 
 function Login({ onLogin, errorMessage }) {
+
+    const { t } = useTranslation();
+
     const { values, isValid, errors, handleChange } = useFormValidation();
 
     function handleSubmit(event) {
@@ -18,7 +21,7 @@ function Login({ onLogin, errorMessage }) {
             <Link to="/" >
                 <img className="login__logo app__button-opacity" src={logo} alt="Логотип сайта"/>
             </Link>
-            <h2 className="login__text">Рады видеть!</h2>
+            <h2 className="login__text">{t('registr.glad_to_see_you', 'Рады видеть!')}</h2>
             <form className="login__form" onSubmit={handleSubmit} noValidate>
                 <label className="login__label" htmlFor="email">E-mail
                     <input
@@ -35,10 +38,10 @@ function Login({ onLogin, errorMessage }) {
                     />
                     <span 
                         className={`${errors.email ? "login__error" : "login__error_hidden"}`}>
-                            {EMAIL}
+                            {t('errors.enter_valid_email', 'Введите валидную почту(name@mail.com)')}
                     </span>
                 </label> 
-                <label className="login__label" htmlFor="password">Пароль
+                <label className="login__label" htmlFor="password">{t('registr.password', 'Пароль')}
                     <input
                         value={values.password || ''}
                         onChange={handleChange}
@@ -52,7 +55,7 @@ function Login({ onLogin, errorMessage }) {
                     />
                     <span 
                         className={`${errors.password ? "login__error" : "login__error_hidden"}`}>
-                            {PASS}
+                            {t('errors.enter_password_of_min_8_chars', 'Введите пароль не менее 8 разных символов')}
                     </span>
                 </label>
                 <button 
@@ -61,14 +64,14 @@ function Login({ onLogin, errorMessage }) {
                     {`login__submit-button ${!isValid ? "login__submit-button_disable" : "app__button-opacity"}`}
                     type="submit"
                     aria-label="Войти">
-                        Войти
+                        {t('registr.login', 'Войти')}
                 </button>
             </form>
             <div className="login__signin-container">
-                <Link to="/registration" className="login__signin app__text-opacity">Еще не зарегистрированы? 
-                    <p className="login__signin_red">Регистрация</p>
+                <Link to="/registration" className="login__signin app__text-opacity">{t('registr.not_registered_yet', 'Еще не зарегистрированы? ')}
+                    <p className="login__signin_red">{t('registr.register_account', 'Регистрация')}</p>
                 </Link>
-                <p className="register__error-text">{errorMessage}</p>
+                <p className="register__error-text">{errorMessage && t(errorMessage)}</p>
             </div>
         </div>
     );

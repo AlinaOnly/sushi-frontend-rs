@@ -6,9 +6,12 @@ import cart from '../../images/cart.svg';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
 import i18next from '../../utils/i18n';
+import { useTranslation } from 'react-i18next';
 import './Header.css';
 
 function Headers({ language, onLanguageChange }) {
+
+    const { t } = useTranslation();
 
     const currentUser = useContext(CurrentUserContext);
     const { values, setValues } = useFormValidation();
@@ -32,13 +35,13 @@ function Headers({ language, onLanguageChange }) {
         <header className="header">
             <div className="header__container-links">
                 <NavLink className={({ isActive }) => (isActive ? "header__link-active app__text-opacity" : "header__link app__text-opacity")}
-                    to="/">Меню
+                    to="/">{t('header.menu', 'Меню')}
                 </NavLink>
                 <NavLink className={({ isActive }) => (isActive ? "header__link-active app__text-opacity" : "header__link app__text-opacity")}
-                    to="/contacts">О нас
+                    to="/contacts">{t('header.about', 'О нас')}
                 </NavLink>  
                 <NavLink className={({ isActive }) => (isActive ? "header__link-active app__text-opacity" : "header__link app__text-opacity")}
-                    to="/promo">Промо
+                    to="/promo">{t('header.promo', 'Промо')}
                 </NavLink>
                     <p className="header__phone">
                         <a  
@@ -72,7 +75,7 @@ function Headers({ language, onLanguageChange }) {
             <NavLink 
                 className={({ isActive }) => (isActive ? "header__link-acc header__link-active" : "header__link-acc header__link")}
                 to="/profile">
-                    {values.first_name || 'Аккаунт'}
+                    {values.first_name ? values.first_name : t('header.account', 'Аккаунт')}
                 <img src={account} alt="Логотип аккаунта" className="header__account-logo app__button-opacity"/>
             </NavLink>
             <NavLink className="header__link-button" to="/cart">
@@ -80,7 +83,7 @@ function Headers({ language, onLanguageChange }) {
                     className="header__cart-button app__button-opacity" 
                     type="submit"
                     aria-label="Корзина">
-                        Корзина
+                        {t('header.cart', 'Корзина')}
                     <img src={cart} alt="Логотип корзины" className="header__image-button-cart"/>
                     <p className="header__submit-button-counters">0</p>
                 </button>

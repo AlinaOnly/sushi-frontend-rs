@@ -1,13 +1,17 @@
 import React from 'react';
 import map from '../../images/map.jpg';
+import { useTranslation } from 'react-i18next';
 import './Contact.css';
 
 
 function Contacts() {
+
+    const { t } = useTranslation();
+
     return (
         <>
             <div className="contacts">
-                <h2 className="contacts__title">О нас</h2>
+            <h2 className="contacts__title">{t('contacts.title', 'О нас')}</h2>
                 <div className="contacts__container">
                     <p className="contacts__article">Телефон для заказов: +381 61 2714798
                         Рабочее время: 09:00-23:00

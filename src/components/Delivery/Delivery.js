@@ -2,11 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
+import { useTranslation } from 'react-i18next';
 import './Delivery.css';
 
 function Delivery() {
+
+    const { t } = useTranslation();
+
     //состояние кнопки radio
     const [isChecked, setIsChecked] = useState(false);
+
     //каунтер до 10 приборов
     const [count, setCount] = useState(1);
 
@@ -26,7 +31,6 @@ function Delivery() {
         event.preventDefault();
     }
     //end
-
 
     // Счетчик столовых приборов
     const handleAdd = () => {
@@ -72,16 +76,20 @@ function Delivery() {
         }
         return intervals;
     };
-
     const timeOptions = generateTimeOptions();
     //end
-
 
     // Функция для вывода дня и месяца
     const generateDateOptions = () => {
         const today = new Date();
-        const monthNames = ["Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"];
-        const dates = ["Как можно быстрее"];
+        const monthNames = t('months', {
+            returnObjects: true,
+            defaultValue: [
+                "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
+                "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
+            ]
+        });
+        const dates = [t('dates.as_soon_as_possible', 'Как можно быстрее')];
 
         // Определяем дату на месяц вперед от сегодня
         const oneMonthFromNow = new Date();
@@ -103,10 +111,8 @@ function Delivery() {
             // Переходим к следующему дню
             dateIterator.setDate(dateIterator.getDate() + 1);
         }
-
         return dates;
     };
-
     const dateOptions = generateDateOptions();
     //end
 
@@ -115,7 +121,7 @@ function Delivery() {
             <div className="delivery">
                 <form className="delivery__form" onSubmit={handleSubmit}>
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="first_name">Ваше имя
+                            <label className="delivery__label" htmlFor="first_name">{t('delivery.your_name', 'Ваше имя')}
                                 <input
                                     value={values.first_name || ''}
                                     onChange={handleChange}
@@ -123,19 +129,19 @@ function Delivery() {
                                     className="delivery__input"
                                     name="first_name"
                                     type="text"
-                                    placeholder="Имя"
+                                    placeholder={t('delivery.name', 'Имя')}
                                     minLength="2"
                                     maxLength="40"
                                     required
                                 />
                                 <span 
                                     className={`${errors.first_name ? "login__error" : "login__error_hidden"}`}>
-                                        Поле обязательно для ввода
+                                        {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
                             </label>
                         </div>    
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="phone">Ваш телефон
+                            <label className="delivery__label" htmlFor="phone">{t('delivery.your_phone', 'Ваш телефон')}
                                 <input
                                     value={values.phone || ''}
                                     onChange={handleChange}
@@ -150,12 +156,12 @@ function Delivery() {
                                 />
                                 <span 
                                     className={`${errors.phone ? "login__error" : "login__error_hidden"}`}>
-                                        Поле обязательно для ввода
+                                        {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
                             </label>
                         </div>    
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="adress">Адрес доставки
+                            <label className="delivery__label" htmlFor="adress">{t('delivery.delivery_address', 'Адрес доставки')}
                                 <input
                                     value={values.adress || ''}
                                     onChange={handleChange}
@@ -163,36 +169,36 @@ function Delivery() {
                                     className="delivery__input"
                                     name="adress"
                                     type="text"
-                                    placeholder="Ваш адрес"
+                                    placeholder={t('delivery.your_address', 'Ваш адрес')}
                                     minLength="2"
                                     maxLength="40"
                                     required
                                 />
                                 <span 
                                     className={`${errors.adress ? "login__error" : "login__error_hidden"}`}>
-                                        Поле обязательно для ввода
+                                        {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
                             </label>
                         </div>
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="region">Регион
+                            <label className="delivery__label" htmlFor="region">{t('delivery.region', 'Регион')}
                                 <input
                                     id="region"
                                     className="delivery__input"
                                     name="region"
                                     type="text"
-                                    placeholder="Ваш регион"
+                                    placeholder={t('delivery.your_region', 'Ваш регион')}
                                     minLength="10"
                                     maxLength="40"
                                     //required
                                 />
                                 <span 
                                     className={`${errors.region ? "login__error" : "login__error_hidden"}`}>
-                                        Поле обязательно для ввода
+                                        {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
                             </label>
                         </div>
-                        <div className="delivery__description">Количество приборов
+                        <div className="delivery__description">{t('delivery.number_of_utensils', 'Количество приборов')}
                             <button
                                 onClick={handleDelete}
                                 aria-label="Минус"
@@ -218,25 +224,25 @@ function Delivery() {
                                 onClick={handleRadioClick}
                             />
                             <label id="rd" className="delivery__label" onClick={handleRadioClick}>
-                                Частный дом
+                                {t('delivery.private_house', 'Частный дом')}
                             </label>
                         </div>
                         { isChecked &&
                             <div className="delivery__description">
-                                <label className="delivery__label" htmlFor="home">Дом
+                                <label className="delivery__label" htmlFor="home">{t('delivery.house', 'Дом')}
                                     <input
                                         id="home"
                                         className="delivery__input"
                                         name="home"
                                         type="text"
-                                        placeholder="Дом"
+                                        placeholder={t('delivery.house', 'Дом')}
                                         minLength="1"
                                         maxLength="6"
                                         //required
                                     />
                                 <span 
                                     className={`${errors.home ? "login__error" : "login__error_hidden"}`}>
-                                        Поле обязательно для ввода
+                                        {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
                                 </label>
                             </div>
@@ -244,71 +250,71 @@ function Delivery() {
                         { !isChecked && 
                             <>
                                 <div className="delivery__description">
-                                    <label className="delivery__label" htmlFor="flat">Квартира
+                                    <label className="delivery__label" htmlFor="flat">{t('delivery.apartment', 'Квартира')}
                                         <input
                                             id="flat"
                                             className="delivery__input"
                                             name="flat"
                                             type="text"
-                                            placeholder="Квартира"
+                                            placeholder={t('delivery.apartment', 'Квартира')}
                                             minLength="1"
                                             maxLength="1000"
                                             //required
                                         />
                                     <span 
                                         className={`${errors.flat ? "login__error" : "login__error_hidden"}`}>
-                                            Поле обязательно для ввода
+                                            {t('delivery.field_required', 'Поле обязательно для ввода')}
                                     </span>
                                     </label>
                                 </div> 
                                 <div className="delivery__description">
-                                    <label className="delivery__label" htmlFor="floor">Этаж
+                                    <label className="delivery__label" htmlFor="floor">{t('delivery.floor', 'Этаж')}
                                         <input
                                             id="floor"
                                             className="delivery__input"
                                             name="floor"
                                             type="text"
-                                            placeholder="Этаж"
+                                            placeholder={t('delivery.floor', 'Этаж')}
                                             minLength="1"
                                             maxLength="100"
                                             //required
                                             />
                                         <span 
                                             className={`${errors.floor ? "login__error" : "login__error_hidden"}`}>
-                                                Поле обязательно для ввода
+                                                {t('delivery.field_required', 'Поле обязательно для ввода')}
                                         </span>
                                     </label>
                                 </div> 
                                 <div className="delivery__description">
-                                    <label className="delivery__label" htmlFor="homephone">Домофон
+                                    <label className="delivery__label" htmlFor="homephone">{t('delivery.intercom', 'Домофон')}
                                         <input
                                             id="homephone"
                                             className="delivery__input"
                                             name="homephone"
                                             type="text"
-                                            placeholder="Домофон"
+                                            placeholder={t('delivery.intercom', 'Домофон')}
                                             minLength="1"
                                             maxLength="1000"
                                             //required
                                         />
                                         <span 
                                             className={`${errors.homephone ? "login__error" : "login__error_hidden"}`}>
-                                                Поле обязательно для ввода
+                                                {t('delivery.field_required', 'Поле обязательно для ввода')}
                                         </span>
                                     </label>
                                 </div>
                             </>
                         }
                         <div className="delivery__description">
-                            <label className="delivery__label">Комментарий к заказу
+                            <label className="delivery__label">{t('delivery.order_comment', 'Комментарий к заказу')}
                                 <textarea
                                     className="delivery__textarea"
-                                    placeholder="Напиши свои комментарии к Вашему заказу"
+                                    placeholder={t('delivery.write_your_order_comments', 'Напишите свои комментарии к Вашему заказу')}
                                 />
                             </label>
                         </div>
                         <div className="delivery__container">
-                            Укажите дату и время
+                            {t('delivery.specify_date_time', 'Укажите дату и время')}
                                 <select className="delivery__select" id="month" name="selectedMonth">
                                     {dateOptions.map((date, index) => (
                                         <option key={index} value={date} className="delivery__select-month">
@@ -334,7 +340,7 @@ function Delivery() {
                                 disabled={!isValid}
                                 type="submit"
                                 aria-label="Выберете способ оплаты">
-                                    Выберете способ оплаты
+                                    {t('delivery.choose_payment_method', 'Выберете способ оплаты')}
                             </button>
                         </Link>
                     </form>

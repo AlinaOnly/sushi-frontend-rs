@@ -9,12 +9,13 @@ i18next
     .use(LanguageDetector)
     .use(Backend)  // с помощью плагина определяем язык пользователя в браузере
         .init({
-        debug: true,
+        //debug: true,
         resources,  // передаем переводы текстов интерфейса в формате JSON
-        fallbackLng: 'sr', // если переводы на языке пользователя недоступны, то будет использоваться язык, указанный в этом поле
-        saveMissing: true,
+        lng: 'ru',
+        fallbackLng: 'ru', // если переводы на языке пользователя недоступны, то будет использоваться язык, указанный в этом поле
+        saveMissing: false,
         interpolation: {
-        escapeValue: false, // экранирование уже есть в React, поэтому отключаем
+            escapeValue: false, // экранирование уже есть в React, поэтому отключаем
         },
     });
 

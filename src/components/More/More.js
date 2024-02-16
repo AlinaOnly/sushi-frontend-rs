@@ -1,18 +1,20 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './More.css';
 
 function More({ handleMoreButton }) {
-    return (
-            <div className="dishes__loading">
-                    <button
+        const { t } = useTranslation();
+return (
+        <div className="dishes__loading">
+                <button
                         onClick={handleMoreButton}
                         className="dishes__button app__button-opacity"
                         type="button"
                         aria-label="Ещё">
-                            Ещё
-                    </button> 
-            </div>
-    );
+                        {t('more-btn.more', 'Ещё')}
+                </button> 
+        </div>
+        );
 }
 
 export default More;

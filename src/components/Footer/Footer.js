@@ -5,9 +5,13 @@ import instagram from '../../images/instagram.svg';
 import telegram from '../../images/telegram.svg';
 import viber from '../../images/viber.svg';
 import whatsapp from '../../images/whatsapp.svg';
+import { useTranslation } from 'react-i18next';
 import './Footer.css';
 
 function Footer() {
+
+    const { t } = useTranslation();
+
     return (
         <footer className="footer">
             <Link to="/">
@@ -15,13 +19,13 @@ function Footer() {
             </Link>
             <div className="footer__container">
             <NavLink className={({ isActive }) => (isActive ? "footer__link-active app__text-opacity" : "footer__link app__text-opacity")}
-                to="/">Меню
+                to="/">{t('footer.menu', 'Меню')}
             </NavLink>
             <NavLink className={({ isActive }) => (isActive ? "footer__link-active app__text-opacity" : "footer__link app__text-opacity")}
-                to="/contacts">О нас
+                to="/contacts">{t('footer.about', 'О нас')}
             </NavLink>  
             <NavLink className={({ isActive }) => (isActive ? "footer__link-active app__text-opacity" : "footer__link app__text-opacity")}
-                to="/promo">Промо
+                to="/promo">{t('footer.promo', 'Промо')}
             </NavLink>
                 <ul className="footer__list">
                     <li className="footer__item">
