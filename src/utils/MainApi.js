@@ -142,7 +142,17 @@ class Api {
             headers: this._headers,
             credentials: 'include',
         }).then(this._mainApiError);
+    }
+    //
 
+    // About Us Contacts api
+    getOurContacts() {
+        return fetch(`${this._url}/contacts/`, {
+            method: 'GET',
+            headers: this._headers,
+            credentials: 'include',
+        })
+        .then(this._mainApiError);
     }
     //
 

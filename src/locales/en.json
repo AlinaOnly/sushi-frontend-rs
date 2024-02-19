@@ -17,7 +17,9 @@
         "telegram": "Telegram"
     },
     "contacts": {
-        "title": "About Us"
+        "title": "About Us",
+        "time": "Work time:",
+        "phone": "Phone number for orders:"
     },
     "promo": {
         "title": "News and Promotions"
@@ -161,15 +163,15 @@
         "as_soon_as_possible": "As soon as possible"
     },
     "errors": {
-        "incorrect_email_or_password": "You entered an incorrect email or password.",
+        "incorrect_email_or_password": "No active account found with the specified details",
         "error_during_login": "An error occurred during login.",
         "user_already_exists": "A user with this email already exists.",
         "error_during_registration": "An error occurred during registration.",
         "error_during_data_change": "An error occurred while updating data",
         "enter_valid_email": "Enter a valid email (name@mail.com)",
-        "enter_password_of_min_8_chars": "Enter a password of at least 8 different characters",
-        "enter_text_of_min_two_letters": "Enter text of at least two letters",
-        "enter_valid_phone_starting_with_plus": "Enter a valid phone number starting with +",
+        "enter_password_of_min_8_chars": "The password must consist of numbers and letters and must be at least 8 characters long",
+        "enter_text_of_min_two_letters": "Enter your first or last name, at least 2 letters",
+        "enter_valid_phone_starting_with_plus": "Broj telefona mora biti u međunarodnom formatu i sadržati od 11 do 14 cifara",
         "error_during_profile_update": "An error occurred during profile update."
     }
 }

@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useContext } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
-import { EMAIL, NAME, PHONE } from '../../utils/errors';
 import ProfileNav from '../ProfileNav/ProfileNav';
 import { useTranslation } from 'react-i18next';
 import './Profile.css';
@@ -70,12 +69,13 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 type="text"
                                 placeholder={t('profile.first_name', 'Имя')}
                                 minLength="2"
-                                maxLength="40"
+                                maxLength="150"
+                                pattern="^[A-Za-zА-Яа-яЁё]{2,150}$"
                                 required
                             /></label>
                             <span 
                                 className={`${errors.first_name ? "profile__error" : "profile__error_hidden"}`}>
-                                    {t('errors.enter_text_of_min_two_letters', 'Введите текст не менее двух букв')}
+                                    {t('errors.enter_text_of_min_two_letters', 'Введите имя или фамилию от 2 букв')}
                             </span>
                     </div>    
                     <div className="profile__container">
@@ -90,11 +90,12 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 type="text"
                                 placeholder={t('profile.last_name', 'Фамилия')}
                                 minLength="2"
-                                maxLength="40"
+                                maxLength="150"
+                                pattern="^[A-Za-zА-Яа-яЁё]{2,150}$"
                             /></label>
                             <span 
                                 className={`${errors.last_name ? "profile__error" : "profile__error_hidden"}`}>
-                                    {t('errors.enter_text_of_min_two_letters', 'Введите текст не менее двух букв')}
+                                    {t('errors.enter_text_of_min_two_letters', 'Введите имя или фамилию от 2 букв')}
                             </span>
                     </div>    
                     <div className="profile__container">
@@ -129,14 +130,14 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 name="phone"
                                 type="tel"
                                 placeholder="+"
-                                minLength="12"
-                                maxLength="13"
-                                pattern="^((8|\+3)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,13}$"
+                                minLength="11"
+                                maxLength="14"
+                                pattern="^\+[0-9]{11,14}$"
                                 required
                             /></label>
                             <span 
                                 className={`${errors.phone ? "profile__error" : "profile__error_hidden"}`}>
-                                    {t('errors.enter_valid_phone_starting_with_plus', 'Введите валидный телефон начиная с +')}
+                                    {t('errors.enter_valid_phone_starting_with_plus', 'Номер телефона должен быть в международном формате и содержать от 11 до 14 цифр')}
                             </span>
                     </div>
                     <div className="profile__container">

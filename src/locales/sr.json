@@ -17,7 +17,10 @@
         "telegram": "Telegrama"
     },
     "contacts": {
-        "title": "O nama"
+        "title": "O nama",
+        "time": "Radno vreme:",
+        "phone": "Broj telefona za porudžbine:"
+
     },
     "promo": {
         "title": "Vesti i Akcije"
@@ -161,15 +164,15 @@
         "as_soon_as_possible": "Što je pre moguće"
     },
     "errors": {
-        "incorrect_email_or_password": "Uneli ste pogrešan email ili lozinku.",
+        "incorrect_email_or_password": "Nije pronađen nijedan aktivan nalog sa navedenim detaljima",
         "error_during_login": "Došlo je do greške prilikom prijavljivanja.",
         "user_already_exists": "Korisnik sa ovim email-om već postoji.",
         "error_during_registration": "Došlo je do greške prilikom registracije.",
         "error_during_data_change": "Došlo je do greške prilikom ažuriranja podataka",
         "enter_valid_email": "Unesite validan email (ime@mail.com)",
-        "enter_password_of_min_8_chars": "Unesite lozinku od najmanje 8 različitih karaktera",
-        "enter_text_of_min_two_letters": "Unesite tekst od najmanje dva slova",
-        "enter_valid_phone_starting_with_plus": "Unesite validan broj telefona koji počinje sa +",
+        "enter_password_of_min_8_chars": "Lozinka mora da se sastoji od brojeva i slova i mora imati najmanje 8 znakova",
+        "enter_text_of_min_two_letters": "Unesite svoje ime ili prezime, najmanje 2 slova",
+        "enter_valid_phone_starting_with_plus": "Broj telefona mora biti u međunarodnom formatu i sadržati od 11 do 14 cifara",
         "error_during_profile_update": "Došlo je do greške prilikom ažuriranja profila."
     }
 }

@@ -37,12 +37,13 @@ function Register({ onRegister, errorMessage }) {
                         name="first_name"
                         type="text"
                         minLength="2"
-                        maxLength="30"
+                        maxLength="150"
+                        pattern="^[A-Za-zА-Яа-яЁё]{2,150}$"
                         required
                     />
                     <span 
                         className={`${errors.first_name ? "register__error" : "register__error_hidden"}`}>
-                            {t('errors.enter_text_of_min_two_letters', 'Введите текст не менее двух букв')}
+                            {t('errors.enter_text_of_min_two_letters', 'Введите имя или фамилию от 2 букв')}
                     </span>
                 </label>
                 <label className="register__label" htmlFor="last_name">{t('registr.last_name', 'Фамилия')}
@@ -54,12 +55,13 @@ function Register({ onRegister, errorMessage }) {
                         name="last_name"
                         type="text"
                         minLength="2"
-                        maxLength="30"
+                        maxLength="150"
+                        pattern="^[A-Za-zА-Яа-яЁё]{2,150}$"
                         required
                     />
                     <span 
                         className={`${errors.last_name ? "register__error" : "register__error_hidden"}`}>
-                            {t('errors.enter_text_of_min_two_letters', 'Введите текст не менее двух букв')}
+                            {t('errors.enter_text_of_min_two_letters', 'Введите имя или фамилию от 2 букв')}
                     </span>
                 </label>
                 <label className="register__label" htmlFor="email">E-mail
@@ -70,8 +72,8 @@ function Register({ onRegister, errorMessage }) {
                         className="register__input"
                         name="email"
                         type="email"
-                        minLength="8"
-                        maxLength="30"
+                        minLength="6"
+                        maxLength="40"
                         pattern="^(http(s){0,1}:\/\/.){0,1}[\-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$"
                         required
                     />
@@ -88,14 +90,14 @@ function Register({ onRegister, errorMessage }) {
                         className="register__input"
                         name="phone"
                         type="phone"
-                        minLength="12"
+                        minLength="11"
                         maxLength="14"
-                        pattern="^((8|\+3)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,13}$"
+                        pattern="^\+[0-9]{11,14}$"
                         required
                     />
                     <span 
                         className={`${errors.phone ? "register__error" : "register__error_hidden"}`}>
-                            {t('errors.enter_valid_phone_starting_with_plus', 'Введите валидный телефон начиная с +')}
+                            {t('errors.enter_valid_phone_starting_with_plus', 'Номер телефона должен быть в международном формате и содержать от 11 до 14 цифр')}
                     </span>
                 </label>
                 <label className="register__label" htmlFor="password">{t('registr.password', 'Пароль')}
@@ -107,13 +109,13 @@ function Register({ onRegister, errorMessage }) {
                         name="password"
                         type="password"
                         minLength="8"
-                        maxLength="40"
-                        //pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$"
+                        maxLength="100"
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,100}$"
                         required
                     />
                     <span 
                         className={`${errors.password ? "register__error" : "register__error_hidden"}`}>
-                            {t('errors.enter_password_of_min_8_chars', 'Введите пароль не менее 8 разных символов')}
+                            {t('errors.enter_password_of_min_8_chars', 'Пароль должен состоять из цифр и букв, длина должна быть не менее 8 символов')}
                     </span>
                 </label> 
                 <button 

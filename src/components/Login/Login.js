@@ -50,12 +50,13 @@ function Login({ onLogin, errorMessage }) {
                         name="password"
                         type="password"
                         minLength="8"
-                        maxLength="40"
+                        maxLength="100"
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,100}$"
                         required
                     />
                     <span 
                         className={`${errors.password ? "login__error" : "login__error_hidden"}`}>
-                            {t('errors.enter_password_of_min_8_chars', 'Введите пароль не менее 8 разных символов')}
+                            {t('errors.enter_password_of_min_8_chars', 'Пароль должен состоять из цифр и букв, длина должна быть не менее 8 символов')}
                     </span>
                 </label>
                 <button 

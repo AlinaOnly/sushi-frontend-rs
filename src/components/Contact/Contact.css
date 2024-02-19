@@ -15,21 +15,33 @@
     max-width: 700px;
 }
 
-.contacts__article {
-    font-weight: 400;
-    line-height: 40px;
-    font-size: 16px;
+.contact__container {
+    margin: 50px 0;
 }
 
-.contacts__description {
+.contact__article {
     font-weight: 400;
-    line-height: 40px;
     font-size: 16px;
+    margin: 0;
 }
 
-.contacts__image {
+.contact__description {
+    font-weight: 400;
+    font-size: 16px;
+    margin: 20px 0 0 0;
+}
+
+.contact__image {
     width: 100%;
+    margin-top: 20px;
     margin-bottom: 50px;
+}
+
+.contacts__delivery {
+    font-weight: 400;
+    line-height: 40px;
+    font-size: 16px;
+    max-width: 700px;
 }
 
 @media screen and (max-width: 768px) {

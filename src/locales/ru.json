@@ -1,14 +1,14 @@
 {
     "errors": {
-        "incorrect_email_or_password": "Вы ввели неправильную почту или пароль.",
+        "incorrect_email_or_password": "Не найдено активной учетной записи с указанными данными",
         "error_during_login": "При авторизации произошла ошибка.",
         "user_already_exists": "Пользователь с таким email уже существует.",
         "error_during_registration": "При регистрации пользователя произошла ошибка.",
         "error_during_data_change": "При изменении данных произошла ошибка",
         "enter_valid_email": "Введите валидную почту(name@mail.com)",
-        "enter_password_of_min_8_chars": "Введите пароль не менее 8 разных символов",
-        "enter_text_of_min_two_letters": "Введите текст не менее двух букв",
-        "enter_valid_phone_starting_with_plus": "Введите валидный телефон начиная с +",
+        "enter_password_of_min_8_chars": "Пароль должен состоять из цифр и букв, длина должна быть не менее 8 символов",
+        "enter_text_of_min_two_letters": "Введите имя или фамилию от 2 букв",
+        "enter_valid_phone_starting_with_plus": "Номер телефона должен быть в международном формате и содержать от 11 до 14 цифр",
         "error_during_profile_update": "При обновлении профиля произошла ошибка."
     }
 }

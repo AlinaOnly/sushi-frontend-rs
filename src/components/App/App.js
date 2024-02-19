@@ -20,6 +20,7 @@ import Dishes from '../Dishes/Dishes';
 import PopupDish from '../PopupDish/PopupDish';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
+import Extra from '../Extra/Extra';
 import Rolls from '../Rolls/Rolls';
 import Backed from '../Backed/Backed';
 import Futomaki from '../Futomaki/Futomaki';
@@ -76,6 +77,9 @@ function App() {
 
   // Promo news Items state
   const [promoNews, setPromoNews] = useState([]);
+
+  // About us and our contacts state
+  const [aboutUs, setAboutUs] = useState(null);
 
   // dishes Items
   const [dishes, setDishesItems] = useState([]);
@@ -312,6 +316,21 @@ function App() {
   }
   //end
 
+  // functionality -- getting news from Api
+  function getAboutUsfunction() {
+    setPreloader(true);
+    MainApi.getOurContacts()
+      .then((data) => {
+        setAboutUs(data);
+        setPreloader(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setPreloader(false);
+      });
+  }
+  //end
+
   // functionality -- getting dishes from Api
   function getDishes() {
     setPreloader(true);
@@ -394,7 +413,8 @@ function App() {
     useEffect(() => {
       getDishes();
       getNews();
-    }, []);
+      getAboutUsfunction();
+    }, []); // Пустой массив зависимостей, чтобы запрос выполнился один раз
     //end
 
     useEffect(() => {
@@ -592,6 +612,17 @@ function App() {
           />
 
           <Route 
+            path='/extra' 
+            element={
+              <Extra
+                dishes={dishes}
+                language={language}
+                onDishClick={handleDishClick}
+                handleBurgerMenu={handleBurgerMenu}
+              />} 
+          />
+
+          <Route 
             path='/rolls' 
             element={
               <Rolls
@@ -736,7 +767,12 @@ function App() {
 
           <Route 
             path='/contacts'
-            element={<Contacts/>}
+            element={
+              <Contacts
+                aboutUs={aboutUs}
+                language={language}
+              />
+            }
           />
 
           <Route 

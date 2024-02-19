@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react';
-// Import Swiper React components
+import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import imbir from '../../images/imbir.jpg';
 import vasaby from '../../images/vasaby.jpg';
@@ -12,9 +11,6 @@ import 'swiper/css/navigation';
 import './Carousel.css';
 
 //import './styles.css';
-
-// import required modules
-import { Parallax, Pagination, Navigation } from 'swiper/modules';
 
 export default function App() {
     return (
