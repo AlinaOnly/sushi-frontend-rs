@@ -3,18 +3,22 @@ import { Link } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
 import { useTranslation } from 'react-i18next';
+import StorePickerMap from '../../utils/StorePickerMap';
 import './CashnCarry.css';
 
 function CashnCarry() {
 
     const { t } = useTranslation();
 
+    // для выбора магазина с карты
+    const [selectedStore, setSelectedStore] = useState(null);
+
     //каунтер до 10 приборов
     const [count, setCount] = useState(1);
 
     //если залогинился юзер - вписать его данные
     const currentUser = useContext(CurrentUserContext);
-    const { values, isValid, errors, setValues, handleChange } = useFormValidation();
+    const { values, isValid, errors, formRef, setValues, handleChange } = useFormValidation();
 
     useEffect(() => {
         setValues({
@@ -47,12 +51,11 @@ function CashnCarry() {
         const endHour = 22;
 
         for (let hour = startHour; hour <= endHour; hour++) {
-            // Для первого часа начинаем с 30 минут, иначе с 0.
-            let startMinute = hour === startHour ? 30 : 0;
+            // Добавляем интервал каждый час начиная с 00 минут
+            intervals.push(`${hour}:00`);
 
-            // Добавляем интервалы по 30 минут
-            intervals.push(`${hour}:${startMinute === 0 ? '00' : startMinute}`);
-            if (startMinute === 30 || hour < endHour) {
+            // Добавляем 30 минут только если это не последний час
+            if (hour < endHour) {
                 intervals.push(`${hour}:30`);
             }
         }
@@ -81,7 +84,7 @@ function CashnCarry() {
         while (dateIterator <= oneMonthFromNow) {
             const day = dateIterator.getDate();
             const month = dateIterator.getMonth();
-            const year = dateIterator.getFullYear(); // Если нужно, можно добавить год
+            //const year = dateIterator.getFullYear(); // Если нужно, можно добавить год
 
             // Форматируем число, добавляя ведущий ноль, если нужно
             const formattedDay = day < 10 ? `0${day}` : day;
@@ -101,7 +104,7 @@ function CashnCarry() {
     return (
         <>
             <div className="delivery">
-                <form className="delivery__form" onSubmit={handleSubmit}>
+                <form ref={formRef} className="delivery__form" onSubmit={handleSubmit}>
                         <div className="delivery__description">
                             <label className="delivery__label" htmlFor="first_name">{t('delivery.your_name', 'Ваше имя')}
                                 <input
@@ -113,7 +116,8 @@ function CashnCarry() {
                                     type="text"
                                     placeholder={t('delivery.name', 'Имя')}
                                     minLength="2"
-                                    maxLength="40"
+                                    maxLength="150"
+                                    pattern="^[A-Za-zА-Яа-яЁё]{2,150}$"
                                     required
                                 />
                                 <span 
@@ -132,8 +136,9 @@ function CashnCarry() {
                                     name="phone"
                                     type="tel"
                                     placeholder="+"
-                                    minLength="10"
+                                    minLength="11"
                                     maxLength="14"
+                                    pattern="^\+[0-9]{11,14}$"
                                     required
                                 />
                                 <span 
@@ -143,41 +148,24 @@ function CashnCarry() {
                             </label>
                         </div>    
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="adress">{t('delivery.delivery_address', 'Адрес доставки')}
+                            <label className="delivery__label" htmlFor="address">{t('delivery.store', 'Выберите магазин для самовывоза')}
                                 <input
-                                    value={values.adress || ''}
+                                    value={selectedStore ? selectedStore.name : ''}
                                     onChange={handleChange}
-                                    id="adress"
+                                    id="address"
                                     className="delivery__input"
-                                    name="adress"
+                                    name="address"
                                     type="text"
-                                    placeholder={t('delivery.your_address', 'Ваш адрес')}
-                                    minLength="2"
-                                    maxLength="40"
+                                    placeholder={t('delivery.store', 'Выберите магазин')}
+                                    minLength="5"
+                                    maxLength="100"
                                     required
                                 />
                                 <span 
-                                    className={`${errors.adress ? "login__error" : "login__error_hidden"}`}>
+                                    className={`${errors.address ? "login__error" : "login__error_hidden"}`}>
                                         {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
-                            </label>
-                        </div>
-                        <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="region">{t('delivery.region', 'Регион')}
-                                <input
-                                    id="region"
-                                    className="delivery__input"
-                                    name="region"
-                                    type="text"
-                                    placeholder={t('delivery.your_region', 'Ваш регион')}
-                                    minLength="10"
-                                    maxLength="40"
-                                    //required
-                                />
-                                <span 
-                                    className={`${errors.region ? "login__error" : "login__error_hidden"}`}>
-                                        {t('delivery.field_required', 'Поле обязательно для ввода')}
-                                </span>
+                                <StorePickerMap onStoreSelect={setSelectedStore} />
                             </label>
                         </div>
                         <div className="delivery__description">{t('delivery.number_of_utensils', 'Количество приборов')}
@@ -221,7 +209,6 @@ function CashnCarry() {
                                 </select>
                             
                         </div>
-                        
                         <Link to="/payment">
                             <button 
                                 //onClick={handleSubmit}

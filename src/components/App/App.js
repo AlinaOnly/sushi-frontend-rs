@@ -65,7 +65,7 @@ function App() {
   const [language, setLanguage] = useState('ru'); //начальный язык
 
   // users state
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({  addresses: []});
 
   const [logIn, setLogIn] = useState(false);
 
@@ -112,7 +112,13 @@ function App() {
       apiAuth.auth({ first_name, last_name, email, phone, password })
           .then((res) => {
               if (res !== 400) {
-                  setCurrentUser(res);
+                setCurrentUser(current => {
+                  const updatedUser = {...current, ...res};
+                  if (!res.addresses && current.addresses) {
+                    updatedUser.addresses = current.addresses;
+                  }
+                  return updatedUser;
+                });
                   navigate('/login');
                   setPreloader(false);
               }
@@ -161,7 +167,13 @@ function App() {
         MainApi.changeUserInformation({ first_name, last_name, email, phone, date_of_birth,
           messenger })
         .then((res) => {
-            setCurrentUser(res);
+          setCurrentUser(current => {
+            const updatedUser = {...current, ...res};
+            if (!res.addresses && current.addresses) {
+              updatedUser.addresses = current.addresses;
+            }
+            return updatedUser;
+          });
             setErrorMessage('Ваши данные успешно изменены');
             setPreloader(false);
         }).catch(err => {
@@ -180,7 +192,8 @@ function App() {
   function getAddressApi() {
     setPreloader(true);
     MainApi.getUserAdress()
-        .then((addresses) => {
+        .then(addresses => {
+            setCurrentUser(user => ({ ...user, addresses }));
             setAddresses(addresses);
             localStorage.setItem('addresses', JSON.stringify(addresses));
             setPreloader(false);
@@ -200,6 +213,7 @@ function App() {
     } else {
       MainApi.postUserAdress(newAddress)
         .then((savedAddress) => {
+          setCurrentUser(addresses);
           setAddresses((prevAddresses) => {
             const updatedAddresses = [...prevAddresses, savedAddress];
             localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
@@ -240,12 +254,9 @@ function App() {
     setPreloader(true);
     MainApi.deleteUserAdress(id)
       .then(() => {
+        setCurrentUser(addresses);
         setAddresses((prevAddresses) => {
           const updatedAddresses = prevAddresses.filter((addressItem) => addressItem.id !== id);
-          if (Array.isArray(updatedAddresses)) {
-            // updatedAddresses действительно массив, теперь обновляем localStorage
-            localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
-          }
           localStorage.setItem('addresses', JSON.stringify(updatedAddresses));
           return updatedAddresses;
         });
@@ -370,13 +381,13 @@ function App() {
     if (logInJwt) {
       apiAuth.tokenVerify(logInJwt)
         .then((res) => {
-          if (res.status === 401 && logInJwtRefresh) { // apiAuth.tokenVerify при недействительном токене возвращает res.status
+          if (res.status === 401 && logInJwtRefresh) {
             apiAuth.tokenRefresh(logInJwtRefresh)
               .then((res) => {
                 localStorage.setItem('logInJwt', res.access);
                 localStorage.setItem('logInJwtRefresh', res.refresh);
                 setLogIn(true);
-                setCurrentUser(res); // Нужно обновить данные пользователя, если они предоставлены в ответе на запрос
+                setCurrentUser(current => ({ ...current, ...res }));
               })
               .catch((err) => {
                 console.log(err);
@@ -384,7 +395,7 @@ function App() {
               });
           } else {
             setLogIn(true);
-            setCurrentUser(res); // Обновляем данные пользователя
+            setCurrentUser(current => ({ ...current, ...res }));
           }
         })
         .catch((err) => {
@@ -418,17 +429,19 @@ function App() {
     //end
 
     useEffect(() => {
-        if (logIn) {
-            Promise.all([MainApi.getUserId()])
-                .then(([userData, orders, addresses]) => {
-                    setCurrentUser(userData);
-                    getAddressApi(addresses);
-                    getOrdersApi(orders);
-                   // getCoupons(coupons);
-                }).catch(err => {
-                    console.log(err);
-                });
-        }
+      if (logIn) {
+        Promise.all([MainApi.getUserId(), MainApi.getUserAdress(), MainApi.getUserOrders()])
+          .then(([userData, addressesData, ordersData]) => {
+            setCurrentUser(userData);
+            getAddressApi(addressesData);
+            getOrdersApi(ordersData);
+            localStorage.setItem('addresses', JSON.stringify(addressesData));
+            // getCoupons(couponsData);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     }, [logIn]);
     //end
 
@@ -454,7 +467,7 @@ function App() {
       setBurgerHeader(false);
       setIsTooltipActive(false);
     }
-    // end popup
+    //end
 
     // Функция закрытия окна на оверлей
     useEffect(() => {
@@ -566,6 +579,7 @@ function App() {
                 <MyOrders
                   logIn={logIn}
                   orders={orders}
+                  language={language}
                 />
               </ProtectedRoute>
             }
@@ -578,6 +592,7 @@ function App() {
                   <MyAddress
                     logIn={logIn}
                     addresses={addresses}
+                    language={language}
                     onDeleteAddress={handleDeleteAddress}
                     onPostAddress={(newAddress, callback) => handlePostUserAddress(newAddress, callback)}
                   />
@@ -591,6 +606,7 @@ function App() {
               <ProtectedRoute logIn={logIn}>
                 <MyCoupons
                   logIn={logIn}
+                  language={language}
                   //coupons={coupons}
                 />
               </ProtectedRoute>

@@ -9,7 +9,7 @@ function Login({ onLogin, errorMessage }) {
 
     const { t } = useTranslation();
 
-    const { values, isValid, errors, handleChange } = useFormValidation();
+    const { values, isValid, errors, handleChange, formRef } = useFormValidation();
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -22,7 +22,7 @@ function Login({ onLogin, errorMessage }) {
                 <img className="login__logo app__button-opacity" src={logo} alt="Логотип сайта"/>
             </Link>
             <h2 className="login__text">{t('registr.glad_to_see_you', 'Рады видеть!')}</h2>
-            <form className="login__form" onSubmit={handleSubmit} noValidate>
+            <form ref={formRef} className="login__form" onSubmit={handleSubmit} noValidate>
                 <label className="login__label" htmlFor="email">E-mail
                     <input
                         value={values.email || ''}

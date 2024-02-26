@@ -62,7 +62,9 @@
     "orders": {
         "order_history": "Istorija porudžbina",
         "no_orders_yet": "Još uvek nemate porudžbina",
-        "repeat_this_order": "Ponovi ovu porudžbinu"
+        "repeat_this_order": "Ponovi ovu porudžbinu",
+        "created": "Narudžbina je napravljena",
+        "final_amount": "Konačni iznos porudžbine"
     },
     "addresses": {
         "your_addresses": "Vaše adrese",
@@ -73,7 +75,8 @@
         "save_address": "Sačuvaj adresu",
         "your_address": "Vaša adresa:",
         "delete_this_address": "Obriši ovu adresu",
-        "add_another_address": "Dodaj još jednu adresu"
+        "add_another_address": "Dodaj još jednu adresu",
+        "choose": "Ili izaberite neku od svojih adresa:"
     },
     "coupons": {
         "your_coupons": "Vaši kuponi",
@@ -127,7 +130,9 @@
         "name": "Ime",
         "your_address": "Vaša Adresa",
         "your_region": "Vaš Region",
-        "write_your_order_comments": "Napišite vaše komentare na vašu porudžbinu"
+        "write_your_order_comments": "Napišite vaše komentare na vašu porudžbinu",
+        "store": "Izaberite prodavnicu",
+        "new_address": "Nova adresa"
     },
     "pickup": {
         "order_summary": "Suma porudžbine",

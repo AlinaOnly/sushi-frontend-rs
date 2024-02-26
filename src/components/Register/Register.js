@@ -9,7 +9,7 @@ function Register({ onRegister, errorMessage }) {
 
     const { t } = useTranslation();
 
-    const { values, isValid, errors, handleChange } = useFormValidation();
+    const { values, isValid, errors, formRef, handleChange } = useFormValidation();
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -27,7 +27,7 @@ function Register({ onRegister, errorMessage }) {
                 <img className="register__logo app__button-opacity" src={logo} alt="Логотип сайта"/>
             </Link>
             <h2 className="register__text">{t('registr.welcome', 'Добро пожаловать!')}</h2>
-            <form className="register__form" onSubmit={handleSubmit} noValidate >
+            <form ref={formRef} className="register__form" onSubmit={handleSubmit} noValidate >
                 <label className="register__label" htmlFor="first_name">{t('registr.first_name', 'Имя')}
                     <input
                         value={values.first_name || ''}

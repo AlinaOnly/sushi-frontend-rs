@@ -61,7 +61,9 @@
     "orders": {
         "order_history": "Order History",
         "no_orders_yet": "You have no orders yet",
-        "repeat_this_order": "Repeat this order"
+        "repeat_this_order": "Repeat this order",
+        "created": "Order created",
+        "final_amount": "Final order amount"
     },
     "addresses": {
         "your_addresses": "Your Addresses",
@@ -72,7 +74,8 @@
         "save_address": "Save Address",
         "your_address": "Your Address:",
         "delete_this_address": "Delete This Address",
-        "add_another_address": "Add Another Address"
+        "add_another_address": "Add Another Address",
+        "choose": "Or choose from your addresses:"
     },
     "coupons": {
         "your_coupons": "Your Coupons",
@@ -126,7 +129,9 @@
         "name": "Name",
         "your_address": "Your Address",
         "your_region": "Your Region",
-        "write_your_order_comments": "Write your comments to your order"
+        "write_your_order_comments": "Write your comments to your order",
+        "store": "Select a store for pickup",
+        "new_address": "New address"
     },
     "pickup": {
         "order_summary": "Order Summary",

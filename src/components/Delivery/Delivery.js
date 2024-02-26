@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
 import { useTranslation } from 'react-i18next';
+import AddressAutocomplete from '../../utils/AddressAutocomplete';
 import './Delivery.css';
 
 function Delivery() {
@@ -17,14 +18,19 @@ function Delivery() {
 
     //если залогинился юзер - вписать автоматически его данные
     const currentUser = useContext(CurrentUserContext);
-    const { values, isValid, errors, setValues, handleChange } = useFormValidation();
+    const { values, isValid, errors, setValues, formRef, handleChange, handleInput, checkFormValidity } = useFormValidation();
 
     useEffect(() => {
-        setValues({
-            first_name: currentUser.first_name,
-            phone: currentUser.phone,
-            adress: currentUser.adress,
-        });
+        // Устанавливаем начальные значения для формы, используя информацию о текущем пользователе
+        if (currentUser && Array.isArray(currentUser.addresses)) {
+            const lastAddress = currentUser.addresses.length > 0 ?
+                currentUser.addresses[currentUser.addresses.length - 1].address : ''; 
+            setValues({
+                first_name: currentUser.first_name || '',
+                phone: currentUser.phone || '',
+                address: lastAddress,
+            });
+        }
     }, [currentUser, setValues]);
 
     function handleSubmit(event) {
@@ -59,18 +65,14 @@ function Delivery() {
     // Функция для создания массива временных интервалов, начиная с 11:30
     const generateTimeOptions = () => {
         const intervals = [];
-
         // Определяем начальные и конечные часы
         const startHour = 11;
         const endHour = 22;
-
         for (let hour = startHour; hour <= endHour; hour++) {
-            // Для первого часа начинаем с 30 минут, иначе с 0.
-            let startMinute = hour === startHour ? 30 : 0;
-
-            // Добавляем интервалы по 30 минут
-            intervals.push(`${hour}:${startMinute === 0 ? '00' : startMinute}`);
-            if (startMinute === 30 || hour < endHour) {
+            // Добавляем интервал каждый час начиная с 00 минут
+            intervals.push(`${hour}:00`);
+            // Добавляем 30 минут только если это не последний час
+            if (hour < endHour) {
                 intervals.push(`${hour}:30`);
             }
         }
@@ -90,7 +92,6 @@ function Delivery() {
             ]
         });
         const dates = [t('dates.as_soon_as_possible', 'Как можно быстрее')];
-
         // Определяем дату на месяц вперед от сегодня
         const oneMonthFromNow = new Date();
         oneMonthFromNow.setMonth(today.getMonth() + 1);
@@ -99,15 +100,12 @@ function Delivery() {
         while (dateIterator <= oneMonthFromNow) {
             const day = dateIterator.getDate();
             const month = dateIterator.getMonth();
-            const year = dateIterator.getFullYear(); // Если нужно, можно добавить год
-
+            //const year = dateIterator.getFullYear(); // Если нужно, можно добавить год
             // Форматируем число, добавляя ведущий ноль, если нужно
             const formattedDay = day < 10 ? `0${day}` : day;
             const monthName = monthNames[month];
-
             const date = `${formattedDay} ${monthName}`; // ${year}, если нужен год
             dates.push(date);
-
             // Переходим к следующему дню
             dateIterator.setDate(dateIterator.getDate() + 1);
         }
@@ -116,10 +114,34 @@ function Delivery() {
     const dateOptions = generateDateOptions();
     //end
 
+    const handleUpdateAddress = (place) => {
+        // Обновление адреса, если он выбран из Google Places Autocomplete
+        if (place.address_components) {
+            const addressComponents = place.address_components;
+            const formattedAddress = place.formatted_address;
+            const hasCountry = addressComponents.some(component => component.types.includes('country'));
+            const hasRoute = addressComponents.some(component => component.types.includes('route'));
+            const isValidAddress = hasCountry && hasRoute;
+
+            setValues(prevState => ({
+                ...prevState,
+                address: formattedAddress,
+                isAddressValid: isValidAddress,
+            }));
+        } else {
+            // Обработка сохраненных адресов
+            setValues(prevState => ({
+                ...prevState,
+                address: place, // в этом случае place является строкой сохраненного адреса
+            }));
+        }
+        checkFormValidity();
+    };
+
     return (
         <>
             <div className="delivery">
-                <form className="delivery__form" onSubmit={handleSubmit}>
+                <form ref={formRef} className="delivery__form" onSubmit={handleSubmit}>
                         <div className="delivery__description">
                             <label className="delivery__label" htmlFor="first_name">{t('delivery.your_name', 'Ваше имя')}
                                 <input
@@ -131,7 +153,8 @@ function Delivery() {
                                     type="text"
                                     placeholder={t('delivery.name', 'Имя')}
                                     minLength="2"
-                                    maxLength="40"
+                                    maxLength="150"
+                                    pattern="^[A-Za-zА-Яа-яЁё]{2,150}$"
                                     required
                                 />
                                 <span 
@@ -150,8 +173,9 @@ function Delivery() {
                                     name="phone"
                                     type="tel"
                                     placeholder="+"
-                                    minLength="10"
+                                    minLength="11"
                                     maxLength="14"
+                                    pattern="^\+[0-9]{11,14}$"
                                     required
                                 />
                                 <span 
@@ -161,41 +185,16 @@ function Delivery() {
                             </label>
                         </div>    
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="adress">{t('delivery.delivery_address', 'Адрес доставки')}
-                                <input
-                                    value={values.adress || ''}
-                                    onChange={handleChange}
-                                    id="adress"
-                                    className="delivery__input"
-                                    name="adress"
-                                    type="text"
-                                    placeholder={t('delivery.your_address', 'Ваш адрес')}
-                                    minLength="2"
-                                    maxLength="40"
-                                    required
+                            <label className="delivery__label" htmlFor="address">
+                                {t('delivery.delivery_address', 'Адрес доставки')}
+                                <AddressAutocomplete
+                                    inputClassName="delivery__input"
+                                    updateAddress={handleUpdateAddress}
+                                    values={values}
+                                    handleChange={handleChange}
+                                    addresses={currentUser.addresses}
+                                    handleInput={handleInput}
                                 />
-                                <span 
-                                    className={`${errors.adress ? "login__error" : "login__error_hidden"}`}>
-                                        {t('delivery.field_required', 'Поле обязательно для ввода')}
-                                </span>
-                            </label>
-                        </div>
-                        <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="region">{t('delivery.region', 'Регион')}
-                                <input
-                                    id="region"
-                                    className="delivery__input"
-                                    name="region"
-                                    type="text"
-                                    placeholder={t('delivery.your_region', 'Ваш регион')}
-                                    minLength="10"
-                                    maxLength="40"
-                                    //required
-                                />
-                                <span 
-                                    className={`${errors.region ? "login__error" : "login__error_hidden"}`}>
-                                        {t('delivery.field_required', 'Поле обязательно для ввода')}
-                                </span>
                             </label>
                         </div>
                         <div className="delivery__description">{t('delivery.number_of_utensils', 'Количество приборов')}
@@ -237,7 +236,7 @@ function Delivery() {
                                         type="text"
                                         placeholder={t('delivery.house', 'Дом')}
                                         minLength="1"
-                                        maxLength="6"
+                                        maxLength="1000"
                                         //required
                                     />
                                 <span 
@@ -331,7 +330,6 @@ function Delivery() {
                                 </select>
                             
                         </div>
-                        
                         <Link to="/payment">
                             <button 
                                 //onClick={handleSubmit}

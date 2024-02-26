@@ -1,10 +1,39 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 
 //хук управления формой
 function useFormValidation() {
-    const [values, setValues] = useState({});
+    const [values, setValues] = useState({isAddressValid: false});
     const [errors, setErrors] = useState({});
     const [isValid, setIsValid] = useState(false);
+
+    const formRef = useRef();
+
+    useEffect(() => {
+      if (formRef.current) {
+        // Обновляем валидность формы основываясь на валидности всех полей формы
+        const formIsValid = formRef.current.checkValidity();
+        setIsValid(formIsValid);
+      }
+    }, [errors, formRef]); // Отслеживаем только errors и formRef, так как isAddressValid не используется
+
+    const checkFormValidity = () => {
+      if (formRef.current) {
+        setIsValid(formRef.current.checkValidity());
+      }
+    };
+
+    useEffect(() => {
+      checkFormValidity();
+    }, [errors]);
+
+    // Функция валидации имени
+    const validateName = (name) => {
+      const forbiddenWords = ['me', 'i', 'я', 'ja', 'и'];
+        if (forbiddenWords.some(word => name.toLowerCase().includes(word))) {
+            return 'Использование этого слова в качестве имени запрещено.';
+        }
+      return '';
+    };
 
     const formatDateToServer = (date) => {
       if (!date) return '';
@@ -25,30 +54,43 @@ function useFormValidation() {
       return date;
     }, []);
 
-      const handleChange = (event) => {
-        const {target} = event;
-        let {name, value} = target;
+    const handleChange = (event) => {
+      const { target } = event;
+      const { name, value } = target;
+      // Обрабатываем поле 'address' отдельно для установки isAddressValid
+      if (name === 'address') {
+        const isAddressValid = value.trim() !== '';
+        setValues((prevValues) => ({
+          ...prevValues,
+          [name]: value,
+          isAddressValid: isAddressValid,
+        }));
+        // После установки нового состояния проверьте валидность формы.
+        checkFormValidity();
+      } else if (name === 'name') {// Обработчики других полей
+        const nameError = validateName(value);
+        setValues(prevValues => ({ ...prevValues, [name]: value }));
+        setErrors(prevErrors => ({ ...prevErrors, [name]: nameError }));
+      } else {
+        // Обрабатываем другие входные данные, такие как 'email', 'password' и т.д.
+          setValues((prevValues) => ({
+            ...prevValues,
+            [name]: value,
+        }));
+          setErrors((prevErrors) => ({
+              ...prevErrors,
+              [name]: target.validationMessage, // Стандартное сообщение об ошибке
+        }));
+      }
+      checkFormValidity();
+    };
 
-        // Переформатирование даты при изменении
-        if (name === 'date_of_birth') value = formatDateToInput(value);
-
-        // Определите, как обновить состояние values – должны мы обновлять поля messenger или нет
-        if (name === 'msngr_phone' || name === 'msngr_username') {
-            // Обновим объект messenger, расширив его предыдущим состоянием
-            setValues({
-              ...values,
-              messenger: {
-                ...values.messenger,
-                [name]: value
-              }
-            });
-        } else {
-            // Если поле не относится к messenger, обновляем как обычно
-            setValues({ ...values, [name]: value });
-        }
-        // Обновляем ошибки и валидацию формы
-        setErrors({ ...errors, [name]: target.validationMessage });
-        setIsValid(target.closest("form").checkValidity());
+    const handleInput = (event) => {
+      const { target } = event;
+      // Это автозаполнение адреса
+      if (target.name === 'address') {
+        handleChange(event); // Используем уже существующий handleChange
+      }
     };
 
   const resetForm = useCallback(
@@ -60,7 +102,7 @@ function useFormValidation() {
       [setValues, setErrors, setIsValid]
   );
 
-    return { 
+    return {
       values,
       setValues,
       handleChange,
@@ -68,7 +110,11 @@ function useFormValidation() {
       isValid,
       resetForm,
       formatDateToServer, 
-      formatDateToInput };
+      formatDateToInput,
+      formRef,
+      handleInput,
+      checkFormValidity
+    };
 }
 
 export default useFormValidation;

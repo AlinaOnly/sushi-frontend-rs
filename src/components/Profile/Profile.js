@@ -11,7 +11,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
 
     const currentUser = useContext(CurrentUserContext);
     const [isDisableInput, setDisableInput] = useState(true);
-    const { values, isValid, errors, handleChange, setValues,  formatDateToServer, formatDateToInput } = useFormValidation();
+    const { values, isValid, errors, formRef, handleChange, setValues,  formatDateToServer, formatDateToInput } = useFormValidation();
 
     useEffect(() => {
         const inputData = {};
@@ -56,7 +56,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
             <ProfileNav />
             <div className="profile">
                 <h2 className="profile__text">{t('profile.hello', 'Привет,')} {currentUser.first_name}!</h2>
-                <form className="profile__form" onSubmit={handleSubmit}>
+                <form ref={formRef} className="profile__form" onSubmit={handleSubmit}>
                     <div className="profile__container">
                         <label className="profile__label" htmlFor="first_name">{t('profile.first_name', 'Имя')}
                             <input
@@ -92,6 +92,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 minLength="2"
                                 maxLength="150"
                                 pattern="^[A-Za-zА-Яа-яЁё]{2,150}$"
+                                required
                             /></label>
                             <span 
                                 className={`${errors.last_name ? "profile__error" : "profile__error_hidden"}`}>

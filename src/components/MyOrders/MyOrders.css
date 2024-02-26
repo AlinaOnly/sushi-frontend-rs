@@ -9,7 +9,29 @@
     font-weight: 500;
     line-height: 29px;
     margin-top: 50px;
-    margin-bottom: 106px;
+    margin-bottom: 50px;
+}
+
+.order__status {
+    font-weight: 400;
+    font-size: 20px;
+    margin-top: 0;
+}
+
+.order__submit-button {
+    background: #FF3055;
+    color: #ffffff;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 200px;
+    height: 45px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    margin: 20px auto 50px;
 }
 
 .orders__text {

@@ -23,6 +23,11 @@
     text-align: center;
 }
 
+.adress__field {
+    margin-bottom: 0;
+    line-height: 25px;
+}
+
 .adress__submit-button{
     background: #FF3055;
     color: #ffffff;
@@ -103,6 +108,20 @@
     font-weight: 400;
     font-size: 13px;
     line-height: 16px;
+}
+
+.suggestions-lists {
+    padding: 0;
+    list-style: decimal;
+    list-style-position: inside;
+    margin-bottom: 0;
+}
+
+.suggestions-list {
+    margin: 10px 0;
+    cursor: pointer;
+    line-height: 25px;
+    color: #FF3055;
 }
 
 @media screen and (max-width: 768px) {

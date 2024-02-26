@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
+//хук для отображение карт
 function MyGoogleMap({ locations }) {
 
     const [mapDimensions, setMapDimensions] = useState({
