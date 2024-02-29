@@ -25,7 +25,7 @@ function Sandochi({ dishes, handleBurgerMenu, onDishClick, language }) {
                         {sandochiDishes.map(dish => (
                             <DishesCard
                                 dish={dish}
-                                key={dish.id}
+                                key={dish.article}
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
                                 language={language}

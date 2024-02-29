@@ -5,13 +5,14 @@ import ProfileNav from '../ProfileNav/ProfileNav';
 import { useTranslation } from 'react-i18next';
 import './Profile.css';
 
-function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
+function Profile({ onUpdateProfile, handleLogout, errorMessage, onUpdateEmail, onUpdatePassword }) {
 
     const { t } = useTranslation();
 
     const currentUser = useContext(CurrentUserContext);
     const [isDisableInput, setDisableInput] = useState(true);
-    const { values, isValid, errors, formRef, handleChange, setValues,  formatDateToServer, formatDateToInput } = useFormValidation();
+    const { values, isValid, errors, formRef, handleChange,
+        setValues,  formatDateToServer, formatDateToInput } = useFormValidation(currentUser);
 
     useEffect(() => {
         const inputData = {};
@@ -20,10 +21,29 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                 inputData[key] = key === 'date_of_birth'
                 ? formatDateToInput(currentUser['date_of_birth']) // Форматируем в YYYY-MM-DD для input
                 : currentUser[key];
+                // Если есть email, значит добавляем новый ключ для newEmail и устанавливаем пустое значение
+                inputData['newPassword'] = '';
+                inputData['newEmail'] = '';
             });
         }
         setValues(inputData);
     }, [currentUser, formatDateToInput]);
+
+    useEffect(() => {
+        setValues(v => ({ ...v, currentPassword: currentUser.password || '' }));
+        setValues(v => ({ ...v, newEmail: currentUser.email || '' }));
+    }, [currentUser]);
+
+    // текущий пароль
+    const [currentPassword, setCurrentPassword] = useState('');
+    // новый пароль
+    const [newPassword, setnewPassword] = useState('');
+
+    // Обработчик изменения значения текущего пароля
+    function handleChangeCurrentPassword(event) {
+        setCurrentPassword(event.target.value);
+        setnewPassword(event.target.value);
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -35,11 +55,16 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
         onUpdateProfile(
             values.first_name,
             values.last_name,
-            values.email,
             values.phone,
             dateOfBirth,
             values.messenger
         );
+        if (values.newEmail && values.newEmail !== currentUser.email) {
+            onUpdateEmail(currentPassword, values.newEmail);
+        }
+        if (values.newPassword && values.newPassword !== currentUser.password) {
+            onUpdatePassword(currentPassword, values.newPassword);
+        }
         setDisableInput(true);
     }
 
@@ -98,16 +123,58 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 className={`${errors.last_name ? "profile__error" : "profile__error_hidden"}`}>
                                     {t('errors.enter_text_of_min_two_letters', 'Введите имя или фамилию от 2 букв')}
                             </span>
-                    </div>    
+                    </div>
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="email">E-mail
+                        <label className="profile__label" htmlFor="currentPassword">{t('profile.current_password', 'Текущий пароль')}
                             <input
                                 disabled={isDisableInput}
-                                value={values.email || ''}
-                                onChange={handleChange}
-                                id="email"
+                                value={currentPassword || ''}
+                                onChange={handleChangeCurrentPassword}
+                                //onChange={handleChange}
                                 className="profile__input"
-                                name="email"
+                                name="currentPassword"
+                                type="password"
+                                minLength="8"
+                                maxLength="100"
+                                pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,100}$"
+                                //placeholder="Ваш текущий пароль"
+                                required
+                            /></label>
+                            <span 
+                                className={`${errors.currentPassword ? "profile__error" : "profile__error_hidden"}`}>
+                                    {t('errors.enter_password_of_min_8_chars', 'Пароль должен состоять из цифр и букв, длина должна быть не менее 8 символов')}
+                            </span>
+                    </div>
+                    <div className="profile__container">
+                        <label className="profile__label" htmlFor="newPassword">{t('profile.new_password', 'Новый пароль')}
+                            <input
+                                disabled={isDisableInput}
+                                value={newPassword || ''}
+                                //onChange={handleChange}
+                                onChange={handleChangeCurrentPassword}
+                                className="profile__input"
+                                name="newPassword"
+                                type="password"
+                                minLength="8"
+                                maxLength="100"
+                                pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,100}$"
+                                //placeholder="Ваш новый пароль"
+                                required
+                            /></label>
+                            <span 
+                                className={`${errors.newPassword ? "profile__error" : "profile__error_hidden"}`}>
+                                    {t('errors.enter_password_of_min_8_chars', 'Пароль должен состоять из цифр и букв, длина должна быть не менее 8 символов')}
+                            </span>
+                    </div>        
+                    <div className="profile__container">
+                        <label className="profile__label" htmlFor="newEmail">E-mail
+                            <input
+                                disabled={isDisableInput}
+                                value={values.newEmail || ''}
+                                onChange={handleChange}
+                                id="newEmail"
+                                className="profile__input"
+                                name="newEmail"
                                 type="email"
                                 placeholder="Email"
                                 minLength="6"
@@ -116,10 +183,11 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                                 required
                             /></label>
                             <span 
-                                className={`${errors.email ? "profile__error" : "profile__error_hidden"}`}>
+                                className={`${errors.newEmail ? "profile__error" : "profile__error_hidden"}`}>
                                     {t('errors.enter_valid_email', 'Введите валидную почту(name@mail.com)')}
                             </span>
                     </div>
+                    
                     <div className="profile__container">
                         <label className="profile__label" htmlFor="phone">{t('profile.phone', 'Телефон')}
                             <input
@@ -186,7 +254,8 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage }) {
                             className={
                                 `app__text-opacity 
                                 ${isValid && (currentUser.first_name !== values.first_name || currentUser.last_name !== values.last_name
-                                    || currentUser.email !== values.email || currentUser.phone !== values.phone 
+                                    || currentUser.newPassword !== values.newPassword
+                                    || currentUser.newEmail !== values.newEmail || currentUser.phone !== values.phone 
                                     || currentUser.date_of_birth !== values.date_of_birth || currentUser.messenger !== values.messenger
                                 )
                                 ? "profile__button-save" : "profile__button-save_disable"}`}

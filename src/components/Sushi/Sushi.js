@@ -25,7 +25,7 @@ function Sushi({ dishes, handleBurgerMenu, onDishClick, language }) {
                         {sushiDishes.map(dish => (
                             <DishesCard
                                 dish={dish}
-                                key={dish.id}
+                                key={dish.article}
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
                                 language={language}

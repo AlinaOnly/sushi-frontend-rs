@@ -7,8 +7,8 @@ function StorePickerMap( {onStoreSelect } ) {
     const stores = [
         {
             id: 1,
-            name: 'Магазин на ул. Milovana Milovanovića 4',
-            coordinates: { lat: 44.8141165, lng: 20.4211955 }
+            name: 'Yume Shushi ul. Milovana Milovanovića 4',
+            coordinates: { lat: 44.8090336 , lng: 20.4580446 }
         },
         // Можно потом добавить другие магазины по мере их появления
     ];

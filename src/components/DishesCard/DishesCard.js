@@ -13,7 +13,7 @@ function DishesCard({ dish, onDishClick, language }) {
     }
 
     if(!dish.translations[language]) {
-        console.error(`Перевод для блюда "${dish.id}" отсутствует для языка "${language}".`);
+        console.error(`Перевод для блюда "${dish.article}" отсутствует для языка "${language}".`);
         return null;
     }
 

@@ -26,7 +26,7 @@
         "title": "Vesti i Akcije"
     },
     "registr": {
-        "glad_to_see_you": "Drago nam je da vas vidimo!",
+        "glad_to_see_you": "Drago nam je što vas vidimo!",
         "password": "Lozinka",
         "login": "Uloguj se",
         "not_registered_yet": "Još niste registrovani?",
@@ -36,7 +36,10 @@
         "last_name": "Prezime",
         "phone": "Telefon",
         "register_account": "Registrujte se",
-        "already_registered": "Već ste registrovani?"
+        "already_registered": "Već ste registrovani?",
+        "forgot_pass": "Zaboravili ste lozinku?",
+        "password_req": "Resetujte lozinku",
+        "password_confirm": "Postavite novu lozinku"
     },
     "activation": {
         "activating": "Aktivacija u toku..."
@@ -57,7 +60,9 @@
         "enter_telegram_or_whatsapp": "Unesite korisničko ime na Telegramu ili broj na WhatsAppu",
         "save": "Sačuvaj",
         "edit": "Uredi",
-        "log_out": "Izloguj se"
+        "log_out": "Izloguj se",
+        "current_password": "Trenutna lozinka",
+        "new_password": "Nova lozinka"
     },
     "orders": {
         "order_history": "Istorija porudžbina",
@@ -131,7 +136,7 @@
         "your_address": "Vaša Adresa",
         "your_region": "Vaš Region",
         "write_your_order_comments": "Napišite vaše komentare na vašu porudžbinu",
-        "store": "Izaberite prodavnicu",
+        "store": "Izaberite lokaciju restorana",
         "new_address": "Nova adresa"
     },
     "pickup": {
@@ -178,6 +183,9 @@
         "enter_password_of_min_8_chars": "Lozinka mora da se sastoji od brojeva i slova i mora imati najmanje 8 znakova",
         "enter_text_of_min_two_letters": "Unesite svoje ime ili prezime, najmanje 2 slova",
         "enter_valid_phone_starting_with_plus": "Broj telefona mora biti u međunarodnom formatu i sadržati od 11 do 14 cifara",
-        "error_during_profile_update": "Došlo je do greške prilikom ažuriranja profila."
+        "error_during_profile_update": "Došlo je do greške prilikom ažuriranja profila.",
+        "success_change_profile": "Vaši podaci su uspešno promenjeni",
+        "email_change_requested": "Pismo sa vezom za potvrdu vaše nove e-pošte je poslato na vašu novu Email",
+        "password_change_requested": "Lozinka je poslata na vašu Email"
     }
 }

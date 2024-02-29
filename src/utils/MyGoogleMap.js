@@ -43,15 +43,14 @@ function MyGoogleMap({ locations }) {
     }
 
     // Опционально: добавить padding для bounds, чтобы не было слишком тесно
-    const mapOptions = {
+    /*const mapOptions = {
         bounds: bounds,
         padding: {top: 100, bottom:100, left: 100, right: 100}
-    };
+    };*/
 
     const onLoad = map => {
         if (bounds) {
-            // Подгоняем карту под область, покрывающую все маркеры
-            map.fitBounds(bounds);
+            map.fitBounds(bounds, { top: 100, bottom: 100, left: 100, right: 100 });
         }
     };
 
@@ -63,7 +62,8 @@ function MyGoogleMap({ locations }) {
                 center={bounds ? bounds.getCenter() : { lat: 0, lng: 0 }}
                 zoom={13}
                 onLoad={onLoad}
-                options={mapOptions}
+                options={{ streetViewControl: false }}
+                //options={mapOptions}
             >
                 {locations.map((location, index) => (
                     <Marker key={index} position={location} />

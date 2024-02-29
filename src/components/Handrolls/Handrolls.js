@@ -25,7 +25,7 @@ function Handrolls({ dishes, handleBurgerMenu, onDishClick, language }) {
                         {handrollsDishes.map(dish => (
                             <DishesCard
                                 dish={dish}
-                                key={dish.id}
+                                key={dish.article}
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
                                 language={language}

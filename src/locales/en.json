@@ -35,7 +35,10 @@
         "last_name": "Last Name",
         "phone": "Phone",
         "register_account": "Sign Up",
-        "already_registered": "Already registered?"
+        "already_registered": "Already registered?",
+        "forgot_pass": "Forgot your password?",
+        "password_req": "Reset the password",
+        "password_confirm": "Set a new password"
     },
     "activation": {
         "activating": "Activating..."
@@ -56,7 +59,9 @@
         "enter_telegram_or_whatsapp": "Enter Telegram username or WhatsApp number",
         "save": "Save",
         "edit": "Edit",
-        "log_out": "Log Out"
+        "log_out": "Log Out",
+        "current_password": "Current Password",
+        "new_password": "New Password"
     },
     "orders": {
         "order_history": "Order History",
@@ -130,7 +135,7 @@
         "your_address": "Your Address",
         "your_region": "Your Region",
         "write_your_order_comments": "Write your comments to your order",
-        "store": "Select a store for pickup",
+        "store": "Select a restaurant for pickup",
         "new_address": "New address"
     },
     "pickup": {
@@ -177,6 +182,9 @@
         "enter_password_of_min_8_chars": "The password must consist of numbers and letters and must be at least 8 characters long",
         "enter_text_of_min_two_letters": "Enter your first or last name, at least 2 letters",
         "enter_valid_phone_starting_with_plus": "Broj telefona mora biti u međunarodnom formatu i sadržati od 11 do 14 cifara",
-        "error_during_profile_update": "An error occurred during profile update."
+        "error_during_profile_update": "An error occurred during profile update.",
+        "success_change_profile": "Your data is successfully changed",
+        "email_change_requested": "A letter with a link to confirm your new email has been sent to your new Email",
+        "password_change_requested": "The password has been sent to your email"
     }
 }

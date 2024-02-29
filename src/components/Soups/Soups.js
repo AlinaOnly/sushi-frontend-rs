@@ -25,7 +25,7 @@ function Soups({ dishes, handleBurgerMenu, onDishClick, language }) {
                         {soupsDishes.map(dish => (
                             <DishesCard
                                 dish={dish}
-                                key={dish.id}
+                                key={dish.article}
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
                                 language={language}

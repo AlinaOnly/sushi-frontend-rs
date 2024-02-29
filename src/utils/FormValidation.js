@@ -1,8 +1,14 @@
-import { useCallback, useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef, useEffect, useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 //хук управления формой
 function useFormValidation() {
-    const [values, setValues] = useState({isAddressValid: false});
+
+    const currentUser = useContext(CurrentUserContext);
+
+    const [values, setValues] = useState({
+      isAddressValid: false,
+      newEmail: currentUser.email || ''});
     const [errors, setErrors] = useState({});
     const [isValid, setIsValid] = useState(false);
 
@@ -73,13 +79,8 @@ function useFormValidation() {
         setErrors(prevErrors => ({ ...prevErrors, [name]: nameError }));
       } else {
         // Обрабатываем другие входные данные, такие как 'email', 'password' и т.д.
-          setValues((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
-          setErrors((prevErrors) => ({
-              ...prevErrors,
-              [name]: target.validationMessage, // Стандартное сообщение об ошибке
+          setValues((prevValues) => ({...prevValues, [name]: value }));
+          setErrors((prevErrors) => ({...prevErrors, [name]: target.validationMessage, // Стандартное сообщение об ошибке
         }));
       }
       checkFormValidity();

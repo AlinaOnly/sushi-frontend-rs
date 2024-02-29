@@ -131,6 +131,9 @@ function Register({ onRegister, errorMessage }) {
                 <Link to="/login" className="register__signup app__text-opacity">{t('registr.already_registered', 'Уже зарегистрированы?')}
                     <p className="register__signup_red">{t('registr.login', 'Войти')}</p>
                 </Link>
+                <Link to="/reset-password" className="login__signin app__text-opacity">
+                    <p className="login__signin_red">{t('registr.forgot_pass', 'Забыли пароль?')}</p>
+                </Link>
                 <p className="register__error-text">{errorMessage && t(errorMessage)}</p>
             </div>
         </div>

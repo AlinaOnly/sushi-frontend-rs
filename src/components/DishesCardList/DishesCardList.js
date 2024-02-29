@@ -36,7 +36,7 @@ function DishesCardList({ dishes, onDishClick, language }) {
                             .map(dish => (
                                 <DishesCard
                                     dish={dish}
-                                    key={dish.id}
+                                    key={dish.article}
                                     language={language}
                                     isCartDishes={dish.isCartDishes}
                                     onDishClick={onDishClick}

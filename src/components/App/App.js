@@ -10,6 +10,8 @@ import HeaderMenu from '../HeaderMenu/HeaderMenu';
 
 import Register from '../Register/Register';
 import Login from '../Login/Login';
+import ResetPasswordRequest from '../../utils/ResetPasswordRequest';
+import ResetPasswordConfirm from '../../utils/ResetPasswordConfirm';
 import ActivationPage from '../../utils/ActivationPage';
 import Profile from '../Profile/Profile';
 import MyOrders from '../MyOrders/MyOrders';
@@ -161,10 +163,10 @@ function App() {
   //end
 
   // functionality -- update user info
-  function handleUpdateProfile(first_name, last_name, email, phone, date_of_birth,
+  function handleUpdateProfile(first_name, last_name, phone, date_of_birth,
     messenger) {
       setPreloader(true);
-        MainApi.changeUserInformation({ first_name, last_name, email, phone, date_of_birth,
+        MainApi.changeUserInformation({ first_name, last_name, phone, date_of_birth,
           messenger })
         .then((res) => {
           setCurrentUser(current => {
@@ -174,7 +176,7 @@ function App() {
             }
             return updatedUser;
           });
-            setErrorMessage('Ваши данные успешно изменены');
+            setErrorMessage('errors.success_change_profile');
             setPreloader(false);
         }).catch(err => {
             if (err === 'Ошибка: 409') {
@@ -186,6 +188,44 @@ function App() {
             setPreloader(false);
         });
   }
+
+  function handleChangeEmail(currentPassword, newEmail) {
+    setPreloader(true);
+    apiAuth.newEmailRequest({ current_password: currentPassword, new_email: newEmail })
+      .then(() => {
+        // Показываем сообщение о том, что на новый адрес отправлено письмо со ссылкой для верификации
+        setErrorMessage('errors.email_change_requested');
+        setPreloader(false);
+      }).catch(err => {
+        // Здесь мы обрабатываем возможные ошибки, связанные именно с процессом смены почты
+        if (err === 'Ошибка: 409') {
+          setErrorMessage('errors.user_already_exists');
+        } else {
+          setErrorMessage('errors.error_during_data_change');
+        }
+        console.log(err);
+        setPreloader(false);
+      });
+  }
+
+  function handleChangePassword(currentPassword, newPassword) {
+    setPreloader(true);
+    apiAuth.newPasswordRequest({ current_password: currentPassword, new_password: newPassword })
+      .then(() => {
+        // Показываем сообщение о том, что на адрес отправлен новый пароль
+        setErrorMessage('errors.password_change_requested');
+        setPreloader(false);
+      }).catch(err => {
+        if (err === 'Ошибка: 409') {
+          setErrorMessage('errors.user_already_exists');
+        } else {
+          setErrorMessage('errors.error_during_data_change');
+        }
+        console.log(err);
+        setPreloader(false);
+      });
+  }
+
   //end
 
   // functionality -- getting User Address information
@@ -430,7 +470,7 @@ function App() {
 
     useEffect(() => {
       if (logIn) {
-        Promise.all([MainApi.getUserId(), MainApi.getUserAdress(), MainApi.getUserOrders()])
+        Promise.all([MainApi.getUserId() ])
           .then(([userData, addressesData, ordersData]) => {
             setCurrentUser(userData);
             getAddressApi(addressesData);
@@ -543,6 +583,18 @@ function App() {
           />
 
           <Route 
+            path='/reset-password' 
+            element={
+              <ResetPasswordRequest />} 
+          />
+
+          <Route 
+            path='/reset_password_confirm/:uid/:token' 
+            element={
+              <ResetPasswordConfirm />} 
+          />
+
+          <Route 
             path='/activation/:uid/:token'
             element={
               <ActivationPage />}
@@ -564,6 +616,8 @@ function App() {
                 <Profile
                   logIn={logIn}
                   onUpdateProfile={handleUpdateProfile}
+                  onUpdateEmail={handleChangeEmail}
+                  onUpdatePassword={handleChangePassword}
                   handleLogout={handleLogout}
                   errorMessage={errorMessage}
                   handleBurgerHeader={handleBurgerHeader}

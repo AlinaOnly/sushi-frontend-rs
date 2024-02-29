@@ -72,6 +72,9 @@ function Login({ onLogin, errorMessage }) {
                 <Link to="/registration" className="login__signin app__text-opacity">{t('registr.not_registered_yet', 'Еще не зарегистрированы? ')}
                     <p className="login__signin_red">{t('registr.register_account', 'Регистрация')}</p>
                 </Link>
+                <Link to="/reset-password" className="login__signin app__text-opacity">
+                    <p className="login__signin_red">{t('registr.forgot_pass', 'Забыли пароль?')}</p>
+                </Link>
                 <p className="register__error-text">{errorMessage && t(errorMessage)}</p>
             </div>
         </div>

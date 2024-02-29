@@ -148,7 +148,7 @@ function CashnCarry() {
                             </label>
                         </div>    
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="address">{t('delivery.store', 'Выберите магазин для самовывоза')}
+                            <label className="delivery__label" htmlFor="address">{t('delivery.store', 'Выберите ресторан для самовывоза')}
                                 <input
                                     value={selectedStore ? selectedStore.name : ''}
                                     onChange={handleChange}
@@ -156,7 +156,7 @@ function CashnCarry() {
                                     className="delivery__input"
                                     name="address"
                                     type="text"
-                                    placeholder={t('delivery.store', 'Выберите магазин')}
+                                    placeholder={t('delivery.store', 'Выберите точку ресторана')}
                                     minLength="5"
                                     maxLength="100"
                                     required

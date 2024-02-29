@@ -30,16 +30,16 @@ function Contacts({ aboutUs, language }) {
                     <p className="contact__article">{restaurant.short_name}</p>
                     <p className="contact__description">{restaurant.city}</p>
                     <p className="contact__description">{restaurant.address}</p>
-                    <p className="contact__description">{t('contacts.time', 'Рабочее время:')} {restaurant.work_hours}</p>
+                    <p className="contact__description">{t('contacts.time', 'Рабочее время: 11:00-22:00')} {restaurant.work_hours}</p>
                     <p className="contact__description">{t('contacts.phone', 'Телефон для заказов:')} {restaurant.phone}</p>
                         {restaurant.coordinates && (
                             <div className="contact__coordinats">
                                 <MyGoogleMap locations={locations} /> 
                             </div>
                         )}
-                        {restaurant.image && (
+                        {/*restaurant.image && (
                             <img src={restaurant.image} alt={`Изображение ${restaurant.short_name}`} className="contact__image"/>
-                        )}
+                        )*/}
                 </div>
                 ))}
             </div>
@@ -49,9 +49,9 @@ function Contacts({ aboutUs, language }) {
                             <p className="contacts__delivery-description">
                                 {item.translations[language]?.description}
                             </p>
-                            {item.image && (
+                            {/*item.image && (
                                 <img src={item.image} alt="Изображение доставки" className="contact__image"/>
-                            )}
+                            )*/}
                         </div>
                     ))}
                 </div>

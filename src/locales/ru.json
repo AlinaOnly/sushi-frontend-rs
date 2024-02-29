@@ -9,6 +9,9 @@
         "enter_password_of_min_8_chars": "Пароль должен состоять из цифр и букв, длина должна быть не менее 8 символов",
         "enter_text_of_min_two_letters": "Введите имя или фамилию от 2 букв",
         "enter_valid_phone_starting_with_plus": "Номер телефона должен быть в международном формате и содержать от 11 до 14 цифр",
-        "error_during_profile_update": "При обновлении профиля произошла ошибка."
+        "error_during_profile_update": "При обновлении профиля произошла ошибка.",
+        "success_change_profile": "Ваши данные успешно изменены",
+        "email_change_requested": "Письмо с сылкой для подтверждения новой почты отправлено на Вашу новую почту",
+        "password_change_requested": "Пароль выслан на Вашу почту"
     }
 }

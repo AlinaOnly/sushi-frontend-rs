@@ -1,9 +1,9 @@
 //хук для активации юзера с почты
-
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Preloader from '../components/Preloader/Preloader';
 import { useTranslation } from 'react-i18next';
+import { urlDB } from './consts';
 import '../components/App/App.css';
 
 const ActivationPage = ({ isPreloader }) => {
@@ -14,7 +14,7 @@ const ActivationPage = ({ isPreloader }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/v1/auth/users/activation/', {
+        fetch(`${urlDB}/auth/users/activation/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ const ActivationPage = ({ isPreloader }) => {
             }
         })
         .then((data) => {
-            // Обработка успешной активации, например, переадресация на страницу входа
+            // Обработка успешной активации - переадресация на страницу входа
             console.log('Аккаунт активирован!', data);
             navigate('/login');
         })
