@@ -8,7 +8,9 @@ function useFormValidation() {
 
     const [values, setValues] = useState({
       isAddressValid: false,
-      newEmail: currentUser.email || ''});
+      //currentPassword: currentUser.password || '',
+      //newEmail: currentUser.email || ''
+    });
     const [errors, setErrors] = useState({});
     const [isValid, setIsValid] = useState(false);
 
@@ -20,7 +22,7 @@ function useFormValidation() {
         const formIsValid = formRef.current.checkValidity();
         setIsValid(formIsValid);
       }
-    }, [errors, formRef]); // Отслеживаем только errors и formRef, так как isAddressValid не используется
+    }, [errors, formRef]); // Отслеживаем только errors и formRef
 
     const checkFormValidity = () => {
       if (formRef.current) {
@@ -28,9 +30,9 @@ function useFormValidation() {
       }
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
       checkFormValidity();
-    }, [errors]);
+    }, [errors]);*/
 
     // Функция валидации имени
     const validateName = (name) => {
@@ -77,7 +79,7 @@ function useFormValidation() {
         const nameError = validateName(value);
         setValues(prevValues => ({ ...prevValues, [name]: value }));
         setErrors(prevErrors => ({ ...prevErrors, [name]: nameError }));
-      } else {
+      }  else {
         // Обрабатываем другие входные данные, такие как 'email', 'password' и т.д.
           setValues((prevValues) => ({...prevValues, [name]: value }));
           setErrors((prevErrors) => ({...prevErrors, [name]: target.validationMessage, // Стандартное сообщение об ошибке

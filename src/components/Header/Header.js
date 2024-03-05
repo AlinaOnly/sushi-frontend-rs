@@ -9,7 +9,7 @@ import i18next from '../../utils/i18n';
 import { useTranslation } from 'react-i18next';
 import './Header.css';
 
-function Headers({ language, onLanguageChange }) {
+function Headers({ language, onLanguageChange, cartData }) {
 
     const { t } = useTranslation();
 
@@ -29,6 +29,16 @@ function Headers({ language, onLanguageChange }) {
         }
         i18next.changeLanguage(selectedLanguage); // Обновление текущего языка в i18next
         onLanguageChange(selectedLanguage);
+    };
+
+    // Функция для подсчета товаров в корзине
+    const getCountOfCartItems = () => {
+        let count = 0;
+        // Перебираем все элементы и суммируем их количество
+        for (const item of cartData) {
+        count += item.quantity;
+        }
+        return count;
     };
 
     return (
@@ -72,22 +82,22 @@ function Headers({ language, onLanguageChange }) {
                         <option className="header__select-language" value="sr-latn">Sr</option>
                         <option className="header__select-language" value="en">En</option>
                 </select>
-            <NavLink 
-                className={({ isActive }) => (isActive ? "header__link-acc header__link-active" : "header__link-acc header__link")}
-                to="/profile">
-                    {values.first_name ? values.first_name : t('header.account', 'Аккаунт')}
-                <img src={account} alt="Логотип аккаунта" className="header__account-logo app__button-opacity"/>
-            </NavLink>
-            <NavLink className="header__link-button" to="/cart">
-                <button 
-                    className="header__cart-button app__button-opacity" 
-                    type="submit"
-                    aria-label="Корзина">
-                        {t('header.cart', 'Корзина')}
-                    <img src={cart} alt="Логотип корзины" className="header__image-button-cart"/>
-                    <p className="header__submit-button-counters">0</p>
-                </button>
-            </NavLink>
+                <NavLink 
+                    className={({ isActive }) => (isActive ? "header__link-acc header__link-active" : "header__link-acc header__link")}
+                    to="/profile">
+                        {values.first_name ? values.first_name : t('header.account', 'Аккаунт')}
+                    <img src={account} alt="Логотип аккаунта" className="header__account-logo app__button-opacity"/>
+                </NavLink>
+                <NavLink className="header__link-button" to="/cart">
+                    <button 
+                        className="header__cart-button app__button-opacity" 
+                        type="submit"
+                        aria-label="Корзина">
+                            {t('header.cart', 'Корзина')}
+                        <img src={cart} alt="Логотип корзины" className="header__image-button-cart"/>
+                        <p className="header__submit-button-counters">{getCountOfCartItems()}</p>
+                    </button>
+                </NavLink>
             </div>
         </header>
     );

@@ -115,7 +115,8 @@
         "total": "Ukupno:",
         "checkout": "Naručiti",
         "delivery": "Dostava",
-        "pick_up_myself": "Preuzimanje Lično"
+        "pick_up_myself": "Preuzimanje Lično",
+        "add_dop": "Dodati"
     },
     "delivery": {
         "your_name": "Vaše Ime",
@@ -140,13 +141,15 @@
         "new_address": "Nova adresa"
     },
     "pickup": {
-        "order_summary": "Suma porudžbine",
+        "order_summary": "Suma porudžbine:",
         "agreement": "Izvršavajući porudžbinu na vebsajtu potvrđujem da sam upoznat sa pravilima prodaje robe, kao i sa svim dokumentima objavljenim na sajtu i potvrđujem prihvatanje pravila prodaje robe na sajtu u potpunosti bez ograničenja.",
         "consent_to_personal_data_processing": "Izvršavajući porudžbinu na vebsajtu dajem svoju saglasnost za prikupljanje i obradu mojih ličnih podataka u skladu sa politikom privatnosti.",
         "consent_to_communications": "Izvršavajući porudžbinu na vebsajtu dajem svoju saglasnost za primanje SMS poruka i e-mailova reklamnog i informativnog karaktera koji su mi upućeni.",
         "choose_payment_method": "Izaberite način plaćanja",
         "payment_cash": "Gotovinom kuriru",
-        "payment_card": "Karticom kuriru"
+        "payment_card": "Karticom kuriru",
+        "order_sell": "Vaš popust:",
+        "order_total": "Ukupno:"
     },
     "more-btn": {
         "more": "Još"
@@ -180,12 +183,14 @@
         "error_during_registration": "Došlo je do greške prilikom registracije.",
         "error_during_data_change": "Došlo je do greške prilikom ažuriranja podataka",
         "enter_valid_email": "Unesite validan email (ime@mail.com)",
-        "enter_password_of_min_8_chars": "Lozinka mora da se sastoji od brojeva i slova i mora imati najmanje 8 znakova",
+        "enter_password_of_min_8_chars": "Lozinka mora da se sastoji od brojeva i latiničnih slova, najmanje 8 karaktera",
         "enter_text_of_min_two_letters": "Unesite svoje ime ili prezime, najmanje 2 slova",
-        "enter_valid_phone_starting_with_plus": "Broj telefona mora biti u međunarodnom formatu i sadržati od 11 do 14 cifara",
+        "enter_valid_phone_starting_with_plus": "Broj telefona mora da počinje sa '+' i da sadrži od 11 do 14 cifara",
         "error_during_profile_update": "Došlo je do greške prilikom ažuriranja profila.",
         "success_change_profile": "Vaši podaci su uspešno promenjeni",
         "email_change_requested": "Pismo sa vezom za potvrdu vaše nove e-pošte je poslato na vašu novu Email",
-        "password_change_requested": "Lozinka je poslata na vašu Email"
+        "password_change_requested": "Lozinka je poslata na vašu Email",
+        "promo_notfound": "Promotivni kod nije pronađen",
+        "promo_error": "Greška pri primeni promotivnog koda"
     }
 }

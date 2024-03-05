@@ -5,7 +5,18 @@ import logo from '../../images/logo.png';
 import cart from '../../images/cart.svg';
 import './HeaderMenu.css';
 
-function HeaderMenu({ handleBurgerHeader }) {
+function HeaderMenu({ handleBurgerHeader, cartData }) {
+
+    // Функция для подсчета товаров в корзине
+    const getCountOfCartItems = () => {
+        let count = 0;
+        // Перебираем все элементы и суммируем их количество
+        for (const item of cartData) {
+        count += item.quantity;
+        }
+        return count;
+    };
+
     return (
         <section className="menu">
             <button 
@@ -26,7 +37,7 @@ function HeaderMenu({ handleBurgerHeader }) {
                     type="submit"
                     aria-label="Корзина">
                     <img src={cart} alt="Логотип корзины" className="header__image-button-cart"/>
-                    <p className="header__submit-button-counters">0</p>
+                    <p className="header__submit-button-counters">{getCountOfCartItems()}</p>
                 </button>
             </NavLink>
         </section>

@@ -164,22 +164,33 @@ class Api {
         }).then(this._mainApiError);
     }
 
-    createDish(dish) {
-        return fetch(`${this._url}/menu/`, {
+    // Функция для загрузки данных корзины
+    getCartData() {
+            return fetch(`${this._url}/shopping_cart/`, {
+            method: 'GET',
+            headers: this._headers,
+            credentials: 'include',
+        }).then(this._mainApiError);
+    }
+
+    // Промокод в корзине
+    postPromoMethod({promocode}) {
+        return fetch(`${this._url}/shopping_cart/promocode/`, {
             method: 'POST',
             headers: this._headers,
             credentials: 'include',
             body: JSON.stringify( {
-            
+                promocode: promocode
             }),
         }).then(this._mainApiError);
     }
 
-    deleteDish(id) {
-        return fetch(`${this._url}/shopping_cart_delete/${id}/`, {
+    // удалить одно блюдо
+    deleteDishfromCardById(id) {
+        return fetch(`${this._url}/shopping_cart/${id}/`, { 
             method: 'DELETE',
             headers: {
-                Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                //Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
@@ -192,6 +203,42 @@ class Api {
             // В случае успешного ответа не пытаться разобрать JSON, вместо этого вернуть response
             return response;
         });
+    }
+
+    // очистить всю корзину
+    deleteAllDishes() {
+        return fetch(`${this._url}/shopping_cart/empty_cart/`, { 
+            method: 'DELETE',
+            headers: {
+                //Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        }).then(response => {
+            if (!response.ok) {
+                return response.json().then((error) => {
+                    throw new Error(error.message);
+                });
+            }
+            // В случае успешного ответа не пытаться разобрать JSON, вместо этого вернуть response
+            return response;
+        });
+    }
+
+    getDishCartPlus(id) {
+        return fetch(`${this._url}/shopping_cart/${id}/plus/`, {
+            method: 'GET',
+            headers: this._headers,
+            credentials: 'include',
+        }).then(this._mainApiError);
+    }
+
+    getDishCartMinus(id) {
+        return fetch(`${this._url}/shopping_cart/${id}/minus/`, {
+            method: 'GET',
+            headers: this._headers,
+            credentials: 'include',
+        }).then(this._mainApiError);
     }
 }
 

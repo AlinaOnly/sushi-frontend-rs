@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Woks({ dishes, handleBurgerMenu, onDishClick, language }) {
+function Woks({ dishes, handleBurgerMenu, onDishClick, language, onAddToCart }) {
 
     const woksDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "woks"));
 
@@ -29,6 +29,7 @@ function Woks({ dishes, handleBurgerMenu, onDishClick, language }) {
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
                                 language={language}
+                                onAddToCart={onAddToCart}
                             />
                         ))}
                     </ul>

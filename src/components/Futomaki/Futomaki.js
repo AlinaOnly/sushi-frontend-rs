@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Futomaki({ dishes, handleBurgerMenu, onDishClick, language }) {
+function Futomaki({ dishes, handleBurgerMenu, onDishClick, language, onAddToCart }) {
 
     const futomakiDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "futomaki"));
 
@@ -29,6 +29,7 @@ function Futomaki({ dishes, handleBurgerMenu, onDishClick, language }) {
                             isCartDishes={dish.isCartDishes}
                             onDishClick={onDishClick}
                             language={language}
+                            onAddToCart={onAddToCart}
                         />
                     ))}
                 </ul>

@@ -86,6 +86,17 @@ function App() {
   // dishes Items
   const [dishes, setDishesItems] = useState([]);
 
+  // Проверяем, есть ли элементы в корзине
+  //const [cartData, setCartData] = useState([]);
+  const [cartData, setCartData] = useState(() => {
+    // Пытаемся получить данные из localStorage
+    const localData = localStorage.getItem('cartDishes');
+    return localData ? JSON.parse(localData) : [];
+});
+
+  //состояние для промокода
+  const [promoCode, setPromoCode] = useState('');
+
   // dish Items state
   const [selectedDish, setSelectedDish] = useState({});
 
@@ -107,6 +118,8 @@ function App() {
     caption: '',
   });
 
+  // для отрисовки блюд в корзине
+  const [isLoadedFromStorage, setIsLoadedFromStorage] = useState(false);
 
   // functionality -- registration
   function handleRegister(first_name, last_name,  email, phone, password) {
@@ -125,11 +138,13 @@ function App() {
                   setPreloader(false);
               }
           }).catch(err => {
-                if (err === 'Ошибка: 409') {
+                /*if (err === 'Ошибка: 409') {
                   setErrorMessage('errors.user_already_exists');
                 } else {
                   setErrorMessage('errors.error_during_registration');
-                }
+                }*/
+                handleAuthError(err);
+                setErrorMessage('errors.error_during_registration');
                 console.log(err);
                 setPreloader(false);
       });
@@ -150,12 +165,14 @@ function App() {
                 setPreloader(false);
             }
         }).catch(err => {
-            if (err === 'Ошибка: 401') {
+            /*if (err === 'Ошибка: 401') {
               setErrorMessage('errors.incorrect_email_or_password');
               setLogIn(false);
             } else {
               setErrorMessage('errors.error_during_login');
-            }
+            }*/
+            handleAuthError(err);
+            setErrorMessage('errors.error_during_login');
             console.log(err);
             setPreloader(false);
         });
@@ -179,11 +196,13 @@ function App() {
             setErrorMessage('errors.success_change_profile');
             setPreloader(false);
         }).catch(err => {
-            if (err === 'Ошибка: 409') {
+          /* if (err === 'Ошибка: 409') {
               setErrorMessage('errors.user_already_exists');
             } else {
               setErrorMessage('errors.error_during_data_change');
-            }
+            }*/
+            handleAuthError(err);
+            setErrorMessage('errors.error_during_data_change');
             console.log(err);
             setPreloader(false);
         });
@@ -197,15 +216,17 @@ function App() {
         setErrorMessage('errors.email_change_requested');
         setPreloader(false);
       }).catch(err => {
-        // Здесь мы обрабатываем возможные ошибки, связанные именно с процессом смены почты
-        if (err === 'Ошибка: 409') {
-          setErrorMessage('errors.user_already_exists');
+        const message = err.message || 'Неизвестная ошибка';
+        if (message.includes('409')) {
+            setErrorMessage('errors.user_already_exists');
+        } else if (message.includes('400')) {
+            setErrorMessage('errors.same_email');
         } else {
-          setErrorMessage('errors.error_during_data_change');
+        setErrorMessage('errors.error_during_data_change');
         }
-        console.log(err);
+        console.error('Ошибка:', err);
         setPreloader(false);
-      });
+    });
   }
 
   function handleChangePassword(currentPassword, newPassword) {
@@ -216,16 +237,16 @@ function App() {
         setErrorMessage('errors.password_change_requested');
         setPreloader(false);
       }).catch(err => {
-        if (err === 'Ошибка: 409') {
-          setErrorMessage('errors.user_already_exists');
-        } else {
-          setErrorMessage('errors.error_during_data_change');
-        }
-        console.log(err);
+        const message = err.message || 'Неизвестная ошибка';
+          if (message.includes('409')) {
+              setErrorMessage('errors.user_already_exists');
+          } else {
+              setErrorMessage('errors.error_during_data_change');
+          }
+        console.error('Ошибка:', err);
         setPreloader(false);
-      });
+    });
   }
-
   //end
 
   // functionality -- getting User Address information
@@ -238,6 +259,7 @@ function App() {
             localStorage.setItem('addresses', JSON.stringify(addresses));
             setPreloader(false);
           }).catch(err => {
+              handleAuthError(err);
               console.log(err);
               setPreloader(false);
           });
@@ -332,6 +354,7 @@ function App() {
               localStorage.setItem('orders', JSON.stringify(orders));
               setPreloader(false);
           }).catch(err => {
+              handleAuthError(err);
               console.log(err);
               setPreloader(false);
           });
@@ -347,10 +370,11 @@ function App() {
               localStorage.setItem('coupons', JSON.stringify(coupons));
               setPreloader(false);
           }).catch(err => {
+              handleAuthError(err);
               console.log(err);
               setPreloader(false);
           });
-  }*/ 
+  }*/
   // end
 
   // functionality -- getting news from Api
@@ -397,19 +421,139 @@ function App() {
   }
   //end
 
+  // functionality -- dishes for cart
+  function getDishForCart() {
+    setPreloader(true);
+    // Возвращаем промис, чтобы его можно было использовать в useEffect
+    return MainApi.getCartData()
+      .then((cartResponse) => {
+        // Если cartResponse - это массив с объектом, содержащим поле cartdishes
+        const cartItems = (cartResponse[0]?.cartdishes) || [];
+        setCartData(cartItems);
+        localStorage.setItem('cartDishes', JSON.stringify(cartItems));
+        setPreloader(false);
+        return cartItems; // Возвращаем результат
+      })
+      .catch(err => {
+        console.log(err);
+        setPreloader(false);
+        throw err; // Возвращаем ошибку в промис, чтобы она была доступна в .catch()
+      });
+  }
+
+  useEffect(() => {
+    const storageData = localStorage.getItem('cartDishes');
+    if (storageData) {
+      // Если данные были в локальном хранилище, устанавливаем их в состояние
+      const storedCartData = JSON.parse(storageData);
+      setCartData(storedCartData);
+      setIsLoadedFromStorage(true); // Устанавливаем флаг, что данные загружены из хранилища
+    } else {
+      // Если данных нет, делаем запрос на сервер
+      getDishForCart()
+        .then(cartItems => {
+          console.log('cartDishes from getDishForCart', cartItems);
+        })
+        .catch(error => {
+          console.error('Error during getDishForCart', error);
+        });
+    }
+  }, []); // Зависимости для useEffect пусты, так что он выполнится один раз при монтировании компонента
+
+  // Функция для удаления всех блюд из корзины
+  const handleClearCart = () => {
+    MainApi.deleteAllDishes()
+        .then(() => {
+            setCartData([]); // очищаем корзину на клиенте
+            localStorage.removeItem('cartDishes'); // удаляем данные о корзине из `localStorage`
+            // Можно также установить пустой массив, используя localStorage.setItem('cartDishes', JSON.stringify([]));
+        })
+        .catch(error => {
+            console.error("Ошибка при очистке корзины: ", error);
+        });
+  };
+
+  /* const updateCartData = (newCartData) => {
+    setCartData(newCartData);
+    // если API возвращает новый массив данных корзины, обновляем его состояние
+    localStorage.setItem('cartDishes', JSON.stringify(newCartData)); // сохраним обновленные данные корзины в localStorage
+  };
+
+  const handleIncreaseQuantity = (id) => {
+    MainApi.getDishCartPlus(id)
+      .then(data => {
+        updateCartData(data); // функция для обновления состояния cartData
+      })
+      .catch(error => console.error('Ошибка при увеличении количества блюда', error));
+  };
+
+  const handleDecreaseQuantity = (id) => {
+    MainApi.getDishCartMinus(id)
+      .then(data => {
+        updateCartData(data); // функция для обновления состояния cartData
+      })
+      .catch(error => console.error('Ошибка при уменьшении количества блюда', error));
+  };*/
+  //end
+
+  // добавление в корзину
+  const handleAddToCart = (newItem) => {
+    setCartData(prevItems => {
+      if (!Array.isArray(prevItems)) {
+          console.error('prevItems is not an array', prevItems);
+          prevItems = [];
+      }
+      const isItemAlreadyInCart = prevItems.some(cartItem => cartItem.dish.article === newItem.article);
+      const updatedCart = !isItemAlreadyInCart
+        ? [...prevItems, { dish: newItem, quantity: 1 }]
+        : prevItems.map(cartItem =>
+            cartItem.dish.article === newItem.article
+              ? { ...cartItem, quantity: cartItem.quantity + 1 }
+              : cartItem
+          );
+      // Сохраняем обновлённую корзину в localStorage
+      localStorage.setItem('cartDishes', JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  };
+
+  const handleSubmitPromo = () => {
+    MainApi.postPromoMethod({ promocode: promoCode })
+        .then(data => {
+            // Если data не является массивом, не обновляем cartData
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid cart data format');
+            }
+            setCartData(data);
+            setErrorMessage(null); // Очистка ошибки после успешного запроса
+        })
+        .catch(error => {
+            // текущая обработка ошибок, можете добавить обработку ошибки из then
+            console.error(error); // Для отладки
+            setErrorMessage('errors.promo_notfound');
+        });
+  };
+  // end
+
+  // вызываем при получении ошибки 401:
+  const handleAuthError = (err) => {
+    if (err.status === 401) {
+      handleLogout();
+    }
+  };
+
   // functionality -- clear token and exit
   const handleLogout = () => {
-    // Сначала удаляем специфичные для приложения ключи
+    //шаги для очистки localStorage и состояния пользователя
     localStorage.removeItem('addresses');
     localStorage.removeItem('orders');
     localStorage.removeItem('coupons');
-    // Затем удаляем ключи авторизации
     localStorage.removeItem('logInJwt');
     localStorage.removeItem('logInJwtRefresh');
-    // А только после - очищаем всё остальное
-    window.localStorage.clear();
+    window.localStorage.clear(); //вызывается перед удалением конкретных элементов
     setLogIn(false);
     setCurrentUser({});
+    // navigate для вывода пользователя на главную страницу
     navigate('/');
   };
   //end
@@ -430,6 +574,7 @@ function App() {
                 setCurrentUser(current => ({ ...current, ...res }));
               })
               .catch((err) => {
+                handleAuthError(err);
                 console.log(err);
                 setLogIn(false);
               });
@@ -439,6 +584,7 @@ function App() {
           }
         })
         .catch((err) => {
+          handleAuthError(err);
           console.log(err);
           setLogIn(false);
         });
@@ -465,12 +611,13 @@ function App() {
       getDishes();
       getNews();
       getAboutUsfunction();
+      //getDishForCart();
     }, []); // Пустой массив зависимостей, чтобы запрос выполнился один раз
     //end
 
     useEffect(() => {
       if (logIn) {
-        Promise.all([MainApi.getUserId() ])
+        Promise.all([MainApi.getUserId()])
           .then(([userData, addressesData, ordersData]) => {
             setCurrentUser(userData);
             getAddressApi(addressesData);
@@ -560,12 +707,14 @@ function App() {
       />
 
       <HeaderMenu 
-        handleBurgerHeader={handleBurgerHeader} 
+        handleBurgerHeader={handleBurgerHeader}
+        cartData={cartData} 
       />
 
         <Header 
           language={language} 
           onLanguageChange={setLanguage}
+          cartData={cartData}
         />
 
         <Banner />
@@ -678,6 +827,7 @@ function App() {
                 isPreloader={isPreloader}
                 handleBurgerHeader={handleBurgerHeader}
                 language={language}
+                onAddToCart={handleAddToCart}
               />}
           />
 
@@ -689,6 +839,7 @@ function App() {
                 language={language}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -700,6 +851,7 @@ function App() {
                 language={language}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -710,7 +862,8 @@ function App() {
                 dishes={dishes}
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
-                language={language} 
+                language={language}
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -722,6 +875,7 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -733,6 +887,7 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -744,6 +899,7 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -755,6 +911,7 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -766,6 +923,7 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -777,6 +935,7 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -788,6 +947,7 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -799,6 +959,7 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
@@ -810,14 +971,28 @@ function App() {
                 onDishClick={handleDishClick}
                 handleBurgerMenu={handleBurgerMenu}
                 language={language} 
+                onAddToCart={handleAddToCart}
               />} 
           />
 
           <Route 
             path='/cart' 
-            element={<Cart
-              dishes={dishes}
-            />} 
+            element={
+              <Cart
+                dishes={dishes}
+                cartData={cartData}
+                setCartData={setCartData}
+                language={language}
+                onAddToCart={handleAddToCart}
+                extraDishes={dishes.filter(dish => dish.category.some(cat => cat.slug === "extra"))}
+                promoCode={promoCode}
+                setPromoCode={setPromoCode}
+                handleSubmitPromo={handleSubmitPromo}
+                errorMessage={errorMessage}
+                onClearCart={handleClearCart}
+                //onIncreaseQuantity={handleIncreaseQuantity}
+                //onDecreaseQuantity={handleDecreaseQuantity}
+              />} 
           />
 
           <Route 

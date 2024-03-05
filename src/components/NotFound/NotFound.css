@@ -22,7 +22,7 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 19px;
-    margin: 5px auto 184px;
+    margin: 5px auto 50px;
 }
 
 .not-found__button {
@@ -34,6 +34,7 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
+    margin-top: 15px;
 }
 
 .not-found__image {
@@ -63,7 +64,7 @@
     .not-found__subtitle {
         font-size: 12px;
         line-height: 15px;
-        margin: 10px auto 200px;
+        margin: 10px auto 50px;
     }
 
     .not-found__button {

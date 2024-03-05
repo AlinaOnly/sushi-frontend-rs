@@ -55,7 +55,7 @@
     margin-top: 10px;
 }
 
-.dishes__cart-button:active {
+.dishes__cart-button_active {
     background: #FF3055;
     color: #E8E8E8;
     border-radius: 20px;
@@ -97,4 +97,5 @@
 
 .dishes__price {
     color: #FF3055;
+    font-size: 15px;
 }

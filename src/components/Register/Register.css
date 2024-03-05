@@ -1,6 +1,6 @@
 .register {
     display: flex;
-    margin: 70px auto 70px;
+    margin: 50px auto;
     justify-content: center;
     flex-direction: column;
     max-width: 396px;
@@ -55,7 +55,7 @@
 }
 
 .register__submit-button {
-    margin-top: 128px;
+    margin-top: 50px;
     width: 396px;
     height: 45px;
     cursor: pointer;
@@ -114,20 +114,20 @@
 
 @media screen and (max-width: 768px) {
     .register {
-        margin: 232px auto;
+        margin: 50px auto;
     }
 
     .register__submit-button {
         width: 396px;
         font-size: 14px;
         line-height: 17px;
-        margin-top: 128px;
+        margin-top: 50px;
     }
 }
 
 @media screen and (max-width: 550px) {
     .register {
-        margin-top: 56px;
+        margin-top: 50px;
         margin-bottom: 30px;
         align-items: center;
         
@@ -138,7 +138,7 @@
     }
 
     .register__text {
-        margin-bottom: 80px;
+        margin-bottom: 50px;
         margin-left: 20px;
         margin-right: 20px;
         text-align: center;
@@ -153,7 +153,7 @@
     }
 
     .register__submit-button {
-        margin-top: 216px;
+        margin-top: 50px;
         width: 260px;
         font-size: 12px;
         line-height: 15px;

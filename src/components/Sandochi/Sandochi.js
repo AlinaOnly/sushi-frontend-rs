@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Sandochi({ dishes, handleBurgerMenu, onDishClick, language }) {
+function Sandochi({ dishes, handleBurgerMenu, onDishClick, language, onAddToCart }) {
 
     const sandochiDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "sandochi"));
 
@@ -29,6 +29,7 @@ function Sandochi({ dishes, handleBurgerMenu, onDishClick, language }) {
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
                                 language={language}
+                                onAddToCart={onAddToCart}
                             />
                         ))}
                     </ul>

@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import vegan from '../../images/vegan.svg';
 import spicy from '../../images/spicy.svg';
 import { useTranslation } from 'react-i18next';
 import './DishesCard.css';
 
-function DishesCard({ dish, onDishClick, language }) {
+function DishesCard({ dish, onDishClick, language, onAddToCart }) {
+
+    const [isCartBtnClick, setCartBtnClick] = useState(false);
 
     const { t } = useTranslation();
 
     function handleDishClick() {
         onDishClick(dish);
+    }
+
+    function handleAddToCartClick() {
+        onAddToCart(dish);
+        setCartBtnClick(true);
     }
 
     if(!dish.translations[language]) {
@@ -44,8 +51,9 @@ function DishesCard({ dish, onDishClick, language }) {
             </div>
             <div className="dishes__container">
                 <button 
-                    className="dishes__cart-button app__button-opacity"
-                    type="submit"
+                    onClick={handleAddToCartClick}
+                    className={isCartBtnClick ? "dishes__cart-button_active app__button-opacity" : "dishes__cart-button"}
+                    type="button"
                     aria-label="Корзина">
                         {t('dish.cart', 'В корзину')}
                 </button>

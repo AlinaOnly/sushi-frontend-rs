@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Sushi({ dishes, handleBurgerMenu, onDishClick, language }) {
+function Sushi({ dishes, handleBurgerMenu, onDishClick, language, onAddToCart }) {
 
     const sushiDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "sushi"));
 
@@ -29,6 +29,7 @@ function Sushi({ dishes, handleBurgerMenu, onDishClick, language }) {
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
                                 language={language}
+                                onAddToCart={onAddToCart}
                             />
                         ))}
                     </ul>

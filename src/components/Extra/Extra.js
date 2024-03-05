@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 
-function Extra({ dishes, handleBurgerMenu, onDishClick, language }) {
+function Extra({ dishes, handleBurgerMenu, onDishClick, language, onAddToCart }) {
 
     const extraDishes = dishes.filter(dish => dish.category.some(cat => cat.slug === "extra"));
 
@@ -29,6 +29,7 @@ function Extra({ dishes, handleBurgerMenu, onDishClick, language }) {
                                 isCartDishes={dish.isCartDishes}
                                 onDishClick={onDishClick}
                                 language={language}
+                                onAddToCart={onAddToCart}
                             />
                         ))}
                     </ul>

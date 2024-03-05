@@ -114,7 +114,8 @@
         "total": "Total:",
         "checkout": "Checkout",
         "delivery": "Delivery",
-        "pick_up_myself": "I'll Pick It Up Myself"
+        "pick_up_myself": "I'll Pick It Up Myself",
+        "add_dop": "Add"
     },
     "delivery": {
         "your_name": "Your Name",
@@ -139,13 +140,15 @@
         "new_address": "New address"
     },
     "pickup": {
-        "order_summary": "Order Summary",
+        "order_summary": "Order Summary:",
         "agreement": "By placing an order on the website, I confirm that I have read the rules of sale of goods and all documents posted on the website at the address and I confirm the acceptance of the rules of sale of goods on the website in full without restrictions.",
         "consent_to_personal_data_processing": "By placing an order on the website, I give my consent to the collection and processing of my personal data in accordance with the privacy policy.",
         "consent_to_communications": "By placing an order on the website, I give my consent to receiving SMS messages and emails of an advertising and informational nature.",
         "choose_payment_method": "Select Payment Method",
         "payment_cash": "Cash to courier",
-        "payment_card": "Card to courier"
+        "payment_card": "Card to courier",
+        "order_sell": "Your discount:",
+        "order_total": "Total:"
     },
     "more-btn": {
         "more": "More"
@@ -179,12 +182,15 @@
         "error_during_registration": "An error occurred during registration.",
         "error_during_data_change": "An error occurred while updating data",
         "enter_valid_email": "Enter a valid email (name@mail.com)",
-        "enter_password_of_min_8_chars": "The password must consist of numbers and letters and must be at least 8 characters long",
+        "enter_password_of_min_8_chars": "The password must consist of numbers and Latin letters, at least 8 characters long",
         "enter_text_of_min_two_letters": "Enter your first or last name, at least 2 letters",
-        "enter_valid_phone_starting_with_plus": "Broj telefona mora biti u međunarodnom formatu i sadržati od 11 do 14 cifara",
+        "enter_valid_phone_starting_with_plus": "The phone number must start with '+' and contain from 11 to 14 digits",
         "error_during_profile_update": "An error occurred during profile update.",
         "success_change_profile": "Your data is successfully changed",
         "email_change_requested": "A letter with a link to confirm your new email has been sent to your new Email",
-        "password_change_requested": "The password has been sent to your email"
+        "password_change_requested": "The password has been sent to your email",
+        "same_email": "Nalog sa istom email već postoji",
+        "promo_notfound": "Promo code notfound",
+        "promo_error": "Error when applying promotional code"
     }
 }

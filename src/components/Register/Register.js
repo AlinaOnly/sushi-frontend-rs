@@ -97,7 +97,7 @@ function Register({ onRegister, errorMessage }) {
                     />
                     <span 
                         className={`${errors.phone ? "register__error" : "register__error_hidden"}`}>
-                            {t('errors.enter_valid_phone_starting_with_plus', 'Номер телефона должен быть в международном формате и содержать от 11 до 14 цифр')}
+                            {t('errors.enter_valid_phone_starting_with_plus', 'Номер телефона должен начинаться с "+" и содержать от 11 до 14 цифр')}
                     </span>
                 </label>
                 <label className="register__label" htmlFor="password">{t('registr.password', 'Пароль')}
@@ -115,7 +115,7 @@ function Register({ onRegister, errorMessage }) {
                     />
                     <span 
                         className={`${errors.password ? "register__error" : "register__error_hidden"}`}>
-                            {t('errors.enter_password_of_min_8_chars', 'Пароль должен состоять из цифр и букв, длина должна быть не менее 8 символов')}
+                            {t('errors.enter_password_of_min_8_chars', 'Пароль должен состоять из цифр и латинских букв, длина не менее 8 символов')}
                     </span>
                 </label> 
                 <button 

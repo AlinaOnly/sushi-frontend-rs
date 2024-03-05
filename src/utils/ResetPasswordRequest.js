@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { urlDB } from './consts';
 import  useFormValidation from './FormValidation';
@@ -10,29 +11,39 @@ function ResetPasswordRequest() {
 
     const { t } = useTranslation();
 
-    function onResetPasswordRequest(email) {
-        fetch(`${urlDB}/auth/users/reset_password/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-        })
-        .then((response) => {
-            if (response.ok) {
-                return response.text().then(text => text ? JSON.parse(text) : {});
-            } else {
-                throw new Error('Ошибка отправки пароля');
-            }
-        })
-        .then((data) => {
-            // Показать сообщение, что инструкции были отправлены на почту
-            console.log('Инструкции были отправлены на почту!', data);
-        })
-        .catch((error) => {
-            console.error("Ошибка сброса пароля:", error);
-        });
-    }
+    const navigate = useNavigate();
+
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+
+    function onResetPasswordRequest(email) { 
+        setErrorMessage(""); // Очистить предыдущие ошибки
+        setSuccessMessage(""); // Очистить предыдущее сообщение об успехе
+            fetch(`${urlDB}/auth/users/reset_password/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text().then(text => text ? JSON.parse(text) : {}); //если ответ JSON с бэка простой текст
+                } else {
+                    return response.json().then(json => {
+                        throw new Error(json.error || 'Пользователя с данным адресом электронной почты не существует.');
+                    });
+                }
+            })
+            .then((data) => {
+                //console.log('Инструкции были отправлены на почту!', data);
+                setSuccessMessage("Проверьте Вашу электронную почту"); // Установить сообщение об успехе
+            })
+            .catch((error) => {
+                //console.error("Пользователя с данным адресом электронной почты не существует.", error);
+                setErrorMessage(error.message); // Установить сообщение об ошибке
+            });
+        }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -68,6 +79,12 @@ function ResetPasswordRequest() {
                     {t('registr.password_req', 'Сбросить пароль')}
                 </button>
             </form>
+            <p className="register__error-text">{errorMessage || successMessage}</p>
+            <button
+                    className="not-found__button app__text-opacity"
+                    onClick={() => navigate(-1)}>
+                        {t('not-found.back', 'Назад')}
+                </button>
         </div>
     );
 }

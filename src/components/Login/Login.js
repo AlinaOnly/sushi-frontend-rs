@@ -56,7 +56,7 @@ function Login({ onLogin, errorMessage }) {
                     />
                     <span 
                         className={`${errors.password ? "login__error" : "login__error_hidden"}`}>
-                            {t('errors.enter_password_of_min_8_chars', 'Пароль должен состоять из цифр и букв, длина должна быть не менее 8 символов')}
+                            {t('errors.enter_password_of_min_8_chars', 'Пароль должен состоять из цифр и латинских букв, длина не менее 8 символов')}
                     </span>
                 </label>
                 <button 

@@ -9,11 +9,21 @@ function Payment() {
     return (
         <>
             <section className="payment">
-                <div className="payment__container">
-                    <div className="payment__container-title">
-                        <h2 className="payment__title">{t('pickup.order_summary', 'Сумма заказа')}</h2>
-                        <p className="payment__price">3000 RSD</p>
-                    </div>
+                <div className="payment__containers">
+                    <div className="payment__container">
+                        <div className="payment__container-title">
+                            <h2 className="payment__title-sum">{t('pickup.order_summary', 'Сумма заказа:')}</h2>
+                            <p className="payment__price-sum">3000 RSD</p>
+                        </div>
+                        <div className="payment__container-title">
+                            <h2 className="payment__title-sell">{t('pickup.order_sell', 'Ваша скидка:')}</h2>
+                            <p className="payment__price-sell"> 3000 RSD</p>
+                        </div>
+                        <div className="payment__container-title">
+                            <h2 className="payment__title-total">{t('pickup.order_total', 'Итого:')}</h2>
+                            <p className="payment__price-total"> 3000 RSD</p>
+                        </div>
+                    </div>    
                     <div className="payment__checkbox">
                         <input className="payment__input" type="checkbox" id="rules" name="rules" />
                         <label className="payment__label" htmlFor="rules">{t('pickup.agreement', 'Осуществляя заказ на сайте я подтверждаю, что ознакомился с правилами продажи товаров, а также cо всеми документами, размещенными на сайте по адресу и подтверждаю принятие правил продажи товаров на сайте в полном объеме без ограничений.')}</label>
@@ -34,7 +44,7 @@ function Payment() {
                                 type="submit"
                                 className="payment__btn-cash app__button-opacity">
                             </button>
-                            <p className="payment__btn-text">{t('pickup.payment_cash', 'Наличными курьеру')}</p>
+                            <p className="payment__btn-text_cash">{t('pickup.payment_cash', 'Наличными курьеру')}</p>
                         </div> 
                         <div className="payment__area-box">   
                             <button 
@@ -42,7 +52,7 @@ function Payment() {
                                 type="submit"
                                 className="payment__btn-card app__button-opacity">
                             </button>
-                            <p className="payment__btn-text">{t('pickup.payment_card', 'Картой курьеру')}</p>
+                            <p className="payment__btn-text_card">{t('pickup.payment_card', 'Картой курьеру')}</p>
                         </div>   
                     </div>
                 </div>    

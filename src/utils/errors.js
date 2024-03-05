@@ -36,3 +36,9 @@ export function ERR_UPDATE() {
     return i18n.t('errors.error_during_profile_update');
 }
 
+export function ERR_PROMO() {
+    return i18n.t('errors.promo_notfound');
+}
+
+
+

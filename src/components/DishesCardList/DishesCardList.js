@@ -2,7 +2,7 @@ import React from 'react';
 import DishesCard from '../DishesCard/DishesCard';
 import './DishesCardList.css';
 
-function DishesCardList({ dishes, onDishClick, language }) {
+function DishesCardList({ dishes, onDishClick, language, onAddToCart }) {
 
     // Получаем уникальные категории блюд массивом уникальных данных
     const uniqueCategories = Array.from(new Set(dishes.flatMap(dish => dish.category.map(cat => cat.slug))));
@@ -40,13 +40,14 @@ function DishesCardList({ dishes, onDishClick, language }) {
                                     language={language}
                                     isCartDishes={dish.isCartDishes}
                                     onDishClick={onDishClick}
+                                    onAddToCart={onAddToCart}
                                 />
                         ))}
                     </ul>
                 </div>
             ))}
         </section>
-        );
-    }
+    );
+}
     
 export default DishesCardList;

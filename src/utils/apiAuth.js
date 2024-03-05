@@ -42,17 +42,20 @@ const newEmailRequest = ({ current_password, new_email }) => {
         if (response.ok) {
             return response.text().then(text => text ? JSON.parse(text) : {});
         } else {
-            throw new Error('Ошибка изменения почты в профиле');
+            // Если в ответе есть JSON с описанием ошибки, лучше его использовать
+            return response.json().then(json => {
+                throw new Error(json.detail || 'Ошибка изменения почты в профиле');
+            });
         }
-    }).then(error);
+    });
 };
 
 const newPasswordRequest = ({ current_password, new_password }) => {
     return fetch(`${urlDB}/auth/users/set_password/`, {
         method: 'POST',
         headers: {
-            Authorization: `Bearer ${localStorage.getItem('logInJwt')}`,
-            Accept: 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('logInJwt')}`,
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
         credentials: 'include',
@@ -61,10 +64,12 @@ const newPasswordRequest = ({ current_password, new_password }) => {
         if (response.ok) {
             return response.text().then(text => text ? JSON.parse(text) : {});
         } else {
-            throw new Error('Ошибка изменения пароля в профиле');
+            // Если в ответе есть JSON с описанием ошибки, лучше его использовать
+            return response.json().then(json => {
+                throw new Error(json.detail || 'Ошибка изменения пароля в профиле');
+            });
         }
-    })
-    .then(error);
+    });
 };
 
 const tokenRefresh = (refreshToken) => {

@@ -2,96 +2,188 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Carousel from '../Carousel/Carousel';
 import empty from '../../images/empty-cart.svg';
-//import imbir from '../../images/imbir.jpg';
 import { useTranslation } from 'react-i18next';
 import './Cart.css';
 
+function Cart({
+    cartData,
+    setCartData,
+    language,
+    extraDishes,
+    onAddToCart,
+    setPromoCode,
+    promoCode,
+    handleSubmitPromo,
+    errorMessage,
+    onClearCart,
+    onIncreaseQuantity,
+    onDecreaseQuantity
+}) {
 
-function Cart({ dishes, dish }) {
     const navigate = useNavigate();
 
     const { t } = useTranslation();
 
+    const getTranslationByLanguage = (translations) => {
+        return translations[language] || translations.en; // Возвращаем перевод для текущего языка либо английский как запасной вариант
+    };
+
+    // Функция для увеличения количества блюда
+    const handleIncreaseQuantity = (index) => {
+        const newCartData = [...cartData];
+        newCartData[index].quantity += 1;
+        setCartData(newCartData);
+        // Сохраняем изменения в localStorage или отправляем на сервер
+        localStorage.setItem('cartDishes', JSON.stringify(newCartData));
+    };
+
+    // Функция для уменьшения количества блюда
+    const handleDecreaseQuantity = (index) => {
+        const newCartData = [...cartData];
+        if(newCartData[index].quantity > 1) {
+            newCartData[index].quantity -= 1;
+            setCartData(newCartData);
+            // Сохраняем изменения в localStorage или отправляем на сервер
+            localStorage.setItem('cartDishes', JSON.stringify(newCartData));
+        }
+    };
+
+    // Функция для удаления блюда из корзины
+    const handleRemoveCartItem = (index) => {
+        const newCartData = [...cartData];
+        newCartData.splice(index, 1); // Удаляем элемент по индексу
+        setCartData(newCartData);
+        // Сохраняем изменения в localStorage
+        localStorage.setItem('cartDishes', JSON.stringify(newCartData));
+    };
+
+    // Функция для вычисления итоговой цены на основе количества
+    const calculateTotalPrice = (price, quantity) => {
+        return (parseFloat(price) * quantity).toFixed(2);
+    };
+
+    // Функция для вычисления итоговой суммы всех товаров в корзине
+    const calculateTotalSum = () => {
+        return cartData.reduce((sum, cartItem) => {
+        return sum + (cartItem.dish.final_price * cartItem.quantity);
+        }, 0);
+    };
+
+    // Вычисляем итоговую сумму
+    const totalSum = calculateTotalSum();
+
+    const handlePromoChange = (event) => {
+        setPromoCode(event.target.value);
+    };
+
     return (
         <>
             <div className="cart">
-                <h2 className="cart__title">{t('cart.empty', 'В корзине пусто!')}</h2>
-                <img src={empty} className="cart__img-empty" alt="Пустая корзина"/>
-                <p className="cart__text">{t('cart.add', 'Добавьте что-нибудь из нашего меню!')}</p>
-                <button 
-                    onClick={() => navigate('/')}
-                    aria-label="Назад в меню"
-                    type="button"
-                    className="cart__btn-back app__button-opacity">{t('cart.back', 'Назад в меню')}
-                </button>
-            </div>
-
-             <div className="cart">
-                <h2 className="cart__title">{t('cart.in_your_cart', 'В Вашей корзине')}</h2>
-                <div className="cart__products">
-                    <img className="cart__product-image" src={dishes.image} alt="Фото заказанного товара" />
-                    <p className="cart__product-name">{dishes.short_name_rus}</p>
-                    <div className="cart__container-count">
-                        <p className="cart__product-price">{dishes.final_price} RSD</p>
-                        <button
-                            aria-label="Плюс"
-                            type="button"
-                            className="cart__btn-product_delete app__button-opacity">
-                        </button>
-                        <p className="cart__product-count">1</p>
-                        <button
-                            aria-label="Минус"
-                            type="button"
-                            className="cart__btn-product_add app__button-opacity">
-                        </button>
-                    </div>
-                </div>    
-                    <button
-                        aria-label="Очистить корзину"
-                        type="button"
-                        className="cart__btn-products_clean app__button-opacity">{t('cart.clear_cart', 'Очистить корзину')}
-                    </button>
-
-                <div className="cart__slider">
-                    <p className="cart__text-slider">{t('cart.add_to_your_order', 'Добавьте к себе в заказ:')}</p>
-                    <Carousel/>
-                </div>
-                
-                <div className="cart__promo">
-                    <label className="cart__promo-label" htmlFor="promo">{t('cart.promo_code', 'Промокод:')}
-                        <input
-                            id="promo"
-                            className="cart__promo-input"
-                            name="promo"
-                            type="text"/>
-                        </label>
-                    <button 
-                        aria-label="Применить"
-                        type="submit"
-                        className="cart__btn-promo app__button-opacity">{t('cart.apply', 'Применить')}
-                    </button>
-                </div>
-                <div className="cart__results">
-                    <p className="cart__text-price">{t('cart.total', 'Итого:')}</p>
-                    <p className="cart__product-price">{dishes.final_price} RSD</p>
-                </div>
-                <div className="cart__delivery">
-                    <p className="cart__order-text">{t('cart.checkout', 'Оформить заказ')}</p>
-                    <Link to="/delivery">
+                {cartData && cartData.length > 0 ? (
+                    <>
+                        <h2 className="cart__title">{t('cart.in_your_cart', 'В Вашей корзине')}</h2>
+                        {cartData.map((cartItem, index) => {
+                            const translation = getTranslationByLanguage(cartItem.dish.translations);
+                            const totalPrice = calculateTotalPrice(cartItem.dish.final_price, cartItem.quantity);
+                            return (
+                                <div className="cart__products"  key={index}>
+                                    <img className="cart__product-image" src={cartItem.dish.image} alt={translation.short_name}/>
+                                    <p className="cart__product-name">{translation.short_name}</p>
+                                    <div className="cart__container-count">
+                                        <p className="cart__product-price">{totalPrice} RSD</p>
+                                        <button
+                                            onClick={() => handleDecreaseQuantity(index)}
+                                            aria-label="Минус"
+                                            type="button"
+                                            className="cart__btn-product_delete app__button-opacity">
+                                        </button>
+                                        <p className="cart__product-count">{cartItem.quantity}</p>
+                                        <button
+                                            onClick={() => handleIncreaseQuantity(index)}
+                                            aria-label="Плюс"
+                                            type="button"
+                                            className="cart__btn-product_add app__button-opacity">
+                                        </button>
+                                        <button 
+                                            onClick={() => handleRemoveCartItem(index)}
+                                            className="cart__product-btn_trash app__button-opacity" 
+                                            type="button"  
+                                            aria-label="Очистить от блюда">
+                                        </button>
+                                    </div>
+                                </div>  
+                            );
+                        })} 
+                            <button
+                                onClick={onClearCart}
+                                aria-label="Очистить корзину"
+                                type="button"
+                                className="cart__btn-products_clean app__button-opacity">{t('cart.clear_cart', 'Очистить корзину')}
+                            </button>
+                        <div className="cart__slider">
+                            <p className="cart__text-slider">{t('cart.add_to_your_order', 'Добавьте к себе в заказ:')}</p>
+                            <Carousel
+                                extraDishes={extraDishes}
+                                onAddToCart={onAddToCart}
+                                language={language}
+                            />
+                        </div>
+                        <form onSubmit={(e) => { e.preventDefault(); handleSubmitPromo(); }}>
+                            <div className="cart__promo">
+                                <label className="cart__promo-label" htmlFor="promo">{t('cart.promo_code', 'Промокод:')}
+                                    <input
+                                        id="promo"
+                                        className="cart__promo-input"
+                                        name="promo"
+                                        type="text"
+                                        value={promoCode}
+                                        onChange={handlePromoChange}
+                                        minLength="5"
+                                    />
+                                        {t(errorMessage) && <p className="promo__error">{t(errorMessage)}</p>}
+                                    </label>
+                                <button 
+                                    aria-label={t('cart.apply', 'Применить')}
+                                    type="submit"
+                                    className="cart__btn-promo app__button-opacity">{t('cart.apply', 'Применить')}
+                                </button>
+                            </div>
+                        </form>
+                        <div className="cart__results">
+                            <p className="cart__text-price">{t('cart.total', 'Итого:')}</p>
+                            <p className="cart__product-summ-price">{totalSum.toFixed(2)} RSD</p>
+                        </div>
+                        <div className="cart__delivery">
+                            <p className="cart__order-text">{t('cart.checkout', 'Оформить заказ')}</p>
+                            <Link to="/delivery">
+                                <button 
+                                    aria-label={t('cart.delivery', 'Доставка')}
+                                    type="button"
+                                    className="cart__btn-delivery app__button-opacity">{t('cart.delivery', 'Доставка')}
+                                </button>
+                            </Link>
+                            <Link to="/pickup">
+                                <button 
+                                    aria-label={t('cart.pick_up_myself', 'Заберу сам')}
+                                    type="button"
+                                    className="cart__btn-pickup app__button-opacity">{t('cart.pick_up_myself', 'Заберу сам')}
+                                </button>
+                            </Link>
+                        </div>
+                    </>
+                    ) : (
+                    <>
+                        <h2 className="cart__title">{t('cart.empty', 'В корзине пусто!')}</h2>
+                        <img src={empty} className="cart__img-empty" alt="Пустая корзина"/>
+                        <p className="cart__text">{t('cart.add', 'Добавьте что-нибудь из нашего меню!')}</p>
                         <button 
-                            aria-label="Доставка"
+                            onClick={() => navigate('/')}
+                            aria-label="Назад в меню"
                             type="button"
-                            className="cart__btn-delivery app__button-opacity">{t('cart.delivery', 'Доставка')}
+                            className="cart__btn-back app__button-opacity">{t('cart.back', 'Назад в меню')}
                         </button>
-                    </Link>
-                    <Link to="/pickup">
-                        <button 
-                            aria-label="Заберу сам"
-                            type="button"
-                            className="cart__btn-pickup app__button-opacity">{t('cart.pick_up_myself', 'Заберу сам')}
-                        </button>
-                    </Link>
-                </div>
+                    </>
+                )}
             </div> 
         </>
     );
