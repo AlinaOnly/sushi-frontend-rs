@@ -44,7 +44,7 @@ function Delivery() {
     };
 
     const handleDelete = () => {
-        setCount(prevCount => (prevCount > 0 ? prevCount - 1 : prevCount));
+        setCount(prevCount => (prevCount > 1 ? prevCount - 1 : prevCount));
     };
     //end
 
@@ -138,6 +138,14 @@ function Delivery() {
         checkFormValidity();
     };
 
+    // Добавим состояние для выбранного месяца
+    const [selectedMonth, setSelectedMonth] = useState(dateOptions[0]);
+
+    // Обработчик изменения выбора месяца
+    const handleMonthChange = (event) => {
+        setSelectedMonth(event.target.value);
+    };
+
     return (
         <>
             <div className="delivery">
@@ -197,21 +205,7 @@ function Delivery() {
                                 />
                             </label>
                         </div>
-                        <div className="delivery__description">{t('delivery.number_of_utensils', 'Количество приборов')}
-                            <button
-                                onClick={handleDelete}
-                                aria-label="Минус"
-                                type="button"
-                                className="delivery__btn-product_delete app__button-opacity">
-                            </button>
-                            <span className="delivery__product-count">{count}</span>
-                            <button
-                                onClick={handleAdd}
-                                aria-label="Плюс"
-                                type="button"
-                                className="delivery__btn-product_add app__button-opacity">
-                            </button>
-                        </div>
+                        
                         <div className="delivery__description">
                             <input
                                 id="rd"
@@ -248,6 +242,24 @@ function Delivery() {
                         }
                         { !isChecked && 
                             <>
+                                <div className="delivery__description">
+                                    <label className="delivery__label" htmlFor="home">{t('delivery.house', 'Дом')}
+                                        <input
+                                            id="home"
+                                            className="delivery__input"
+                                            name="home"
+                                            type="text"
+                                            placeholder={t('delivery.house', 'Дом')}
+                                            minLength="1"
+                                            maxLength="1000"
+                                            //required
+                                        />
+                                    <span 
+                                        className={`${errors.home ? "login__error" : "login__error_hidden"}`}>
+                                            {t('delivery.field_required', 'Поле обязательно для ввода')}
+                                    </span>
+                                    </label>
+                                </div>
                                 <div className="delivery__description">
                                     <label className="delivery__label" htmlFor="flat">{t('delivery.apartment', 'Квартира')}
                                         <input
@@ -304,6 +316,21 @@ function Delivery() {
                                 </div>
                             </>
                         }
+                        <div className="delivery__description delivery__description-count">{t('delivery.number_of_utensils', 'Количество приборов')}
+                            <button
+                                onClick={handleDelete}
+                                aria-label="Минус"
+                                type="button"
+                                className="delivery__btn-product_delete app__button-opacity">
+                            </button>
+                            <span className="delivery__product-count">{count}</span>
+                            <button
+                                onClick={handleAdd}
+                                aria-label="Плюс"
+                                type="button"
+                                className="delivery__btn-product_add app__button-opacity">
+                            </button>
+                        </div>
                         <div className="delivery__description">
                             <label className="delivery__label">{t('delivery.order_comment', 'Комментарий к заказу')}
                                 <textarea
@@ -314,13 +341,15 @@ function Delivery() {
                         </div>
                         <div className="delivery__container">
                             {t('delivery.specify_date_time', 'Укажите дату и время')}
-                                <select className="delivery__select" id="month" name="selectedMonth">
-                                    {dateOptions.map((date, index) => (
-                                        <option key={index} value={date} className="delivery__select-month">
-                                            {date}
-                                        </option>
-                                    ))}
-                                </select>
+                            <select className="delivery__select" id="month" name="selectedMonth"
+                                    onChange={handleMonthChange} value={selectedMonth}>
+                                {dateOptions.map((date, index) => (
+                                    <option key={index} value={date} className="delivery__select-month">
+                                        {date}
+                                    </option>
+                                ))}
+                            </select>
+                            {selectedMonth !== 'Как можно быстрее' && (
                                 <select className="delivery__select" id="time" name="selectedTime">
                                     {timeOptions.map((time, index) => (
                                         <option key={index} value={time} className="delivery__select-time">
@@ -328,7 +357,7 @@ function Delivery() {
                                         </option>
                                     ))}
                                 </select>
-                            
+                            )}
                         </div>
                         <Link to="/payment">
                             <button 

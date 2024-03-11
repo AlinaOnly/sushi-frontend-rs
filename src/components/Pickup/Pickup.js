@@ -4,9 +4,9 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
 import { useTranslation } from 'react-i18next';
 import StorePickerMap from '../../utils/StorePickerMap';
-import './CashnCarry.css';
+import './Pickup.css';
 
-function CashnCarry() {
+function Pickup() {
 
     const { t } = useTranslation();
 
@@ -38,7 +38,7 @@ function CashnCarry() {
     };
 
     const handleDelete = () => {
-        setCount(prevCount => (prevCount > 0 ? prevCount - 1 : prevCount));
+        setCount(prevCount => (prevCount > 1 ? prevCount - 1 : prevCount));
     };
     //end
 
@@ -100,6 +100,14 @@ function CashnCarry() {
     };
     const dateOptions = generateDateOptions();
     //end
+
+    // Добавим состояние для выбранного месяца
+    const [selectedMonth, setSelectedMonth] = useState(dateOptions[0]);
+
+    // Обработчик изменения выбора месяца
+    const handleMonthChange = (event) => {
+        setSelectedMonth(event.target.value);
+    };
 
     return (
         <>
@@ -193,13 +201,15 @@ function CashnCarry() {
                         </div>
                         <div className="delivery__container">
                             {t('delivery.specify_date_time', 'Укажите дату и время')}
-                                <select className="delivery__select" id="month" name="selectedMonth">
-                                    {dateOptions.map((date, index) => (
-                                        <option key={index} value={date} className="delivery__select-month">
-                                            {date}
-                                        </option>
-                                    ))}
-                                </select>
+                            <select className="delivery__select" id="month" name="selectedMonth"
+                                    onChange={handleMonthChange} value={selectedMonth}>
+                                {dateOptions.map((date, index) => (
+                                    <option key={index} value={date} className="delivery__select-month">
+                                        {date}
+                                    </option>
+                                ))}
+                            </select>
+                            {selectedMonth !== 'Как можно быстрее' && (
                                 <select className="delivery__select" id="time" name="selectedTime">
                                     {timeOptions.map((time, index) => (
                                         <option key={index} value={time} className="delivery__select-time">
@@ -207,7 +217,7 @@ function CashnCarry() {
                                         </option>
                                     ))}
                                 </select>
-                            
+                            )}
                         </div>
                         <Link to="/payment">
                             <button 
@@ -226,4 +236,4 @@ function CashnCarry() {
     );
 }
 
-export default CashnCarry;
+export default Pickup;

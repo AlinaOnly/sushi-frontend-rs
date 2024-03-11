@@ -17,39 +17,44 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage, onUpdateEmail, o
         setValues,  formatDateToServer, formatDateToInput } = useFormValidation(currentUser);
 
     useEffect(() => {
-        const inputData = {};
+        const defaultmessenger_accountData = {
+            msngr_type: '',
+            msngr_username: '',
+        };
+        const inputData = { messenger_account: defaultmessenger_accountData };
         if (currentUser) {
             Object.keys(currentUser).forEach(key => {
-                inputData[key] = key === 'date_of_birth'
-                ? formatDateToInput(currentUser['date_of_birth']) // Форматируем в YYYY-MM-DD для input
-                : currentUser[key];
-                // Если есть email, значит добавляем новый ключ для newEmail и устанавливаем пустое значение
-                inputData['newEmail'] = currentUser.email || '';
-                inputData['currentPassword'] = currentUser.password || '';
-                inputData['newPassword'] = currentUser.password || '';
+                if (key === 'date_of_birth') {
+                    inputData[key] = formatDateToInput(currentUser[key]);
+                } else if (key === 'messenger_account' && currentUser.messenger_account) { // Проверка на null
+                    inputData['messenger_account'] = {
+                        // Используем опциональную цепочку, чтобы обработать null
+                        msngr_type: currentUser.messenger_account?.msngr_type || '',
+                        msngr_username: currentUser.messenger_account?.msngr_username || '',
+                    };
+                } else if (key !== 'messenger_account') { // Исключаем ключ messenger_account
+                    inputData[key] = currentUser[key];
+                }
             });
+            setValues(inputData);
         }
-        setValues(inputData);
     }, [currentUser, formatDateToInput, setValues]);
-
-    /* useEffect(() => {
-        setValues(v => ({ ...v, newEmail: currentUser.email || '' }));
-    }, [currentUser]);*/
 
     function handleSubmit(event) {
         event.preventDefault();
-        let dateOfBirth = values.date_of_birth;
-        // Преобразуем дату только если она включает символ '-', предполагая, что формат YYYY-MM-DD
-        if (dateOfBirth.includes('-') && !dateOfBirth.includes('.')) {
-            dateOfBirth = formatDateToServer(values.date_of_birth);
-        }
+        // Предполагаемая функция для форматирования даты
+        const formattedDateOfBirth = values.date_of_birth
+            ? formatDateToServer(values.date_of_birth)
+            : null; // или пустую строку, если ваш API так требует
+        // Вызываем функцию обновления профиля с индивидуальными параметрами
         onUpdateProfile(
             values.first_name,
             values.last_name,
             values.phone,
-            dateOfBirth,
-            values.messenger
-        );
+            formattedDateOfBirth,
+            values.messenger_account
+        ); 
+        // Деактивируем ввод в форму
         setDisableInput(true);
     }
 
@@ -172,32 +177,45 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage, onUpdateEmail, o
                                 type="date"
                                 required
                             /></label> 
-                            <span 
-                                className={`${errors.date_of_birth ? "profile__error" : "profile__error_hidden"}`}>
-                                    {t('profile.enter_birth_date', 'Введите дату своего рождения')}
+                            <span className={errors.date_of_birth ? "profile__error" : "profile__error_hidden"}>
+                                {errors.date_of_birth || t('profile.enter_birth_date', 'Введите дату своего рождения')}
                             </span>
                     </div> 
                     <div className="profile__container">
-                        <label className="profile__label" htmlFor="messenger">Messenger
+                        <label className="profile__label profile__label-messenger_account" htmlFor="messenger_account-type">{t('profile.type_messenger_account', 'Тип мессенджера')}
+                            <select
+                                disabled={isDisableInput}
+                                value={values.messenger_account.msngr_type}
+                                onChange={handleChange}
+                                id="messenger_account-type"
+                                className="profile__input"
+                                name="msngr_type"
+                                required
+                            >
+                                <option value="">{t('profile.choose_messenger_account', 'Выберите мессенджер')}</option>
+                                <option value="tm">Telegram</option>
+                                <option value="wts">WhatsApp</option>
+                                
+                            </select>
+                        </label>
+                        <label className="profile__label" htmlFor="messenger_account">Messenger
                             <input
                                 disabled={isDisableInput}
-                                value={values.messenger_type === 'tm' ? 
-                                    (values.messenger?.msngr_username || '') : 
-                                    (values.messenger?.msngr_phone || '')}
+                                value={values.messenger_account.msngr_username || ''}
                                 onChange={handleChange}
-                                id="messenger"
+                                id="messenger_account"
                                 className="profile__input"
-                                name={values.messenger_type === 'tm' ? 'msngr_username' : 'msngr_phone'}
-                                placeholder={values.messenger_type === 'tm' ? '@username' : '+'}
-                                minLength={values.messenger_type === 'wa' ? 10 : 3}
+                                name={values.messenger_account.msngr_type === 'tm' ? 'msngr_username' : 'msngr_username'}
+                                placeholder={values.messenger_account.msngr_type === 'tm' ? '@username' : '+'}
+                                minLength={values.messenger_account.msngr_type === 'wts' ? 10 : 3}
                                 maxLength="50"
                                 required
-                            /></label>
-                            <span 
-                                className={`${errors.messenger ? "profile__error" : "profile__error_hidden"}`}>
-                                    {t('profile.enter_telegram_or_whatsapp', 'Введите ник Telegram или номер Whatsapp')}
-                            </span>
-                    </div>               
+                            />
+                        </label>
+                        <span 
+                            className={`${errors.messenger_account ? "profile__error" : "profile__error_hidden"}`}>
+                            {t('profile.enter_telegram_or_whatsapp', 'Введите ник Telegram или номер Whatsapp')}</span>
+                    </div>          
                 </form>
                 { !isDisableInput ? (
                         <button 
@@ -209,7 +227,8 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage, onUpdateEmail, o
                                     || currentUser.last_name !== values.last_name
                                     || currentUser.phone !== values.phone 
                                     || currentUser.date_of_birth !== values.date_of_birth 
-                                    || currentUser.messenger !== values.messenger
+                                    || currentUser.messenger_account.msngr_username !== values.messenger_account.msngr_username
+                                    || currentUser.messenger_account.msngr_type !== values.messenger_account.msngr_type
                                 )
                                 ? "profile__button-save" : "profile__button-save_disable"}`}
                             type="submit"

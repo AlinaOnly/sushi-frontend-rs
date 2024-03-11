@@ -15,6 +15,7 @@ function DishesCard({ dish, onDishClick, language, onAddToCart }) {
     }
 
     function handleAddToCartClick() {
+        console.log('Adding to cart from Menu:', dish);
         onAddToCart(dish);
         setCartBtnClick(true);
     }

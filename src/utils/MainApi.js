@@ -7,7 +7,7 @@ class Api {
         this._headers = config.headers;
     }
 
-    _mainApiError(res) {
+    /*_mainApiError(res) {
         if (res.ok) {
             // Проверяем, содержит ли ответ 'Content-Type': 'application/json' перед парсингом.
             const contentType = res.headers.get('Content-Type');
@@ -21,6 +21,35 @@ class Api {
         return res.text().then((text) => {
             const error = text ? JSON.parse(text) : { message: `Ошибка: ${res.status}` };
             return Promise.reject(error);
+        });
+    }*/
+
+    _mainApiError(res) {
+        if (res.ok) {
+            // Проверяем на код ответа 204 No Content
+            if (res.status === 204) {
+                // не пытаемся парсить тело ответа и сразу возвращаем Promise.resolve()
+                return Promise.resolve(null);
+            }
+            // Далее идёт существующая логика обработки ответа 'Content-Type': 'application/json'
+            const contentType = res.headers.get('Content-Type');
+            if (contentType && contentType.includes('application/json')) {
+                return res.json();
+            }
+            return Promise.resolve(res);
+        }
+        // Обработка неуспешных HTTP статусов
+        return res.text().then((text) => {
+            if (!text) {
+                const error = { message: `Ошибка: ${res.status}`, details: 'No response body' };
+                return Promise.reject(error);
+            }
+            try {
+                const error = JSON.parse(text);
+                return Promise.reject(error);
+            } catch (e) {
+                return Promise.reject({ message: `Ошибка: ${res.status}`, details: text });
+            }
         });
     }
 
@@ -36,7 +65,7 @@ class Api {
         }).then(this._mainApiError);
     }
 
-    changeUserInformation( {first_name, last_name, phone, date_of_birth, messenger} ) {
+    changeUserInformation( {first_name, last_name, phone, date_of_birth, messenger_account} ) {
         return fetch(`${this._url}/auth/users/me/`, {
             method: 'PATCH',
             headers: {
@@ -49,7 +78,7 @@ class Api {
                 last_name: last_name,
                 phone: phone,
                 date_of_birth: date_of_birth,
-                messenger: messenger
+                messenger_account: messenger_account
             }),
         }).then(this._mainApiError);
     }

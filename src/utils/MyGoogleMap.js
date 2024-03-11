@@ -42,14 +42,12 @@ function MyGoogleMap({ locations }) {
         });
     }
 
-    // Опционально: добавить padding для bounds, чтобы не было слишком тесно
-    /*const mapOptions = {
-        bounds: bounds,
-        padding: {top: 100, bottom:100, left: 100, right: 100}
-    };*/
-
     const onLoad = map => {
-        if (bounds) {
+        const bounds = new window.google.maps.LatLngBounds();
+        locations.forEach((location) => {
+            bounds.extend(new window.google.maps.LatLng(location.lat, location.lng));
+        });
+        if (map && locations.length > 0) {
             map.fitBounds(bounds, { top: 100, bottom: 100, left: 100, right: 100 });
         }
     };
@@ -58,12 +56,9 @@ function MyGoogleMap({ locations }) {
         <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
             <GoogleMap
                 mapContainerStyle={mapDimensions}
-                // Используем дефолтный центр, если bounds не определен
-                center={bounds ? bounds.getCenter() : { lat: 0, lng: 0 }}
-                zoom={13}
+                zoom={10}
                 onLoad={onLoad}
                 options={{ streetViewControl: false }}
-                //options={mapOptions}
             >
                 {locations.map((location, index) => (
                     <Marker key={index} position={location} />

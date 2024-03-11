@@ -22,10 +22,15 @@ function Cart({
 
     const navigate = useNavigate();
 
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
-    const getTranslationByLanguage = (translations) => {
-        return translations[language] || translations.en; // Возвращаем перевод для текущего языка либо английский как запасной вариант
+    const currentLanguage = i18n.language;
+
+    const translateDish = (translations, key) => {
+        if (!translations) return 'Название не найдено';
+        // Ожидаемый формат translations - { en: { short_name: "Dish", text: "Description" }}
+        const translation = translations[currentLanguage] || translations['ru'] || {};
+        return translation[key] || translation['short_name'] || 'Название не найдено';
     };
 
     // Функция для увеличения количества блюда
@@ -48,18 +53,14 @@ function Cart({
         }
     };
 
-    // Функция для удаления блюда из корзины
-    const handleRemoveCartItem = (index) => {
-        const newCartData = [...cartData];
-        newCartData.splice(index, 1); // Удаляем элемент по индексу
-        setCartData(newCartData);
-        // Сохраняем изменения в localStorage
-        localStorage.setItem('cartDishes', JSON.stringify(newCartData));
-    };
-
-    // Функция для вычисления итоговой цены на основе количества
-    const calculateTotalPrice = (price, quantity) => {
-        return (parseFloat(price) * quantity).toFixed(2);
+    // Передаем в функцию цену за единицу и количество
+    const calculateTotalPrice = (unitPrice, quantity) => {
+        // Умножаем цену за единицу на количество, если оно больше чем 1
+        if (quantity > 1) {
+            return (parseFloat(unitPrice) * quantity).toFixed(2);
+        }
+        // Или возвращаем unitPrice как final_price, если количество равно 1
+        return parseFloat(unitPrice).toFixed(2);
     };
 
     // Функция для вычисления итоговой суммы всех товаров в корзине
@@ -72,6 +73,15 @@ function Cart({
     // Вычисляем итоговую сумму
     const totalSum = calculateTotalSum();
 
+    // Функция для удаления блюда из корзины
+    const handleRemoveCartItem = (index) => {
+        const newCartData = [...cartData];
+        newCartData.splice(index, 1); // Удаляем элемент по индексу
+        setCartData(newCartData);
+        // Сохраняем изменения в localStorage
+        localStorage.setItem('cartDishes', JSON.stringify(newCartData));
+    };
+
     const handlePromoChange = (event) => {
         setPromoCode(event.target.value);
     };
@@ -83,12 +93,12 @@ function Cart({
                     <>
                         <h2 className="cart__title">{t('cart.in_your_cart', 'В Вашей корзине')}</h2>
                         {cartData.map((cartItem, index) => {
-                            const translation = getTranslationByLanguage(cartItem.dish.translations);
+                            const translationShortName = translateDish(cartItem.dish.translations, 'short_name');
                             const totalPrice = calculateTotalPrice(cartItem.dish.final_price, cartItem.quantity);
                             return (
                                 <div className="cart__products"  key={index}>
-                                    <img className="cart__product-image" src={cartItem.dish.image} alt={translation.short_name}/>
-                                    <p className="cart__product-name">{translation.short_name}</p>
+                                    <img className="cart__product-image" src={cartItem.dish ? cartItem.dish.image : cartItem.image} alt={translationShortName}/>
+                                    <p className="cart__product-name">{translationShortName}</p>
                                     <div className="cart__container-count">
                                         <p className="cart__product-price">{totalPrice} RSD</p>
                                         <button
@@ -136,9 +146,10 @@ function Cart({
                                         className="cart__promo-input"
                                         name="promo"
                                         type="text"
+                                        pattern="^[A-Za-z0-9]+$"
                                         value={promoCode}
                                         onChange={handlePromoChange}
-                                        minLength="5"
+                                        minLength="6"
                                     />
                                         {t(errorMessage) && <p className="promo__error">{t(errorMessage)}</p>}
                                     </label>

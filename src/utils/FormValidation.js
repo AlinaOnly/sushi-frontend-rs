@@ -8,6 +8,10 @@ function useFormValidation() {
 
     const [values, setValues] = useState({
       isAddressValid: false,
+      messenger_account: {
+        msngr_type: '',
+        msngr_username: '',
+      },
       //currentPassword: currentUser.password || '',
       //newEmail: currentUser.email || ''
     });
@@ -30,9 +34,10 @@ function useFormValidation() {
       }
     };
 
-    /*useEffect(() => {
+    // автоматически проверять валидность формы каждый раз при изменении ошибок,
+    useEffect(() => {
       checkFormValidity();
-    }, [errors]);*/
+    }, [errors]);
 
     // Функция валидации имени
     const validateName = (name) => {
@@ -79,10 +84,15 @@ function useFormValidation() {
         const nameError = validateName(value);
         setValues(prevValues => ({ ...prevValues, [name]: value }));
         setErrors(prevErrors => ({ ...prevErrors, [name]: nameError }));
-      }  else {
+      } else {
         // Обрабатываем другие входные данные, такие как 'email', 'password' и т.д.
           setValues((prevValues) => ({...prevValues, [name]: value }));
           setErrors((prevErrors) => ({...prevErrors, [name]: target.validationMessage, // Стандартное сообщение об ошибке
+        }));
+        // верная структура для обновления вложенного состояния `messenger_account`
+        setValues(prevValues => ({...prevValues, messenger_account: {...prevValues.messenger_account,
+            [name]: value,
+          }
         }));
       }
       checkFormValidity();

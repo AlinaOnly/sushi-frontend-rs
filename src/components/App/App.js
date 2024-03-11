@@ -37,7 +37,7 @@ import Vegan from '../Vegan/Vegan';
 
 import Cart from '../Cart/Cart';
 import Delivery from '../Delivery/Delivery';
-import CashnCarry from '../CashnCarry/CashnCarry';
+import Pickup from '../Pickup/Pickup';
 import Payment from '../Payment/Payment';
 
 import Promo from '../Promo/Promo';
@@ -138,11 +138,11 @@ function App() {
                   setPreloader(false);
               }
           }).catch(err => {
-                /*if (err === 'Ошибка: 409') {
+                if (err === 'Ошибка: 409') {
                   setErrorMessage('errors.user_already_exists');
                 } else {
                   setErrorMessage('errors.error_during_registration');
-                }*/
+                }
                 handleAuthError(err);
                 setErrorMessage('errors.error_during_registration');
                 console.log(err);
@@ -165,12 +165,12 @@ function App() {
                 setPreloader(false);
             }
         }).catch(err => {
-            /*if (err === 'Ошибка: 401') {
+            if (err === 'Ошибка: 401') {
               setErrorMessage('errors.incorrect_email_or_password');
               setLogIn(false);
             } else {
               setErrorMessage('errors.error_during_login');
-            }*/
+            }
             handleAuthError(err);
             setErrorMessage('errors.error_during_login');
             console.log(err);
@@ -181,10 +181,10 @@ function App() {
 
   // functionality -- update user info
   function handleUpdateProfile(first_name, last_name, phone, date_of_birth,
-    messenger) {
+    messenger_account) {
       setPreloader(true);
         MainApi.changeUserInformation({ first_name, last_name, phone, date_of_birth,
-          messenger })
+          messenger_account })
         .then((res) => {
           setCurrentUser(current => {
             const updatedUser = {...current, ...res};
@@ -196,7 +196,7 @@ function App() {
             setErrorMessage('errors.success_change_profile');
             setPreloader(false);
         }).catch(err => {
-          /* if (err === 'Ошибка: 409') {
+            /* if (err === 'Ошибка: 409') {
               setErrorMessage('errors.user_already_exists');
             } else {
               setErrorMessage('errors.error_during_data_change');
@@ -349,7 +349,8 @@ function App() {
   function getOrdersApi() {
     setPreloader(true);
     MainApi.getUserOrders()
-        .then((orders) => {
+        .then(orders => {
+            setCurrentUser(user => ({ ...user, orders }));
               setOrders(orders);
               localStorage.setItem('orders', JSON.stringify(orders));
               setPreloader(false);
@@ -365,7 +366,8 @@ function App() {
   /*function getCoupons() {
     setPreloader(true);
     MainApi.getUserCoupons()
-        .then((coupons) => {
+        .then(coupons => {
+            setCurrentUser(user => ({ ...user, coupons }));
               setCoupons(coupons);
               localStorage.setItem('coupons', JSON.stringify(coupons));
               setPreloader(false);
@@ -426,7 +428,10 @@ function App() {
     setPreloader(true);
     // Возвращаем промис, чтобы его можно было использовать в useEffect
     return MainApi.getCartData()
-      .then((cartResponse) => {
+      .then(cartResponse => {
+        if (!cartResponse) { // проверка на null, который может быть возвращен при HTTP 204
+          return []; // корзина пуста, возвращаем пустой массив
+        }
         // Если cartResponse - это массив с объектом, содержащим поле cartdishes
         const cartItems = (cartResponse[0]?.cartdishes) || [];
         setCartData(cartItems);
@@ -441,24 +446,97 @@ function App() {
       });
   }
 
+  // Функция для загрузки корзины при первом входе или при ошибке
+  function fetchDataAgain() {
+    getDishForCart()
+    .then(cartItems => {
+        if (cartItems) {
+            // Обработка полученных данных, если они есть (не null)
+            if (cartItems.length > 0) {
+                setCartData(cartItems);
+                localStorage.setItem('cartDishes', JSON.stringify(cartItems));
+            } else {
+                // Если массив пустой
+                setCartData([]); // Здесь можно не записывать в localStorage, т.к. корзина пуста
+            }
+        } else {
+            // cartItems равно null, значит сервер вернул ответ 204 No Content, корзина пуста
+            setCartData([]);
+        }
+    })
+    .catch(error => {
+        console.error('Error during initial fetch of cartDishes:', error);
+        setCartData([]); // В случае ошибки также устанавливаем пустую корзину
+    });
+  }
+
   useEffect(() => {
     const storageData = localStorage.getItem('cartDishes');
     if (storageData) {
-      // Если данные были в локальном хранилище, устанавливаем их в состояние
-      const storedCartData = JSON.parse(storageData);
-      setCartData(storedCartData);
-      setIsLoadedFromStorage(true); // Устанавливаем флаг, что данные загружены из хранилища
+      try {
+        const storedCartData = JSON.parse(storageData);
+        setCartData(storedCartData);
+        setIsLoadedFromStorage(true);
+      } catch (error) {
+        console.error('Error parsing cartDishes from localStorage:', error);
+        // Если произошла ошибка в процессе разбора данных из localStorage,
+        // возможно, они повреждены или некорректны - очищаем localStorage от cartDishes
+        localStorage.removeItem('cartDishes');
+        // И далее загружаем корзину заново, как будто пользователь зашел первый раз
+        fetchDataAgain();
+      }
+    } else {
+      // Та же функция, что и при ошибке разбора, для повторной попытки загрузки данных
+      fetchDataAgain();
+    }
+  }, []); // Зависимости для useEffect пусты, так что он выполнится один раз при монтировании компонента
+
+  /*useEffect(() => {
+    const storageData = localStorage.getItem('cartDishes');
+    // Перед вызовом JSON.parse убеждаемся, что storageData содержит данные
+    if (storageData) {
+      try {
+        // Попытка разобрать строку JSON и установить в состояние
+        const storedCartData = JSON.parse(storageData);
+        setCartData(storedCartData);
+        setIsLoadedFromStorage(true);
+      } catch (error) {
+        // Логирование ошибки, если строка не может быть разобрана
+        console.error('Error parsing cartDishes from localStorage:', error);
+      }
     } else {
       // Если данных нет, делаем запрос на сервер
       getDishForCart()
         .then(cartItems => {
           console.log('cartDishes from getDishForCart', cartItems);
         })
-        .catch(error => {
-          console.error('Error during getDishForCart', error);
+        .catch(err => {
+          console.error('Error during getDishForCart', err);
         });
     }
-  }, []); // Зависимости для useEffect пусты, так что он выполнится один раз при монтировании компонента
+  }, []); 
+
+  useEffect(() => {
+    const storageData = localStorage.getItem('cartDishes');
+    // Только если storageData не null и не пустая строка, пытаемся её разобрать
+    if (storageData) {
+      try {
+        const storedCartData = JSON.parse(storageData);
+        setCartData(storedCartData);
+        setIsLoadedFromStorage(true);
+      } catch (error) {
+        console.error('Error parsing cartDishes from localStorage:', error);
+      }
+    } else {
+      // Убедитесь, что cartResponse является массивом и содержит cartdishes перед сохранением в localStorage
+      getDishForCart().catch(error => {
+        console.error('Error during initial fetch of cartDishes:', error);
+      });
+      // Если данные в localStorage отсутствуют или это пустая строка, значит корзина пуста
+      // Устанавливаем cartData в пустой массив
+      setCartData([]);
+    }
+  }, []); */ 
 
   // Функция для удаления всех блюд из корзины
   const handleClearCart = () => {
@@ -503,9 +581,13 @@ function App() {
           console.error('prevItems is not an array', prevItems);
           prevItems = [];
       }
+      // Здесь мы генерируем уникальный ID для cartDish
+      const generateUniqueId = () => {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+      };
       const isItemAlreadyInCart = prevItems.some(cartItem => cartItem.dish.article === newItem.article);
       const updatedCart = !isItemAlreadyInCart
-        ? [...prevItems, { dish: newItem, quantity: 1 }]
+        ? [...prevItems, { id: generateUniqueId(), dish: newItem, quantity: 1 }]
         : prevItems.map(cartItem =>
             cartItem.dish.article === newItem.article
               ? { ...cartItem, quantity: cartItem.quantity + 1 }
@@ -611,7 +693,6 @@ function App() {
       getDishes();
       getNews();
       getAboutUsfunction();
-      //getDishForCart();
     }, []); // Пустой массив зависимостей, чтобы запрос выполнился один раз
     //end
 
@@ -621,9 +702,11 @@ function App() {
           .then(([userData, addressesData, ordersData]) => {
             setCurrentUser(userData);
             getAddressApi(addressesData);
-            getOrdersApi(ordersData);
             localStorage.setItem('addresses', JSON.stringify(addressesData));
+            getOrdersApi(ordersData);
+            localStorage.setItem('orders', JSON.stringify(ordersData));
             // getCoupons(couponsData);
+            //localStorage.setItem('coupons', JSON.stringify(couponsData);
           })
           .catch(err => {
             console.log(err);
@@ -783,6 +866,7 @@ function App() {
                   logIn={logIn}
                   orders={orders}
                   language={language}
+                  onAddToCart={handleAddToCart}
                 />
               </ProtectedRoute>
             }
@@ -1002,7 +1086,7 @@ function App() {
 
           <Route 
             path='/pickup' 
-            element={<CashnCarry/>} 
+            element={<Pickup/>} 
           />
 
           <Route 
@@ -1040,6 +1124,7 @@ function App() {
             dish={selectedDish}
             onClose={closePopup}
             language={language}
+            onAddToCart={handleAddToCart}
         />
 
         <Tooltip

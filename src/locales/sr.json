@@ -62,14 +62,18 @@
         "edit": "Uredi",
         "log_out": "Izloguj se",
         "current_password": "Trenutna lozinka",
-        "new_password": "Nova lozinka"
+        "new_password": "Nova lozinka",
+        "type_messenger_account": "messenger_account tip",
+        "choose_messenger_account": "Izaberite messenger_account"
     },
     "orders": {
         "order_history": "Istorija porudžbina",
         "no_orders_yet": "Još uvek nemate porudžbina",
         "repeat_this_order": "Ponovi ovu porudžbinu",
         "created": "Narudžbina je napravljena",
-        "final_amount": "Konačni iznos porudžbine"
+        "final_amount": "Konačni iznos porudžbine",
+        "quantity": "Količina",
+        "amount": "Cena"
     },
     "addresses": {
         "your_addresses": "Vaše adrese",

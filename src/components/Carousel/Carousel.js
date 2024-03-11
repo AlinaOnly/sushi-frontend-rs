@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Parallax, Pagination, Navigation } from 'swiper';
+//import { Parallax, Pagination, Navigation } from 'swiper';
 import { useTranslation } from 'react-i18next';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -9,12 +9,13 @@ import './Carousel.css';
 
 export default function Carousel({ extraDishes, onAddToCart, language }) {
 
-    const [clickedBtns, setClickedBtns] = useState({}); //чтобы сохранить индивидуальное состояние для каждой кнопки в слайде, это использовать объект для хранения состояния кнопок, где ключом будет артикул блюда, а значением — булево значение, показывающее, нажата кнопка или нет.
+    const [clickedBtns, setClickedBtns] = useState({}); //чтобы сохранить индивидуальное состояние для каждой кнопки в слайде,
+    //это использовать объект для хранения состояния кнопок, где ключом будет артикул блюда,
+    //а значением — булево значение, показывающее, нажата кнопка или нет.
 
     const handleClick = (dish) => {
         // Вызываем функцию onAddToCart переданную в пропсах
         onAddToCart(dish);
-
         // Устанавливаем состояние для конкретной кнопки
         setClickedBtns(prevClickedBtns => ({
             ...prevClickedBtns,
@@ -31,7 +32,7 @@ export default function Carousel({ extraDishes, onAddToCart, language }) {
                     '--swiper-navigation-color': '#FF3055',
                     '--swiper-pagination-color': '#FF3055',
                 }}
-                    //slidesPerView={3} // Количество слайдов для показа
+                    slidesPerView={1} // Количество слайдов для показа
                     spaceBetween={20} // Расстояние между слайдами в пикселях
                     loop={extraDishes.length > 7} // Включение/выключение бесконечной прокрутки
                     speed={800} // Скорость переключения слайдов
@@ -39,7 +40,7 @@ export default function Carousel({ extraDishes, onAddToCart, language }) {
                         clickable: true,
                 }}
                     navigation={true}
-                    modules={[Parallax, Pagination, Navigation]}
+                    //modules={[Parallax, Pagination, Navigation]}
                     className="mySwiper"
             >
                 <div

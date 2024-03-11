@@ -9,6 +9,10 @@
     align-items: center;
 }
 
+.delivery__description-count {
+    margin-top: 5px;
+}
+
 .delivery__container {
     display: flex;
     margin-top: 20px;

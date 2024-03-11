@@ -105,7 +105,7 @@
     bottom: 65px;
 }
 
-.popup-dishes__cart-button:active {
+.popup-dishes__cart-button_active {
     background: #FF3055;
     color: #E8E8E8;
     border-radius: 20px;
@@ -119,6 +119,9 @@
     justify-content: center;
     align-items:center;
     font-size: 16px;
+    position: absolute;
+    right: 35px;
+    bottom: 65px;
 }
 
 .popup__close-button {

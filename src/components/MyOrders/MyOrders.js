@@ -1,47 +1,16 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import ProfileNav from '../ProfileNav/ProfileNav';
 import { useTranslation } from 'react-i18next';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './MyOrders.css';
 
-
-/*function MyOrders({ orders }) {
-
-    const { t } = useTranslation();
-
-    return (
-        <>
-            <ProfileNav />
-            <section className="orders" >
-                <h2 className="orders__title">{t('orders.order_history', 'История заказов')}</h2>
-                <div className="orders__container">
-                    <p className="orders__text">{t('orders.no_orders_yet', 'У Вас пока нет заказов')}</p>
-                </div>
-                {orders.map(order => (
-                        <div className="order" key={order.id}>
-                            <h3 className="order__status">{order.status}</h3>
-                            <p className="order__dishes">{order.dishes}</p>
-                            <p className="order__amount">{order.amount}</p>
-                            <p className="order__created">{order.created}</p>
-                        <button 
-                            className="app__text-opacity order__submit-button"
-                            type="submit"
-                            aria-label="Повторить этот заказ">
-                                {t('orders.repeat_this_order', 'Повторить этот заказ')}
-                            </button>
-                        </div>
-                    ))
-                }    
-            </section>
-        </>
-        
-    );
-}
-
-export default MyOrders;*/
-
-function MyOrders({ orders, language }) {
+function MyOrders({ orders, onAddToCart }) {
 
     const { t, i18n } = useTranslation();
+
+    const [clickedBtns, setClickedBtns] = useState({});
+
+    //const currentUser = useContext(CurrentUserContext);
 
     const currentLanguage = i18n.language;
 
@@ -56,15 +25,36 @@ function MyOrders({ orders, language }) {
         return new Date(formattedDate).toLocaleString(currentLanguage);
     };
 
-    const translateDish = (translations) => {
-        // Предполагаем, что 'translations' - это объект с ключами, соответствующими языковым кодам
-        try {
-            const translationsObject = JSON.parse(translations);
-            return translationsObject[currentLanguage] || translationsObject['default'];
-        } catch (error) {
-            return ''; // В случае ошибки парсинга возвращаем пустую строку
-        }
+    const translateDish = (translations, key) => {
+        if (!translations) return 'Название не найдено';
+        const translation = translations[currentLanguage] || translations['ru'] || {};
+        return translation[key] || translation['short_name'] || 'Название не найдено';
     };
+
+    function handleAddToCartClick(order) {
+        order.orderdishes.forEach(orderDish => {
+            console.log('Adding My order to cart:', order);
+            // Вычисляем final_price на основе количества и общей суммы
+            const finalPrice = orderDish.quantity > 1
+                ? parseFloat(orderDish.amount) / orderDish.quantity
+                : parseFloat(orderDish.amount);
+            // Создаем объект с блюдом для добавления в корзину.
+            const cartDish = {
+                article: orderDish.dish.article,
+                id: orderDish.dish.id,
+                image: orderDish.dish.image,
+                translations: orderDish.dish.translations,
+                final_price: finalPrice,
+                quantity: orderDish.quantity
+            };
+            onAddToCart(cartDish);
+        });
+        // Обновим состояние clickedBtns для UI
+        setClickedBtns(prev => ({
+            ...prev,
+            [order.order_number]: true
+        }));
+    }
 
     return (
         <>
@@ -74,20 +64,27 @@ function MyOrders({ orders, language }) {
                 <div className="orders__container">
                     {lastFiveOrders.length > 0 ? (
                         lastFiveOrders.map(order => (
-                            <div className="order" key={order.id}>
+                            <div className="order" key={order.order_number}>
                                 <h3 className="order__status">{t(`orders.statuses.${order.status.toLowerCase()}`, order.status)}</h3>
-                                {order.order_dishes.map((item, index) => (
-                                    <div key={index} className="order__dishes">
-                                        <img src={item.dish.image} alt={translateDish(item.dish.translations)} className="order__dish-image" />
-                                        <p>{translateDish(item.dish.translations)}</p>
-                                        <p>{t('orders.quantity', { count: item.quantity })}</p>
-                                        <p>{`${t('orders.amount')}: ${item.amount}`}</p>
+                                {order.orderdishes.map((item) => (
+                                    <div key={`${order.order_number}-${item.dish.article}`} className="order__dishes">
+                                        <img src={item.dish.image} alt={translateDish(item.dish.translations, 'short_name')}  className="order__dish-image" />
+                                        <p className="order_item-name">{translateDish(item.dish.translations, 'short_name')} </p>
+                                        <p className="order_item-text">{translateDish(item.dish.translations, 'text')}</p>
+                                        <p>{`${t('orders.quantity', 'Количество')}: ${ item.quantity }`}</p>
+                                        <p>{t('orders.amount', 'Стоимость')}:&nbsp;
+                                            <span style={{ color: 'red' }}>{item.amount} RSD</span> 
+                                        </p>
                                     </div>
                                 ))}
                                 <p className="order__created">{`${t('orders.created', 'Заказ создан')}: ${formatDate(order.created)}`}</p>
-                                <p className="order__amount">{`${t('orders.final_amount', 'Финальная сумма заказа')}: ${order.final_amount_with_shipping}`} RSD</p>
+                                <p className="order__amount">
+                                    {t('orders.final_amount', 'Финальная сумма заказа')}:&nbsp; 
+                                        <span style={{ color: 'red' }}>{order.final_amount_with_shipping} RSD</span> 
+                                </p>
                                 <button 
-                                    className="app__button-opacity order__submit-button"
+                                    onClick={() => handleAddToCartClick(order)}
+                                    className={clickedBtns[order.order_number] ? "app__button-opacity order__submit-button_active" : "order__submit-button"}
                                     type="button" 
                                     aria-label={t('orders.repeat_this_order', 'Повторить этот заказ')}>
                                         {t('orders.repeat_this_order', 'Повторить этот заказ')}

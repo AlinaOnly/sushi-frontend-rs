@@ -1,10 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useTranslation } from 'react-i18next';
 import './PopupDish.css';
 
-function PopupDish({ dish, onClose, language }) {
+function PopupDish({ dish, onClose, language, onAddToCart }) {
 
     const { t } = useTranslation();
+
+    const [isCartBtnClick, setCartBtnClick] = useState({});
+    function handleAddToCartClick() {
+        console.log('Adding to cart:', dish);
+        onAddToCart(dish);
+        setCartBtnClick(prev => ({
+            ...prev,
+            [dish.article]: true
+        }));
+    }
 
     // Проверяем, что dish и его translations определены.
     if (!dish || !dish.translations || !dish.translations[language]) {
@@ -33,8 +43,9 @@ function PopupDish({ dish, onClose, language }) {
                         <p className="popup__price">{dish.final_price} RSD</p>
                     </div>
                 </div>     
-                    <button 
-                        className="popup-dishes__cart-button"
+                    <button
+                        onClick={() => {handleAddToCartClick(dish);}}
+                        className={isCartBtnClick[dish.article] ? "popup-dishes__cart-button_active app__button-opacity" : "popup-dishes__cart-button"} 
                         type="submit"
                         aria-label="Корзина">
                             {t('popup-dish.cart', 'В корзину')}

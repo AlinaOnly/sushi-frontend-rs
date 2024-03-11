@@ -61,14 +61,18 @@
         "edit": "Edit",
         "log_out": "Log Out",
         "current_password": "Current Password",
-        "new_password": "New Password"
+        "new_password": "New Password",
+        "type_messenger_account": "messenger_account type",
+        "choose_messenger_account": "Select messenger_account"
     },
     "orders": {
         "order_history": "Order History",
         "no_orders_yet": "You have no orders yet",
         "repeat_this_order": "Repeat this order",
         "created": "Order created",
-        "final_amount": "Final order amount"
+        "final_amount": "Final order amount",
+        "quantity": "Quantity",
+        "amount": "Price"
     },
     "addresses": {
         "your_addresses": "Your Addresses",
