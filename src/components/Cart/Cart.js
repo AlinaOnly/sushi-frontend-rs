@@ -6,19 +6,19 @@ import { useTranslation } from 'react-i18next';
 import './Cart.css';
 
 function Cart({
-    cartData,
-    setCartData,
-    language,
-    extraDishes,
-    onAddToCart,
-    setPromoCode,
-    promoCode,
-    handleSubmitPromo,
-    errorMessage,
-    onClearCart,
-    onIncreaseQuantity,
-    onDecreaseQuantity
-}) {
+        cartData,
+        setCartData,
+        language,
+        extraDishes,
+        onAddToCart,
+        setPromoCode,
+        promoCode,
+        handleSubmitPromo,
+        errorMessage,
+        onClearCart,
+        onIncreaseQuantity,
+        onDecreaseQuantity
+    }) {
 
     const navigate = useNavigate();
 
@@ -173,7 +173,7 @@ function Cart({
                                     className="cart__btn-delivery app__button-opacity">{t('cart.delivery', 'Доставка')}
                                 </button>
                             </Link>
-                            <Link to="/pickup">
+                            <Link to="/takeaway">
                                 <button 
                                     aria-label={t('cart.pick_up_myself', 'Заберу сам')}
                                     type="button"

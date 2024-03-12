@@ -163,7 +163,7 @@ class Api {
     }*/
     //
 
-    // promo api
+    // promo news api
     getPromoNews() {
         return fetch(`${this._url}/promonews/`, {
             method: 'GET',
@@ -269,6 +269,65 @@ class Api {
             credentials: 'include',
         }).then(this._mainApiError);
     }
+    //end
+
+    //about delivery method
+    getDeliveryMethod() {
+        return fetch(`${this._url}/create_order_delivery/`, {
+            method: 'GET',
+            headers: this._headers,
+            credentials: 'include',
+        }).then(this._mainApiError);
+    }
+
+    postDeliveryCreateMethod(orderData) {
+        console.log(JSON.stringify(orderData)); 
+        return fetch(`${this._url}/create_order_delivery/`, {
+            method: 'POST',
+            headers: this._headers,
+            credentials: 'include',
+            body: JSON.stringify(orderData)
+        }).then(this._mainApiError);
+    }
+
+    postDeliveryPreChecoutMethod(orderPreData) {
+        return fetch(`${this._url}/create_order_delivery/pre_checkout/`, {
+            method: 'POST',
+            headers: this._headers,
+            credentials: 'include',
+            body: JSON.stringify(orderPreData)
+        }).then(this._mainApiError);
+    }
+    //end
+
+    //about takeaway method
+    getTakeawayMethod() {
+        return fetch(`${this._url}/create_order_takeaway/`, {
+            method: 'GET',
+            headers: this._headers,
+            credentials: 'include',
+        }).then(this._mainApiError);
+    }
+
+    postTakeawayCreateMethod(orderTakeAwayData) {
+        return fetch(`${this._url}/create_order_takeaway/`, {
+            method: 'POST',
+            headers: this._headers,
+            credentials: 'include',
+            body: JSON.stringify(orderTakeAwayData)
+        }).then(this._mainApiError);
+    }
+
+    postTakeawayPreChecoutMethod(orderPreTakeAwayData) {
+        return fetch(`${this._url}/create_order_takeaway/pre_checkout/`, {
+            method: 'POST',
+            headers: this._headers,
+            credentials: 'include',
+            body: JSON.stringify(orderPreTakeAwayData)
+        }).then(this._mainApiError);
+    }
+    //end
+
 }
 
 const MainApi = new Api({

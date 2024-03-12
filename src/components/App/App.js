@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { FormDataProvider } from '../../contexts/FormDataContext';
 import ProtectedRoute from '../ProtectedRoute';
 
 import Header from '../Header/Header';
@@ -92,7 +93,13 @@ function App() {
     // Пытаемся получить данные из localStorage
     const localData = localStorage.getItem('cartDishes');
     return localData ? JSON.parse(localData) : [];
-});
+  });
+
+  // состояние для delivery
+  const [isDelivery, setDelivery] = useState([]);
+
+  // состояние для takeaway
+  const [isTakeaway, setTakeaway] = useState([]);
 
   //состояние для промокода
   const [promoCode, setPromoCode] = useState('');
@@ -394,7 +401,7 @@ function App() {
   //end
 
   // functionality -- getting news from Api
-  function getAboutUsfunction() {
+  function getAboutUsFunction() {
     setPreloader(true);
     MainApi.getOurContacts()
       .then((data) => {
@@ -491,53 +498,6 @@ function App() {
     }
   }, []); // Зависимости для useEffect пусты, так что он выполнится один раз при монтировании компонента
 
-  /*useEffect(() => {
-    const storageData = localStorage.getItem('cartDishes');
-    // Перед вызовом JSON.parse убеждаемся, что storageData содержит данные
-    if (storageData) {
-      try {
-        // Попытка разобрать строку JSON и установить в состояние
-        const storedCartData = JSON.parse(storageData);
-        setCartData(storedCartData);
-        setIsLoadedFromStorage(true);
-      } catch (error) {
-        // Логирование ошибки, если строка не может быть разобрана
-        console.error('Error parsing cartDishes from localStorage:', error);
-      }
-    } else {
-      // Если данных нет, делаем запрос на сервер
-      getDishForCart()
-        .then(cartItems => {
-          console.log('cartDishes from getDishForCart', cartItems);
-        })
-        .catch(err => {
-          console.error('Error during getDishForCart', err);
-        });
-    }
-  }, []); 
-
-  useEffect(() => {
-    const storageData = localStorage.getItem('cartDishes');
-    // Только если storageData не null и не пустая строка, пытаемся её разобрать
-    if (storageData) {
-      try {
-        const storedCartData = JSON.parse(storageData);
-        setCartData(storedCartData);
-        setIsLoadedFromStorage(true);
-      } catch (error) {
-        console.error('Error parsing cartDishes from localStorage:', error);
-      }
-    } else {
-      // Убедитесь, что cartResponse является массивом и содержит cartdishes перед сохранением в localStorage
-      getDishForCart().catch(error => {
-        console.error('Error during initial fetch of cartDishes:', error);
-      });
-      // Если данные в localStorage отсутствуют или это пустая строка, значит корзина пуста
-      // Устанавливаем cartData в пустой массив
-      setCartData([]);
-    }
-  }, []); */ 
-
   // Функция для удаления всех блюд из корзины
   const handleClearCart = () => {
     MainApi.deleteAllDishes()
@@ -593,6 +553,16 @@ function App() {
               ? { ...cartItem, quantity: cartItem.quantity + 1 }
               : cartItem
           );
+
+          /*const updatedCart = !isItemAlreadyInCart
+          ? [...prevItems, newItem]
+          : prevItems.map(cartItem =>
+              cartItem.article === newItem.article
+              ? { ...cartItem, quantity: cartItem.quantity + newItem.quantity }
+              : cartItem
+          );*/
+
+
       // Сохраняем обновлённую корзину в localStorage
       localStorage.setItem('cartDishes', JSON.stringify(updatedCart));
       return updatedCart;
@@ -616,6 +586,108 @@ function App() {
         });
   };
   // end
+
+  // functionality -- delivery
+  function getDelivery() {
+    setPreloader(true);
+    MainApi.getDeliveryMethod()
+    .then((delivery) => {
+          setDelivery(delivery);
+          localStorage.setItem('delivery', JSON.stringify(delivery));
+          setPreloader(false);
+      }).catch(err => {
+          console.log(err);
+          setPreloader(false);
+      });
+  }
+
+  function handleSubmitDeliveryData(orderFormData) {
+    setPreloader(true);
+    // Формируем данные для заказа на основе введенных данных и содержимого корзины
+    const orderData = {
+      discounted_amount: orderFormData.discounted_amount,
+      payment_type: orderFormData.payment_type,
+      items_qty: orderFormData.items_qty,
+      recipient_name: orderFormData.recipient_name,
+      recipient_phone: orderFormData.recipient_phone,
+      city: orderFormData.city,
+      delivery_time: orderFormData.delivery_time,
+      comment: orderFormData.comment,
+      persons_qty: orderFormData.persons_qty,
+      orderdishes: orderFormData.orderdishes.map(item => ({
+        dish: item.dish.article,
+        quantity: item.quantity
+      })),
+      amount: orderFormData.amount,
+      promocode: orderFormData.promocode,
+      recipient_address: orderFormData.recipient_address
+    };
+    // Отправка данных на сервер
+    MainApi.postDeliveryCreateMethod(orderData)
+      .then(response => {
+        console.log('Заказ успешно отправлен:', response);
+        // Здесь может присутствовать логика после успешной отправки данных, например, очистка корзины
+        setCartData([]); // очищаем корзину на клиенте
+        localStorage.removeItem('cartDishes'); // удаляем данные о корзине из `localStorage`
+        setPreloader(false); // Скрываем индикатор загрузки
+      })
+      .catch(err => {
+        console.error('Ошибка при отправке заказа:', err);
+        setPreloader(false); // Скрываем индикатор загрузки даже в случае ошибки
+      });
+  }
+  //end
+
+  // functionality -- takeaway
+function getTakeaway() {
+  setPreloader(true);
+  MainApi.getTakeawayMethod()
+  .then((takeaway) => {
+        setTakeaway(takeaway);
+        localStorage.setItem('takeaway', JSON.stringify(takeaway));
+        setPreloader(false);
+    }).catch(err => {
+        console.log(err);
+        setPreloader(false);
+    });
+}
+
+function handleSubmitTakeawayData(orderFormTakeawayData) {
+  setPreloader(true);
+  // Формируем данные для заказа на основе введенных данных и содержимого корзины
+  const orderTakeawayData = {
+    discounted_amount: orderFormTakeawayData.discounted_amount,
+    payment_type: orderFormTakeawayData.payment_type,
+    items_qty: orderFormTakeawayData.items_qty,
+    recipient_name: orderFormTakeawayData.recipient_name,
+    recipient_phone: orderFormTakeawayData.recipient_phone,
+    city: orderFormTakeawayData.city,
+    delivery_time: orderFormTakeawayData.delivery_time,
+    restaurant: orderFormTakeawayData.restaurant,
+    comment: orderFormTakeawayData.comment,
+    persons_qty: orderFormTakeawayData.persons_qty,
+    orderdishes: orderFormTakeawayData.orderdishes.map(item => ({
+      dish: item.dish.article,
+      quantity: item.quantity
+    })),
+    amount: orderFormTakeawayData.amount,
+    promocode: orderFormTakeawayData.promocode,
+  };
+  // Отправка данных на сервер
+  MainApi.postTakeawayCreateMethod(orderTakeawayData)
+    .then(response => {
+      console.log('Заказ успешно отправлен takaway:', response);
+      // Здесь может присутствовать логика после успешной отправки данных, например, очистка корзины
+      setCartData([]); // очищаем корзину на клиенте
+      localStorage.removeItem('cartDishes'); // удаляем данные о корзине из `localStorage`
+      setPreloader(false); // Скрываем индикатор загрузки
+    })
+    .catch(err => {
+      console.error('Ошибка при отправке заказа takaway:', err);
+      setPreloader(false); // Скрываем индикатор загрузки даже в случае ошибки
+    });
+  }
+  //end
 
   // вызываем при получении ошибки 401:
   const handleAuthError = (err) => {
@@ -692,7 +764,9 @@ function App() {
     useEffect(() => {
       getDishes();
       getNews();
-      getAboutUsfunction();
+      getAboutUsFunction();
+      getDelivery();
+      getTakeaway();
     }, []); // Пустой массив зависимостей, чтобы запрос выполнился один раз
     //end
 
@@ -774,6 +848,8 @@ function App() {
       <I18nextProvider i18n={i18n}>
 
       <CurrentUserContext.Provider value={currentUser}>
+
+      <FormDataProvider>
 
       <BurgerMenu 
         isBurger={isBurger} 
@@ -1081,17 +1157,32 @@ function App() {
 
           <Route 
             path='/delivery' 
-            element={<Delivery/>} 
+            element={
+              <Delivery
+                isDelivery={isDelivery}
+                cartData={cartData}
+                onSubmitDeliveryData={handleSubmitDeliveryData}
+              />} 
           />
 
           <Route 
-            path='/pickup' 
-            element={<Pickup/>} 
+            path='/takeaway' 
+            element={
+              <Pickup
+                onSubmitSubmitTakeawayData={handleSubmitTakeawayData}
+                cartData={cartData}
+                isTakeaway={isTakeaway}
+              />} 
           />
 
           <Route 
             path='/payment' 
-            element={<Payment/>} 
+            element={
+              <Payment
+                onSubmitDeliveryData={handleSubmitDeliveryData}
+                onSubmitSubmitTakeawayData={handleSubmitTakeawayData}
+                isTakeaway={isTakeaway}
+              />} 
           />
 
           <Route 
@@ -1136,6 +1227,8 @@ function App() {
         />
         
         <Footer/>
+
+      </FormDataProvider>
       </CurrentUserContext.Provider>
       </I18nextProvider>
     </>

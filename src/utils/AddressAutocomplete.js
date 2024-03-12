@@ -60,10 +60,10 @@ function AddressAutocomplete({ updateAddress, inputClassName, values, handleChan
             options={options}
         >
             <input
-                id="address"
-                name="address"
+                id="recipient_address"
+                name="recipient_address"
                 className={`deliveryinput ${inputClassName}`}
-                value={values.address || ''}
+                value={values.recipient_address || ''}
                 onChange={handleInputChange}
                 onInput={handleInput}
                 type="text"

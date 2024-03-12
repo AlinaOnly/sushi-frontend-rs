@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
+import { useFormData } from '../../contexts/FormDataContext';
 import { useTranslation } from 'react-i18next';
 import AddressAutocomplete from '../../utils/AddressAutocomplete';
 import './Delivery.css';
 
-function Delivery() {
+function Delivery({ isDelivery, cartData }) {
+
+    //  хук useFormData для доступа к состоянию и функции обновления
+    const { updateFormData } = useFormData();
+
+    // location
+    const navigate = useNavigate();
 
     const { t } = useTranslation();
 
@@ -14,7 +21,7 @@ function Delivery() {
     const [isChecked, setIsChecked] = useState(false);
 
     //каунтер до 10 приборов
-    const [count, setCount] = useState(1);
+    const [persons_qty, setCount] = useState(1);
 
     //если залогинился юзер - вписать автоматически его данные
     const currentUser = useContext(CurrentUserContext);
@@ -24,19 +31,32 @@ function Delivery() {
         // Устанавливаем начальные значения для формы, используя информацию о текущем пользователе
         if (currentUser && Array.isArray(currentUser.addresses)) {
             const lastAddress = currentUser.addresses.length > 0 ?
-                currentUser.addresses[currentUser.addresses.length - 1].address : ''; 
+                currentUser.addresses[currentUser.addresses.length - 1].address : '';
             setValues({
-                first_name: currentUser.first_name || '',
-                phone: currentUser.phone || '',
-                address: lastAddress,
+                recipient_name: currentUser.first_name || '',
+                recipient_phone: currentUser.phone || '',
+                recipient_address: lastAddress,
+                PrivateHome: '',
+                home: '',
+                flat: '',
+                floor: '',
+                homephone: '',
+                comment: '',
+                persons_qty,
+                delivery_time: '11:00',
             });
         }
     }, [currentUser, setValues]);
 
-    function handleSubmit(event) {
-        event.preventDefault();
-    }
-    //end
+
+    useEffect(() => {
+        // Предполагая, что данные о доставке уже загружены через App и переданы через isDelivery.
+        // Теперь можно итерировать по isDelivery и решить, как применить эти данные в коде.
+        if (isDelivery.length > 0) {
+            // Например, это могло бы быть использование этих данных для настройки формы
+            // или обновление стейта с вариантами стоимости доставки.
+        }
+    }, [isDelivery]);
 
     // Счетчик столовых приборов
     const handleAdd = () => {
@@ -82,15 +102,16 @@ function Delivery() {
     //end
 
     // Функция для вывода дня и месяца
-    const generateDateOptions = () => {
-        const today = new Date();
-        const monthNames = t('months', {
+    const MONTH_NAMES = t('months', {
             returnObjects: true,
             defaultValue: [
                 "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
                 "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
             ]
-        });
+    });
+
+    const generateDateOptions = () => {
+        const today = new Date();
         const dates = [t('dates.as_soon_as_possible', 'Как можно быстрее')];
         // Определяем дату на месяц вперед от сегодня
         const oneMonthFromNow = new Date();
@@ -103,7 +124,7 @@ function Delivery() {
             //const year = dateIterator.getFullYear(); // Если нужно, можно добавить год
             // Форматируем число, добавляя ведущий ноль, если нужно
             const formattedDay = day < 10 ? `0${day}` : day;
-            const monthName = monthNames[month];
+            const monthName = MONTH_NAMES[month];
             const date = `${formattedDay} ${monthName}`; // ${year}, если нужен год
             dates.push(date);
             // Переходим к следующему дню
@@ -146,18 +167,72 @@ function Delivery() {
         setSelectedMonth(event.target.value);
     };
 
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        let deliveryTime = null; // Для "Как можно быстрее" отправляем null
+        // Проверяем, выбрана ли конкретная дата и время
+        if (selectedMonth !== 'Как можно быстрее' && values.delivery_time) {
+            const [day, monthName] = selectedMonth.split(' ');
+            const monthNumber = MONTH_NAMES.indexOf(monthName) + 1; // Получаем номер месяца
+            const formattedMonth = monthNumber < 10 ? `0${monthNumber}` : monthNumber;
+            const year = new Date().getFullYear();
+            deliveryTime = `${day}.${formattedMonth}.${year} ${values.delivery_time}`;
+        } else {
+            deliveryTime = null;
+        }
+         // Предотвратить обычную отправку формы
+        const formValues = {
+            discounted_amount: values.discounted_amount,
+            //payment_type: values.payment_type,
+            items_qty: values.items_qty,
+            recipient_name: values.recipient_name,
+            recipient_phone: values.recipient_phone,
+            city: values.city,
+            delivery_time: deliveryTime, // Используем составленное или null значение,
+            comment: values.comment,
+            persons_qty:  persons_qty,
+            amount: values.amount,
+            promocode: values.promocode,
+            recipient_address: values.recipient_address
+        };
+        console.log('Submitting form with data:', formValues);
+        const orderFormData = {
+            ...formValues,
+            orderdishes: cartData, // уже сформированный массив блюд
+        };
+        //  функция для отправки заказа
+        console.log('OrderFormData:', orderFormData);
+        updateFormData(orderFormData); // Обновляем глобальное состояние с данными формы
+        navigate('/payment'); // Переход на страницу оплаты
+
+        // Переменная для хранения стоимости доставки
+        /* let deliveryCost = 0;
+        // Найти информацию о доставке для города, указанного пользователем
+        const deliveryInfo = isDelivery.find((cityInfo) => cityInfo.city === values.address);
+        // Если есть информация по указанному городу
+        if (deliveryInfo) {
+            // Рассчитать стоимость доставки
+            //deliveryCost = calculateDeliveryCost(deliveryInfo,);
+        } else {
+            // Отобразить сообщение об ошибке, если доставка в город не осуществляется
+            console.error("Доставка в выбранный город не осуществляется");
+        }*/
+        // обработать оставшуюся логику отправки формы
+    }
+
     return (
         <>
             <div className="delivery">
                 <form ref={formRef} className="delivery__form" onSubmit={handleSubmit}>
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="first_name">{t('delivery.your_name', 'Ваше имя')}
+                            <label className="delivery__label" htmlFor="recipient_name">{t('delivery.your_name', 'Ваше имя')}
                                 <input
-                                    value={values.first_name || ''}
+                                    value={values.recipient_name || ''}
                                     onChange={handleChange}
-                                    id="first_name"
+                                    id="recipient_name"
                                     className="delivery__input"
-                                    name="first_name"
+                                    name="recipient_name"
                                     type="text"
                                     placeholder={t('delivery.name', 'Имя')}
                                     minLength="2"
@@ -166,19 +241,19 @@ function Delivery() {
                                     required
                                 />
                                 <span 
-                                    className={`${errors.first_name ? "login__error" : "login__error_hidden"}`}>
+                                    className={`${errors.recipient_name ? "login__error" : "login__error_hidden"}`}>
                                         {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
                             </label>
                         </div>    
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="phone">{t('delivery.your_phone', 'Ваш телефон')}
+                            <label className="delivery__label" htmlFor="recipient_phone">{t('delivery.your_phone', 'Ваш телефон')}
                                 <input
-                                    value={values.phone || ''}
+                                    value={values.recipient_phone || ''}
                                     onChange={handleChange}
-                                    id="phone"
+                                    id="recipient_phone"
                                     className="delivery__input"
-                                    name="phone"
+                                    name="recipient_phone"
                                     type="tel"
                                     placeholder="+"
                                     minLength="11"
@@ -187,25 +262,24 @@ function Delivery() {
                                     required
                                 />
                                 <span 
-                                    className={`${errors.phone ? "login__error" : "login__error_hidden"}`}>
+                                    className={`${errors.recipient_phone ? "login__error" : "login__error_hidden"}`}>
                                         {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
                             </label>
                         </div>    
                         <div className="delivery__description">
-                            <label className="delivery__label" htmlFor="address">
+                            <label className="delivery__label" htmlFor="recipient_address">
                                 {t('delivery.delivery_address', 'Адрес доставки')}
                                 <AddressAutocomplete
                                     inputClassName="delivery__input"
                                     updateAddress={handleUpdateAddress}
                                     values={values}
                                     handleChange={handleChange}
-                                    addresses={currentUser.addresses}
+                                    addresses={currentUser.recipient_address}
                                     handleInput={handleInput}
                                 />
                             </label>
                         </div>
-                        
                         <div className="delivery__description">
                             <input
                                 id="rd"
@@ -216,25 +290,27 @@ function Delivery() {
                                 onChange={handleRadioChange}
                                 onClick={handleRadioClick}
                             />
-                            <label id="rd" className="delivery__label" onClick={handleRadioClick}>
+                            <label id="rd" className="delivery__label" onClick={handleRadioClick} htmlFor="togglRadio">
                                 {t('delivery.private_house', 'Частный дом')}
                             </label>
                         </div>
                         { isChecked &&
                             <div className="delivery__description">
-                                <label className="delivery__label" htmlFor="home">{t('delivery.house', 'Дом')}
+                                <label className="delivery__label" htmlFor="private_home">{t('delivery.house', 'Дом')}
                                     <input
-                                        id="home"
+                                        value={values.private_home || ''}
+                                        onChange={handleChange}
+                                        id="private_home"
                                         className="delivery__input"
-                                        name="home"
+                                        name="private_home"
                                         type="text"
                                         placeholder={t('delivery.house', 'Дом')}
                                         minLength="1"
                                         maxLength="1000"
-                                        //required
+                                        required
                                     />
                                 <span 
-                                    className={`${errors.home ? "login__error" : "login__error_hidden"}`}>
+                                    className={`${errors.private_home ? "login__error" : "login__error_hidden"}`}>
                                         {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
                                 </label>
@@ -245,6 +321,8 @@ function Delivery() {
                                 <div className="delivery__description">
                                     <label className="delivery__label" htmlFor="home">{t('delivery.house', 'Дом')}
                                         <input
+                                            value={values.home || ''}
+                                            onChange={handleChange}
                                             id="home"
                                             className="delivery__input"
                                             name="home"
@@ -252,7 +330,7 @@ function Delivery() {
                                             placeholder={t('delivery.house', 'Дом')}
                                             minLength="1"
                                             maxLength="1000"
-                                            //required
+                                            required
                                         />
                                     <span 
                                         className={`${errors.home ? "login__error" : "login__error_hidden"}`}>
@@ -263,6 +341,8 @@ function Delivery() {
                                 <div className="delivery__description">
                                     <label className="delivery__label" htmlFor="flat">{t('delivery.apartment', 'Квартира')}
                                         <input
+                                            value={values.flat || ''}
+                                            onChange={handleChange}
                                             id="flat"
                                             className="delivery__input"
                                             name="flat"
@@ -270,7 +350,7 @@ function Delivery() {
                                             placeholder={t('delivery.apartment', 'Квартира')}
                                             minLength="1"
                                             maxLength="1000"
-                                            //required
+                                            required
                                         />
                                     <span 
                                         className={`${errors.flat ? "login__error" : "login__error_hidden"}`}>
@@ -281,6 +361,8 @@ function Delivery() {
                                 <div className="delivery__description">
                                     <label className="delivery__label" htmlFor="floor">{t('delivery.floor', 'Этаж')}
                                         <input
+                                            value={values.floor || ''}
+                                            onChange={handleChange}
                                             id="floor"
                                             className="delivery__input"
                                             name="floor"
@@ -288,7 +370,7 @@ function Delivery() {
                                             placeholder={t('delivery.floor', 'Этаж')}
                                             minLength="1"
                                             maxLength="100"
-                                            //required
+                                            required
                                             />
                                         <span 
                                             className={`${errors.floor ? "login__error" : "login__error_hidden"}`}>
@@ -299,6 +381,8 @@ function Delivery() {
                                 <div className="delivery__description">
                                     <label className="delivery__label" htmlFor="homephone">{t('delivery.intercom', 'Домофон')}
                                         <input
+                                            value={values.homephone || ''}
+                                            onChange={handleChange}
                                             id="homephone"
                                             className="delivery__input"
                                             name="homephone"
@@ -306,7 +390,7 @@ function Delivery() {
                                             placeholder={t('delivery.intercom', 'Домофон')}
                                             minLength="1"
                                             maxLength="1000"
-                                            //required
+                                            required
                                         />
                                         <span 
                                             className={`${errors.homephone ? "login__error" : "login__error_hidden"}`}>
@@ -323,7 +407,7 @@ function Delivery() {
                                 type="button"
                                 className="delivery__btn-product_delete app__button-opacity">
                             </button>
-                            <span className="delivery__product-count">{count}</span>
+                            <span className="delivery__product-count">{persons_qty}</span>
                             <button
                                 onClick={handleAdd}
                                 aria-label="Плюс"
@@ -334,42 +418,49 @@ function Delivery() {
                         <div className="delivery__description">
                             <label className="delivery__label">{t('delivery.order_comment', 'Комментарий к заказу')}
                                 <textarea
+                                    value={values.comment || ''}
+                                    onChange={handleChange}
+                                    name="comment"
                                     className="delivery__textarea"
                                     placeholder={t('delivery.write_your_order_comments', 'Напишите свои комментарии к Вашему заказу')}
                                 />
                             </label>
                         </div>
-                        <div className="delivery__container">
+                        <div className="delivery__container delivery__container-data">
                             {t('delivery.specify_date_time', 'Укажите дату и время')}
-                            <select className="delivery__select" id="month" name="selectedMonth"
-                                    onChange={handleMonthChange} value={selectedMonth}>
-                                {dateOptions.map((date, index) => (
-                                    <option key={index} value={date} className="delivery__select-month">
-                                        {date}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="delivery__container-time">
+                                <select className="delivery__select" id="month" name="selectedMonth"
+                                        onChange={(event) => {
+                                            handleChange(event);
+                                            handleMonthChange(event);
+                                        }} value={selectedMonth}>
+                                    {dateOptions.map((date, index) => (
+                                        <option key={index} value={date} className="delivery__select-month">
+                                            {date}
+                                        </option>
+                                    ))}
+                                </select>
                             {selectedMonth !== 'Как можно быстрее' && (
-                                <select className="delivery__select" id="time" name="selectedTime">
+                                <select className="delivery__select" id="time" name="delivery_time" 
+                                    onChange={handleChange} value={values.delivery_time || '11:00'}>
                                     {timeOptions.map((time, index) => (
-                                        <option key={index} value={time} className="delivery__select-time">
+                                        <option key={index} value={time}>
                                             {time}
                                         </option>
                                     ))}
                                 </select>
                             )}
+                            </div>
                         </div>
-                        <Link to="/payment">
                             <button 
-                                //onClick={handleSubmit}
+                                onClick={handleSubmit}
                                 className=
                                 {`delivery__btn ${!isValid ? "delivery__btn-save_disable" : "app__button-opacity"}`}
                                 disabled={!isValid}
-                                type="submit"
+                                type="button"
                                 aria-label="Выберете способ оплаты">
                                     {t('delivery.choose_payment_method', 'Выберете способ оплаты')}
                             </button>
-                        </Link>
                     </form>
             </div>
         </>
