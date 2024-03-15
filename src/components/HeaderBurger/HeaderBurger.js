@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react';
+import React, { useEffect, useContext } from 'react';
 import  { NavLink, Link } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useFormValidation from '../../utils/FormValidation';
@@ -7,7 +7,15 @@ import i18next from '../../utils/i18n';
 import { useTranslation } from 'react-i18next';
 import './HeaderBurger.css';
 
-function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageChange }) {
+function HeaderBurger({ 
+        burgerHeader,
+        handleBurgerHeader,
+        language,
+        onLanguageChange,
+        aboutUs,
+        selectedCity,
+        onCitySelected
+    }) {
 
     const { t } = useTranslation();
 
@@ -28,6 +36,20 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageCh
         i18next.changeLanguage(selectedLanguage); // Обновление текущего языка в i18next
         onLanguageChange(selectedLanguage);
     };
+
+    if (!aboutUs || !aboutUs[0].restaurants) {
+        return null;
+    }
+
+    const handleCityChange = (event) => {
+        const city = event.target.value;
+        onCitySelected(city); // Здесь подразумевается, что onCitySelected обновляет значение selectedCity
+    };
+
+    // Фильтрация ресторанов для выбранного города
+    const filteredRestaurants = aboutUs && aboutUs.length > 0
+    ? aboutUs.find(cityData => cityData.city === selectedCity)?.restaurants || []
+    : [];
 
     return (
         <section className={burgerHeader ? `header-burger-menu header-burger-menu_open` : 'header-burger-menu'}>
@@ -55,7 +77,7 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageCh
                             {t('header-burger.promo', 'Промо')}
                     </NavLink>
                     <select 
-                        className="header-burger__select app__text-opacity" 
+                        className="header-burger__select header-burger__select-wd_lang app__text-opacity" 
                         id="language" 
                         name="selectedLanguage" 
                         value={language}
@@ -64,8 +86,16 @@ function HeaderBurger({ burgerHeader, handleBurgerHeader, language, onLanguageCh
                             <option className="header__select-language" value="sr-latn">Sr</option>
                             <option className="header__select-language" value="en">En</option>
                     </select>
-                    <select className="header-burger__select app__text-opacity" id="city" name="selectedCity">
-                        <option className="header-burger__select-city" value="beograd">Beograd</option>
+                    <select className="header-burger__select header-burger__select-wd_city app__text-opacity" onChange={handleCityChange} value={selectedCity}>
+                        {aboutUs.map(cityData => (
+                            <optgroup label={cityData.city} key={cityData.city}>
+                                {cityData.restaurants.map(restaurant => (
+                                <option key={restaurant.id} value={restaurant.address}>
+                                    {restaurant.address}
+                                </option>
+                                ))}
+                            </optgroup>
+                        ))}
                     </select>
                     <p className="header-burger__phone">
                         <a  

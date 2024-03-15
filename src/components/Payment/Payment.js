@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useFormData } from '../../contexts/FormDataContext';
 import './Payment.css';
 
-function Payment({ onSubmitDeliveryData, onSubmitSubmitTakeawayData, isTakeaway }) {
+function Payment({ onSubmitDeliveryData, onSubmitSubmitTakeawayData, isTakeawayPayment }) {
 
     const { t } = useTranslation();
 
@@ -15,7 +15,7 @@ function Payment({ onSubmitDeliveryData, onSubmitSubmitTakeawayData, isTakeaway 
 
     const handleSubmitFinal = (event) => {
         event.preventDefault();
-        if (isTakeaway) { // Если флаг true, значит нужно использовать обработчик для Pickup
+        if (isTakeawayPayment) { // Если флаг true, значит нужно использовать обработчик для Pickup
             onSubmitSubmitTakeawayData(formData);
         } else {
             onSubmitDeliveryData(formData); // Если false, значит использовать обработчик для Delivery
@@ -30,15 +30,18 @@ function Payment({ onSubmitDeliveryData, onSubmitSubmitTakeawayData, isTakeaway 
                         <div className="payment__container">
                             <div className="payment__container-title">
                                 <h2 className="payment__title-sum">{t('pickup.order_summary', 'Сумма заказа:')}</h2>
-                                <p className="payment__price-sum">3000 RSD</p>
+                                <p className="payment__price-sum">{}  amount RSD</p>
                             </div>
                             <div className="payment__container-title">
                                 <h2 className="payment__title-sell">{t('pickup.order_sell', 'Ваша скидка:')}</h2>
-                                <p className="payment__price-sell"> 3000 RSD</p>
+                                <p className="payment__price-sell"> {} total_discount RSD</p>
                             </div>
                             <div className="payment__container-title">
                                 <h2 className="payment__title-total">{t('pickup.order_total', 'Итого:')}</h2>
-                                <p className="payment__price-total"> 3000 RSD</p>
+                                <p className="payment__price-total"> {}  "total": 
+                                "title" "Total amount, incl. delivery",
+                                "total_amount": 2925.0
+                            RSD</p>
                             </div>
                         </div>    
                         <div className="payment__checkbox">

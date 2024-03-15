@@ -20,17 +20,27 @@ function AddressAutocomplete({ updateAddress, inputClassName, values, handleChan
 
     const handleInputChange = (event) => {
         const value = event.target.value;
-        handleChange({ target: {name: 'address', value: value} }); // Создаем "искусственный" объект события
-        // Выбираем поле, содержащее строку адреса для сравнения
-        setSuggestions(addresses.filter(addr => addr.address.toLowerCase().includes(value.toLowerCase())));
+        handleChange({ target: {name: 'recipient_address', value: value} });
+        if (Array.isArray(addresses)) {
+            setSuggestions(addresses.filter(addr => addr.address.toLowerCase().includes(value.toLowerCase())).map(addr => ({
+                ...addr,
+                recipient_address: addr.address // создаем новое свойство recipient_address равное address
+            })));
+        } else {
+            // Обрабатывайте случай, когда addresses не является массивом.
+            setSuggestions([]);
+        }
     };
 
     const handleSuggestionClick = (addressObj) => {
-        // Предполагая, что пропс addresses - это объекты, нужно вытащить строку адреса
-        const address = addressObj.address;
-        handleChange({ target: {name: 'address', value: address} }); // Создаем "искусственный" объект события
-        updateAddress(address); // Обновляем адрес в Delivery
-        setSuggestions([]); // Очищаем подсказки
+        // Создаем объект с необходимой структурой
+        const updatedAddressObj = {
+            ...addressObj,
+            recipient_address: addressObj.address
+        };
+        handleChange({ target: {name: 'recipient_address', value: addressObj.address} });
+        updateAddress(updatedAddressObj); // Теперь передаем объект с обоими адресами
+        setSuggestions([]);
     };
 
     // Создаем границы для Белграда

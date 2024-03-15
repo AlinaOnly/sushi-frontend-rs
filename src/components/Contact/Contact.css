@@ -44,6 +44,10 @@
     max-width: 700px;
 }
 
+.contacts__delivery-description {
+    max-width: 600px;
+}
+
 @media screen and (max-width: 768px) {
     .contacts {
         margin: 0 30px;

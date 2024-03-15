@@ -26,13 +26,14 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage, onUpdateEmail, o
             Object.keys(currentUser).forEach(key => {
                 if (key === 'date_of_birth') {
                     inputData[key] = formatDateToInput(currentUser[key]);
-                } else if (key === 'messenger_account' && currentUser.messenger_account) { // Проверка на null
+                } else if (key === 'messenger_account' && currentUser.messenger_account) {
                     inputData['messenger_account'] = {
-                        // Используем опциональную цепочку, чтобы обработать null
                         msngr_type: currentUser.messenger_account?.msngr_type || '',
                         msngr_username: currentUser.messenger_account?.msngr_username || '',
                     };
-                } else if (key !== 'messenger_account') { // Исключаем ключ messenger_account
+                } else if (key === 'email') { // Убедитесь, что используете правильное имя поля с email
+                    inputData['newEmail'] = currentUser[key]; // Присваиваем значение email полю newEmail
+                } else if (key !== 'messenger_account') {
                     inputData[key] = currentUser[key];
                 }
             });
@@ -42,21 +43,23 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage, onUpdateEmail, o
 
     function handleSubmit(event) {
         event.preventDefault();
-        // Предполагаемая функция для форматирования даты
         const formattedDateOfBirth = values.date_of_birth
-            ? formatDateToServer(values.date_of_birth)
-            : null; // или пустую строку, если ваш API так требует
-        // Вызываем функцию обновления профиля с индивидуальными параметрами
+        ? formatDateToServer(values.date_of_birth)
+        : null;
+        const formattedMessenger = (values.messenger_account.msngr_type || values.messenger_account.msngr_username)
+        ? values.messenger_account
+        : null;
         onUpdateProfile(
             values.first_name,
             values.last_name,
             values.phone,
             formattedDateOfBirth,
-            values.messenger_account
-        ); 
+            formattedMessenger
+        );
         // Деактивируем ввод в форму
         setDisableInput(true);
     }
+
 
     function handleSubmitEmail(event) {
         event.preventDefault();
@@ -175,7 +178,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage, onUpdateEmail, o
                                 className="profile__input"
                                 name="date_of_birth"
                                 type="date"
-                                required
+                                //required
                             /></label> 
                             <span className={errors.date_of_birth ? "profile__error" : "profile__error_hidden"}>
                                 {errors.date_of_birth || t('profile.enter_birth_date', 'Введите дату своего рождения')}
@@ -190,7 +193,7 @@ function Profile({ onUpdateProfile, handleLogout, errorMessage, onUpdateEmail, o
                                 id="messenger_account-type"
                                 className="profile__input"
                                 name="msngr_type"
-                                required
+                                //required
                             >
                                 <option value="">{t('profile.choose_messenger_account', 'Выберите мессенджер')}</option>
                                 <option value="tm">Telegram</option>

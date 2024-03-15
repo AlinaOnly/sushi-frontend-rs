@@ -11,8 +11,8 @@ function MyAddressAutocomplete({ updateAddress, inputClassName, values, handleCh
 
     const onPlaceChanged = () => {
         if (autoCompleteRef.current) {
-        const newPlace = autoCompleteRef.current.getPlace();
-        updateAddress(newPlace);
+            const newPlace = autoCompleteRef.current.getPlace();
+            updateAddress(newPlace);
         }
     };
 

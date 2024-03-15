@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { FormDataProvider } from '../../contexts/FormDataContext';
 import ProtectedRoute from '../ProtectedRoute';
@@ -63,6 +64,7 @@ function App() {
 
   // location
   const navigate = useNavigate();
+  const location = useLocation();
 
   // language state
   const [language, setLanguage] = useState('ru'); //начальный язык
@@ -83,26 +85,32 @@ function App() {
 
   // About us and our contacts state
   const [aboutUs, setAboutUs] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(''); // Общее состояние для выбранного города
 
   // dishes Items
   const [dishes, setDishesItems] = useState([]);
 
   // Проверяем, есть ли элементы в корзине
-  //const [cartData, setCartData] = useState([]);
   const [cartData, setCartData] = useState(() => {
     // Пытаемся получить данные из localStorage
     const localData = localStorage.getItem('cartDishes');
     return localData ? JSON.parse(localData) : [];
   });
 
+  // для отрисовки блюд в корзине
+  const [isLoadedFromStorage, setIsLoadedFromStorage] = useState(false);
+
   // состояние для delivery
   const [isDelivery, setDelivery] = useState([]);
 
   // состояние для takeaway
-  const [isTakeaway, setTakeaway] = useState([]);
+  const [isTakeaway, setTakeaway] = useState([]); // для точек магазинов
+  const [isTakeawayPayment, setTakeawayPayment] = useState(false); // или true, если по умолчанию нужен самовывоз для Payment
 
   //состояние для промокода
   const [promoCode, setPromoCode] = useState('');
+  //состояние для скидки
+  const [discount, setDiscount] = useState({ type: null, amount: 0 });
 
   // dish Items state
   const [selectedDish, setSelectedDish] = useState({});
@@ -125,8 +133,6 @@ function App() {
     caption: '',
   });
 
-  // для отрисовки блюд в корзине
-  const [isLoadedFromStorage, setIsLoadedFromStorage] = useState(false);
 
   // functionality -- registration
   function handleRegister(first_name, last_name,  email, phone, password) {
@@ -203,11 +209,11 @@ function App() {
             setErrorMessage('errors.success_change_profile');
             setPreloader(false);
         }).catch(err => {
-            /* if (err === 'Ошибка: 409') {
+            if (err === 'Ошибка: 409') {
               setErrorMessage('errors.user_already_exists');
             } else {
               setErrorMessage('errors.error_during_data_change');
-            }*/
+            }
             handleAuthError(err);
             setErrorMessage('errors.error_during_data_change');
             console.log(err);
@@ -351,7 +357,6 @@ function App() {
     }
   }, []); //пустой массив зависимостей означает, что эффект выполнится один раз при монтировании компонента
 
-
   // functionality -- getting User Last Orders
   function getOrdersApi() {
     setPreloader(true);
@@ -406,13 +411,30 @@ function App() {
     MainApi.getOurContacts()
       .then((data) => {
         setAboutUs(data);
+        if (data && data[0] && data[0].restaurants && data[0].restaurants.length > 0) {
+          // Устанавливаем начальный выбранный город как первый город из загруженных данных
+          setSelectedCity(data[0].restaurants[0].city);
+        }
         setPreloader(false);
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         setPreloader(false);
       });
   }
+
+  useEffect(() => {
+    if (aboutUs && aboutUs.length > 0 && !selectedCity) {
+      // Пример, где aboutUs - массив объектов, каждый из которых представляет отдельный город
+      const initialCity = aboutUs.find(cityData => cityData.city === "Beograd") || aboutUs[0];
+      setSelectedCity(initialCity.city);
+    }
+  }, [aboutUs, setSelectedCity, selectedCity]);
+
+  // Функция обработчика выбора города
+  const handleCitySelection = (city) => {
+    setSelectedCity(city);
+  };
   //end
 
   // functionality -- getting dishes from Api
@@ -532,7 +554,6 @@ function App() {
       })
       .catch(error => console.error('Ошибка при уменьшении количества блюда', error));
   };*/
-  //end
 
   // добавление в корзину
   const handleAddToCart = (newItem) => {
@@ -553,7 +574,6 @@ function App() {
               ? { ...cartItem, quantity: cartItem.quantity + 1 }
               : cartItem
           );
-
           /*const updatedCart = !isItemAlreadyInCart
           ? [...prevItems, newItem]
           : prevItems.map(cartItem =>
@@ -561,8 +581,6 @@ function App() {
               ? { ...cartItem, quantity: cartItem.quantity + newItem.quantity }
               : cartItem
           );*/
-
-
       // Сохраняем обновлённую корзину в localStorage
       localStorage.setItem('cartDishes', JSON.stringify(updatedCart));
       return updatedCart;
@@ -571,17 +589,18 @@ function App() {
 
   const handleSubmitPromo = () => {
     MainApi.postPromoMethod({ promocode: promoCode })
+        // Считаем, что data в формате { promocode_disc: "10.00", promocode_type: "%" или "number" }
         .then(data => {
-            // Если data не является массивом, не обновляем cartData
-            if (!Array.isArray(data)) {
-                throw new Error('Invalid cart data format');
+            if (typeof data !== 'object' || data === null || !('promocode_disc' in data)) {
+              throw new Error('Invalid cart data format');
             }
-            setCartData(data);
-            setErrorMessage(null); // Очистка ошибки после успешного запроса
+            const discountType = data.promocode_disc.slice(-1) === '%' ? '%' : 'number';
+            const discountAmount = parseFloat(data.promocode_disc.replace('%', ''));
+            setDiscount({ type: discountType, amount: discountAmount });
+            setErrorMessage(null);
         })
         .catch(error => {
-            // текущая обработка ошибок, можете добавить обработку ошибки из then
-            console.error(error); // Для отладки
+            console.error(error);
             setErrorMessage('errors.promo_notfound');
         });
   };
@@ -639,53 +658,53 @@ function App() {
   //end
 
   // functionality -- takeaway
-function getTakeaway() {
-  setPreloader(true);
-  MainApi.getTakeawayMethod()
-  .then((takeaway) => {
-        setTakeaway(takeaway);
-        localStorage.setItem('takeaway', JSON.stringify(takeaway));
-        setPreloader(false);
-    }).catch(err => {
-        console.log(err);
-        setPreloader(false);
-    });
-}
+  function getTakeaway() {
+    setPreloader(true);
+    MainApi.getTakeawayMethod()
+    .then((takeaway) => {
+          setTakeaway(takeaway);
+          localStorage.setItem('takeaway', JSON.stringify(takeaway));
+          setPreloader(false);
+      }).catch(err => {
+          console.log(err);
+          setPreloader(false);
+      });
+  }
 
-function handleSubmitTakeawayData(orderFormTakeawayData) {
-  setPreloader(true);
-  // Формируем данные для заказа на основе введенных данных и содержимого корзины
-  const orderTakeawayData = {
-    discounted_amount: orderFormTakeawayData.discounted_amount,
-    payment_type: orderFormTakeawayData.payment_type,
-    items_qty: orderFormTakeawayData.items_qty,
-    recipient_name: orderFormTakeawayData.recipient_name,
-    recipient_phone: orderFormTakeawayData.recipient_phone,
-    city: orderFormTakeawayData.city,
-    delivery_time: orderFormTakeawayData.delivery_time,
-    restaurant: orderFormTakeawayData.restaurant,
-    comment: orderFormTakeawayData.comment,
-    persons_qty: orderFormTakeawayData.persons_qty,
-    orderdishes: orderFormTakeawayData.orderdishes.map(item => ({
-      dish: item.dish.article,
-      quantity: item.quantity
-    })),
-    amount: orderFormTakeawayData.amount,
-    promocode: orderFormTakeawayData.promocode,
-  };
-  // Отправка данных на сервер
-  MainApi.postTakeawayCreateMethod(orderTakeawayData)
-    .then(response => {
-      console.log('Заказ успешно отправлен takaway:', response);
-      // Здесь может присутствовать логика после успешной отправки данных, например, очистка корзины
-      setCartData([]); // очищаем корзину на клиенте
-      localStorage.removeItem('cartDishes'); // удаляем данные о корзине из `localStorage`
-      setPreloader(false); // Скрываем индикатор загрузки
-    })
-    .catch(err => {
-      console.error('Ошибка при отправке заказа takaway:', err);
-      setPreloader(false); // Скрываем индикатор загрузки даже в случае ошибки
-    });
+  function handleSubmitTakeawayData(orderFormTakeawayData) {
+    setPreloader(true);
+    // Формируем данные для заказа на основе введенных данных и содержимого корзины
+    const orderTakeawayData = {
+      discounted_amount: orderFormTakeawayData.discounted_amount,
+      payment_type: orderFormTakeawayData.payment_type,
+      items_qty: orderFormTakeawayData.items_qty,
+      recipient_name: orderFormTakeawayData.recipient_name,
+      recipient_phone: orderFormTakeawayData.recipient_phone,
+      city: orderFormTakeawayData.city,
+      delivery_time: orderFormTakeawayData.delivery_time,
+      restaurant: orderFormTakeawayData.restaurant,
+      comment: orderFormTakeawayData.comment,
+      persons_qty: orderFormTakeawayData.persons_qty,
+      orderdishes: orderFormTakeawayData.orderdishes.map(item => ({
+        dish: item.dish.article,
+        quantity: item.quantity
+      })),
+      amount: orderFormTakeawayData.amount,
+      promocode: orderFormTakeawayData.promocode,
+    };
+    // Отправка данных на сервер
+    MainApi.postTakeawayCreateMethod(orderTakeawayData)
+      .then(response => {
+        console.log('Заказ успешно отправлен takaway:', response);
+        // Здесь может присутствовать логика после успешной отправки данных, например, очистка корзины
+        setCartData([]); // очищаем корзину на клиенте
+        localStorage.removeItem('cartDishes'); // удаляем данные о корзине из `localStorage`
+        setPreloader(false); // Скрываем индикатор загрузки
+      })
+      .catch(err => {
+        console.error('Ошибка при отправке заказа takaway:', err);
+        setPreloader(false); // Скрываем индикатор загрузки даже в случае ошибки
+      });
   }
   //end
 
@@ -711,6 +730,14 @@ function handleSubmitTakeawayData(orderFormTakeawayData) {
     navigate('/');
   };
   //end
+
+  // Функции шифрования и расшифровки:
+  const secretKey = process.env.REACT_SECRET_KEY;
+  const encrypt = (data) => CryptoJS.AES.encrypt(data, secretKey).toString();
+  const decrypt = (encryptedData) => {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  };
 
   // checking token проверка токена
   const handleTokenCheck = useCallback(() => {
@@ -746,6 +773,65 @@ function handleSubmitTakeawayData(orderFormTakeawayData) {
       setLogIn(false);
     }
   }, []);
+
+  /*const handleTokenCheck = useCallback(() => {
+    //  строки для использования шифрованных токенов из localStorage
+    const encryptedLogInJwt = localStorage.getItem('encryptedLogInJwt');
+    const encryptedLogInJwtRefresh = localStorage.getItem('encryptedLogInJwtRefresh');
+    const logInJwt = encryptedLogInJwt ? decrypt(encryptedLogInJwt) : null;
+    const logInJwtRefresh = encryptedLogInJwtRefresh ? decrypt(encryptedLogInJwtRefresh) : null;
+    if (logInJwt) {
+      apiAuth.tokenVerify(logInJwt)
+        .then((res) => {
+          if (res.status === 401 && logInJwtRefresh) {
+            apiAuth.tokenRefresh(logInJwtRefresh)
+              .then((res) => {
+                // Шифруем новые токены перед сохранением
+                localStorage.setItem('encryptedLogInJwt', encrypt(res.access));
+                localStorage.setItem('encryptedLogInJwtRefresh', encrypt(res.refresh));
+                // Обновление состояния аутентификации
+                setLogIn(true);
+                setCurrentUser(current => ({ ...current, ...res }));
+              })
+              .catch((err) => {
+                // Очистка localStorage, если обновление токена не удалось
+                localStorage.removeItem('encryptedLogInJwt');
+                localStorage.removeItem('encryptedLogInJwtRefresh');
+                handleAuthError(err);
+                console.log(err);
+                setLogIn(false);
+              });
+          } else {
+            // Токен все еще действителен
+            setLogIn(true);
+            setCurrentUser(current => ({ ...current, ...res }));
+          }
+        })
+        .catch((err) => {
+          // Очистка localStorage, если токен не прошел проверку
+          localStorage.removeItem('encryptedLogInJwt');
+          localStorage.removeItem('encryptedLogInJwtRefresh');
+          handleAuthError(err);
+          console.log(err);
+          setLogIn(false);
+        });
+    } else {
+      // Очистка localStorage, если токен не найден
+      localStorage.removeItem('encryptedLogInJwt');
+      localStorage.removeItem('encryptedLogInJwtRefresh');
+      setLogIn(false);
+    }
+  }, []);*/
+  //end
+
+  //эффект для остлеживания локации для Payment
+  useEffect(() => {
+    if (location.pathname.includes('/takeaway')) {
+      setTakeawayPayment(true);
+    } else if (location.pathname.includes('/delivery')) {
+      setTakeawayPayment(false);
+    }
+  }, [location]);
   //end
 
   // Проверяю, выполнял ли пользователь вход ранее
@@ -862,18 +948,24 @@ function handleSubmitTakeawayData(orderFormTakeawayData) {
         burgerHeader={burgerHeader} 
         handleBurgerHeader={handleBurgerHeader} 
         language={language} 
-        onLanguageChange={setLanguage}  
+        onLanguageChange={setLanguage}
+        aboutUs={aboutUs}
+        onCitySelected={handleCitySelection}
+        selectedCity={selectedCity}
       />
 
       <HeaderMenu 
         handleBurgerHeader={handleBurgerHeader}
-        cartData={cartData} 
+        cartData={cartData}
       />
 
         <Header 
           language={language} 
           onLanguageChange={setLanguage}
           cartData={cartData}
+          aboutUs={aboutUs}
+          onCitySelected={handleCitySelection}
+          selectedCity={selectedCity}
         />
 
         <Banner />
@@ -1150,6 +1242,7 @@ function handleSubmitTakeawayData(orderFormTakeawayData) {
                 handleSubmitPromo={handleSubmitPromo}
                 errorMessage={errorMessage}
                 onClearCart={handleClearCart}
+                discount={discount}
                 //onIncreaseQuantity={handleIncreaseQuantity}
                 //onDecreaseQuantity={handleDecreaseQuantity}
               />} 
@@ -1181,7 +1274,7 @@ function handleSubmitTakeawayData(orderFormTakeawayData) {
               <Payment
                 onSubmitDeliveryData={handleSubmitDeliveryData}
                 onSubmitSubmitTakeawayData={handleSubmitTakeawayData}
-                isTakeaway={isTakeaway}
+                isTakeawayPayment={isTakeawayPayment}
               />} 
           />
 
@@ -1191,6 +1284,7 @@ function handleSubmitTakeawayData(orderFormTakeawayData) {
               <Contacts
                 aboutUs={aboutUs}
                 language={language}
+                onCitySelected={handleCitySelection}
               />
             }
           />

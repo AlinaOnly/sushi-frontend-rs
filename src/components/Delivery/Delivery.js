@@ -27,6 +27,41 @@ function Delivery({ isDelivery, cartData }) {
     const currentUser = useContext(CurrentUserContext);
     const { values, isValid, errors, setValues, formRef, handleChange, handleInput, checkFormValidity } = useFormValidation();
 
+    // Функция для вывода дня и месяца
+    const MONTH_NAMES = t('months', {
+        returnObjects: true,
+        defaultValue: [
+            "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
+            "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
+        ]
+    });
+
+    const generateDateOptions = () => {
+        const today = new Date();
+        const dates = [t('dates.as_soon_as_possible', 'Как можно быстрее')];
+        // Определяем дату на месяц вперед от сегодня
+        const oneMonthFromNow = new Date();
+        oneMonthFromNow.setMonth(today.getMonth() + 1);
+        let dateIterator = new Date(today);
+        while (dateIterator <= oneMonthFromNow) {
+            const day = dateIterator.getDate();
+            const month = dateIterator.getMonth();
+            //const year = dateIterator.getFullYear(); // Если нужно, можно добавить год
+            // Форматируем число, добавляя ведущий ноль, если нужно
+            const formattedDay = day < 10 ? `0${day}` : day;
+            const monthName = MONTH_NAMES[month];
+            const date = `${formattedDay} ${monthName}`; // ${year}, если нужен год
+            dates.push(date);
+            // Переходим к следующему дню
+            dateIterator.setDate(dateIterator.getDate() + 1);
+        }
+        return dates;
+    };
+    const dateOptions = generateDateOptions();
+
+    const [selectedMonth, setSelectedMonth] = useState(dateOptions[0]);
+    //end
+
     useEffect(() => {
         // Устанавливаем начальные значения для формы, используя информацию о текущем пользователе
         if (currentUser && Array.isArray(currentUser.addresses)) {
@@ -45,6 +80,13 @@ function Delivery({ isDelivery, cartData }) {
                 persons_qty,
                 delivery_time: '11:00',
             });
+        }
+        if (selectedMonth !== 'Как можно быстрее') {
+            const [day, monthName] = selectedMonth.split(' ');
+            const monthNumber = MONTH_NAMES.indexOf(monthName);
+            const year = new Date().getFullYear(); // или берем год из выбранной даты
+            const date = new Date(year, monthNumber, parseInt(day, 10));
+            setValues(v => ({ ...v, delivery_time: generateTimeOptions(date)[0] || '' }));
         }
     }, [currentUser, setValues]);
 
@@ -82,91 +124,80 @@ function Delivery({ isDelivery, cartData }) {
     };
     //end
 
-    // Функция для создания массива временных интервалов, начиная с 11:30
-    const generateTimeOptions = () => {
+    // проверка валидного времени на текущую дату
+    let selectedDate;
+    if (selectedMonth !== 'Как можно быстрее') {
+        const [day, monthName] = selectedMonth.split(' ');
+        const monthNumber = MONTH_NAMES.indexOf(monthName);
+        const year = new Date().getFullYear(); // или берем год из выбранной даты
+        selectedDate = new Date(year, monthNumber, parseInt(day, 10));
+    } else {
+        selectedDate = new Date(); // если "Как можно быстрее", то считаем что дата – сегодня
+    }
+
+    const generateTimeOptions = (selectedDate) => {
         const intervals = [];
-        // Определяем начальные и конечные часы
-        const startHour = 11;
-        const endHour = 22;
-        for (let hour = startHour; hour <= endHour; hour++) {
-            // Добавляем интервал каждый час начиная с 00 минут
-            intervals.push(`${hour}:00`);
-            // Добавляем 30 минут только если это не последний час
-            if (hour < endHour) {
-                intervals.push(`${hour}:30`);
+        const currentDateTime = new Date();
+        const selectedDateAsString = selectedDate.toDateString();
+        let isToday = selectedDateAsString === currentDateTime.toDateString();
+        let startHour = isToday ? currentDateTime.getHours() : 11;
+        // Если сегодня и текущие минуты >= 30, переходим к следующему часу
+        if (isToday && currentDateTime.getMinutes() >= 30) {
+            startHour++;
+        }
+        for (let hour = startHour; hour <= 22; hour++) {
+          // Если выбрана сегодняшняя дата и текущий час уже прошёл, пропускаем добавление
+            if (!(isToday && hour <= currentDateTime.getHours())) {
+                // Добавляем полные часы
+                intervals.push(`${hour}:00`);
+                // Добавляем полчаса только если это не последний час и не первый интервал, когда сегодня и текущее время > 30 минут
+                if (hour < 22 && !(isToday && hour === startHour && currentDateTime.getMinutes() >= 30)) {
+                    intervals.push(`${hour}:30`);
+                }
             }
         }
         return intervals;
     };
-    const timeOptions = generateTimeOptions();
+
+    const timeOptions = generateTimeOptions(selectedDate);
     //end
-
-    // Функция для вывода дня и месяца
-    const MONTH_NAMES = t('months', {
-            returnObjects: true,
-            defaultValue: [
-                "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
-                "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
-            ]
-    });
-
-    const generateDateOptions = () => {
-        const today = new Date();
-        const dates = [t('dates.as_soon_as_possible', 'Как можно быстрее')];
-        // Определяем дату на месяц вперед от сегодня
-        const oneMonthFromNow = new Date();
-        oneMonthFromNow.setMonth(today.getMonth() + 1);
-
-        let dateIterator = new Date(today);
-        while (dateIterator <= oneMonthFromNow) {
-            const day = dateIterator.getDate();
-            const month = dateIterator.getMonth();
-            //const year = dateIterator.getFullYear(); // Если нужно, можно добавить год
-            // Форматируем число, добавляя ведущий ноль, если нужно
-            const formattedDay = day < 10 ? `0${day}` : day;
-            const monthName = MONTH_NAMES[month];
-            const date = `${formattedDay} ${monthName}`; // ${year}, если нужен год
-            dates.push(date);
-            // Переходим к следующему дню
-            dateIterator.setDate(dateIterator.getDate() + 1);
-        }
-        return dates;
-    };
-    const dateOptions = generateDateOptions();
-    //end
-
-    const handleUpdateAddress = (place) => {
-        // Обновление адреса, если он выбран из Google Places Autocomplete
-        if (place.address_components) {
-            const addressComponents = place.address_components;
-            const formattedAddress = place.formatted_address;
-            const hasCountry = addressComponents.some(component => component.types.includes('country'));
-            const hasRoute = addressComponents.some(component => component.types.includes('route'));
-            const isValidAddress = hasCountry && hasRoute;
-
-            setValues(prevState => ({
-                ...prevState,
-                address: formattedAddress,
-                isAddressValid: isValidAddress,
-            }));
-        } else {
-            // Обработка сохраненных адресов
-            setValues(prevState => ({
-                ...prevState,
-                address: place, // в этом случае place является строкой сохраненного адреса
-            }));
-        }
-        checkFormValidity();
-    };
-
-    // Добавим состояние для выбранного месяца
-    const [selectedMonth, setSelectedMonth] = useState(dateOptions[0]);
 
     // Обработчик изменения выбора месяца
     const handleMonthChange = (event) => {
         setSelectedMonth(event.target.value);
+        // преобразуем `selectedMonth` в дату для передачи её в `generateTimeOptions`
+        if (event.target.value !== 'Как можно быстрее') {
+            const [day, monthName] = event.target.value.split(' ');
+            const monthNumber = MONTH_NAMES.indexOf(monthName);
+            const year = new Date().getFullYear(); // или берем год из выбранной даты
+            const selectedDate = new Date(year, monthNumber, parseInt(day, 10));
+            // обновляем состояние времени используя новую выбранную дату
+            setValues(v => ({ ...v, delivery_time: generateTimeOptions(selectedDate)[0] || '' }));
+            }
     };
+    //end
 
+    const handleUpdateAddress = (place) => {
+        if (!place) return;
+        let addressValue;
+        let isValidAddress = false;
+        if (place.address_components) {
+            // Такой же подход, как и ранее, если place - это объект с компонентами адреса
+            addressValue = place.formatted_address;
+            const addressComponents = place.address_components;
+            isValidAddress = addressComponents.some(component => component.types.includes('country')) &&
+                            addressComponents.some(component => component.types.includes('route'));
+        } else {
+            // Если place - это сохраненный адрес, копируем его значение
+            addressValue = place.address;
+        }
+        setValues(prevState => ({
+            ...prevState,
+            recipient_address: addressValue, // используем новый ключ для адреса
+            isAddressValid: isValidAddress,
+        }));
+        checkFormValidity();
+    };
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -275,8 +306,9 @@ function Delivery({ isDelivery, cartData }) {
                                     updateAddress={handleUpdateAddress}
                                     values={values}
                                     handleChange={handleChange}
-                                    addresses={currentUser.recipient_address}
+                                    addresses={currentUser.addresses || ''}
                                     handleInput={handleInput}
+                                    //readOnly={values.isAddressValid}
                                 />
                             </label>
                         </div>

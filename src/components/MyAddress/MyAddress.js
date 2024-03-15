@@ -42,9 +42,9 @@ function MyAddress({ addresses, onDeleteAddress, onPostAddress }) {
         if (isValid) {
             if (addresses.length < 3) {
                 if (isDuplicateAddress(newAddress, addresses)) {
-                alert('Такой адрес уже существует!');
+                    alert('Такой адрес уже существует!');
                 } else {
-                onPostAddress({ address: newAddress }, handleHideInput);
+                    onPostAddress({ address: newAddress }, handleHideInput);
                 }
             } else {
                 alert("Нельзя добавить более трех адресов");

@@ -27,62 +27,13 @@ function Pickup({ isTakeaway, cartData }) {
     const currentUser = useContext(CurrentUserContext);
     const { values, isValid, errors, formRef, setValues, handleChange } = useFormValidation();
 
-    useEffect(() => {
-        setValues({
-            recipient_name: currentUser.first_name || '',
-                recipient_phone: currentUser.phone || '',
-                restaurant: selectedStore,
-                comment: '',
-                persons_qty,
-                delivery_time: '11:00',
-        });
-    }, [currentUser, setValues]);
-
-    useEffect(() => {
-        // Предполагая, что данные о доставке уже загружены через App и переданы через isTakeaway.
-        // Теперь можно итерировать по isTakeaway и решить, как применить эти данные в коде.
-        if (isTakeaway.length > 0) {
-            // Например, это могло бы быть использование этих данных для настройки формы
-            // или обновление стейта с вариантами стоимости доставки.
-        }
-    }, [isTakeaway]);
-
-    // Счетчик столовых приборов
-    const handleAdd = () => {
-        setCount(prevCount => (prevCount < 10 ? prevCount + 1 : prevCount));
-    };
-
-    const handleDelete = () => {
-        setCount(prevCount => (prevCount > 1 ? prevCount - 1 : prevCount));
-    };
-    //end
-
-    // Функция для создания массива временных интервалов, начиная с 11:30
-    const generateTimeOptions = () => {
-        const intervals = [];
-        // Определяем начальные и конечные часы
-        const startHour = 11;
-        const endHour = 22;
-        for (let hour = startHour; hour <= endHour; hour++) {
-            // Добавляем интервал каждый час начиная с 00 минут
-            intervals.push(`${hour}:00`);
-            // Добавляем 30 минут только если это не последний час
-            if (hour < endHour) {
-                intervals.push(`${hour}:30`);
-            }
-        }
-        return intervals;
-    };
-    const timeOptions = generateTimeOptions();
-    //end
-
     // Функция для вывода дня и месяца
     const MONTH_NAMES = t('months', {
-            returnObjects: true,
-            defaultValue: [
-                "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
-                "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
-            ]
+        returnObjects: true,
+        defaultValue: [
+            "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня",
+            "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
+        ]
     });
 
     const generateDateOptions = () => {
@@ -107,15 +58,99 @@ function Pickup({ isTakeaway, cartData }) {
         return dates;
     };
     const dateOptions = generateDateOptions();
+
+    const [selectedMonth, setSelectedMonth] = useState(dateOptions[0]);
     //end
 
-    // Добавим состояние для выбранного месяца
-    const [selectedMonth, setSelectedMonth] = useState(dateOptions[0]);
+    useEffect(() => {
+        setValues({
+            recipient_name: currentUser.first_name || '',
+                recipient_phone: currentUser.phone || '',
+                restaurant: selectedStore ? selectedStore.id : '',
+                comment: '',
+                persons_qty,
+                delivery_time: '11:00',
+        });
+        if (selectedMonth !== 'Как можно быстрее') {
+            const [day, monthName] = selectedMonth.split(' ');
+            const monthNumber = MONTH_NAMES.indexOf(monthName);
+            const year = new Date().getFullYear(); // или берем год из выбранной даты
+            const date = new Date(year, monthNumber, parseInt(day, 10));
+            setValues(v => ({ ...v, delivery_time: generateTimeOptions(date)[0] || '' }));
+        }
+    }, [currentUser, setValues]);
+
+    useEffect(() => {
+        // Предполагая, что данные о доставке уже загружены через App и переданы через isTakeaway.
+        // Теперь можно итерировать по isTakeaway и решить, как применить эти данные в коде.
+        if (isTakeaway.length > 0) {
+            // Например, это могло бы быть использование этих данных для настройки формы
+            // или обновление стейта с вариантами стоимости доставки.
+        }
+    }, [isTakeaway]);
+
+    // Счетчик столовых приборов
+    const handleAdd = () => {
+        setCount(prevCount => (prevCount < 10 ? prevCount + 1 : prevCount));
+    };
+
+    const handleDelete = () => {
+        setCount(prevCount => (prevCount > 1 ? prevCount - 1 : prevCount));
+    };
+    //end
+
+    // проверка валидного времени на текущую дату
+    let selectedDate;
+    if (selectedMonth !== 'Как можно быстрее') {
+        const [day, monthName] = selectedMonth.split(' ');
+        const monthNumber = MONTH_NAMES.indexOf(monthName);
+        const year = new Date().getFullYear(); // или берем год из выбранной даты
+        selectedDate = new Date(year, monthNumber, parseInt(day, 10));
+    } else {
+        selectedDate = new Date(); // если "Как можно быстрее", то считаем что дата – сегодня
+    }
+
+    const generateTimeOptions = (selectedDate) => {
+        const intervals = [];
+        const currentDateTime = new Date();
+        const selectedDateAsString = selectedDate.toDateString();
+        let isToday = selectedDateAsString === currentDateTime.toDateString();
+        let startHour = isToday ? currentDateTime.getHours() : 11;
+        // Если сегодня и текущие минуты >= 30, переходим к следующему часу
+        if (isToday && currentDateTime.getMinutes() >= 30) {
+            startHour++;
+        }
+        for (let hour = startHour; hour <= 22; hour++) {
+          // Если выбрана сегодняшняя дата и текущий час уже прошёл, пропускаем добавление
+            if (!(isToday && hour <= currentDateTime.getHours())) {
+                // Добавляем полные часы
+                intervals.push(`${hour}:00`);
+                // Добавляем полчаса только если это не последний час и не первый интервал, когда сегодня и текущее время > 30 минут
+                if (hour < 22 && !(isToday && hour === startHour && currentDateTime.getMinutes() >= 30)) {
+                    intervals.push(`${hour}:30`);
+                }
+            }
+        }
+        return intervals;
+    };
+
+    const timeOptions = generateTimeOptions(selectedDate);
+    //end
 
     // Обработчик изменения выбора месяца
     const handleMonthChange = (event) => {
         setSelectedMonth(event.target.value);
+        // преобразуем `selectedMonth` в дату для передачи её в `generateTimeOptions`
+        if (event.target.value !== 'Как можно быстрее') {
+            const [day, monthName] = event.target.value.split(' ');
+            const monthNumber = MONTH_NAMES.indexOf(monthName);
+            const year = new Date().getFullYear(); // или берем год из выбранной даты
+            const selectedDate = new Date(year, monthNumber, parseInt(day, 10));
+            // обновляем состояние времени используя новую выбранную дату
+            setValues(v => ({ ...v, delivery_time: generateTimeOptions(selectedDate)[0] || '' }));
+            }
     };
+    //end
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -130,14 +165,18 @@ function Pickup({ isTakeaway, cartData }) {
         } else {
             deliveryTime = null;
         }
-         // Предотвратить обычную отправку формы
+        if (!selectedStore) {
+            // Обработка случая, когда ресторан не выбран
+            console.error('Ресторан не выбран!');
+            return;
+        }
         const formValues = {
             discounted_amount: values.discounted_amount,
             //payment_type: values.payment_type,
             items_qty: values.items_qty,
             recipient_name: values.recipient_name,
             recipient_phone: values.recipient_phone,
-            restaurant: values.restaurant,
+            restaurant: selectedStore.id,
             city: values.city,
             delivery_time: deliveryTime, // Используем составленное или null значение,
             comment: values.comment,
@@ -231,10 +270,10 @@ function Pickup({ isTakeaway, cartData }) {
                                     required
                                 />
                                 <span 
-                                    className={`${errors.restaurant ? "login__error" : "login__error_hidden"}`}>
+                                    className={`${errors.selectedStore ? "login__error" : "login__error_hidden"}`}>
                                         {t('delivery.field_required', 'Поле обязательно для ввода')}
                                 </span>
-                                <StorePickerMap onStoreSelect={setSelectedStore} />
+                                <StorePickerMap onStoreSelect={setSelectedStore} takeaway={isTakeaway}/>
                             </label>
                         </div>
                         <div className="delivery__description">{t('delivery.number_of_utensils', 'Количество приборов')}
@@ -290,7 +329,8 @@ function Pickup({ isTakeaway, cartData }) {
                                 onClick={handleSubmit}
                                 className=
                                 {`delivery__btn ${!isValid ? "delivery__btn-save_disable" : "app__button-opacity"}`}
-                                //disabled={!isValid}
+                                disabled={!isValid || !selectedStore || !values.recipient_name || !values.recipient_phone 
+                                    || (selectedMonth === 'Как можно быстрее' && !values.delivery_time)}
                                 type="button"
                                 aria-label="Выберете способ оплаты">
                                     {t('delivery.choose_payment_method', 'Выберете способ оплаты')}

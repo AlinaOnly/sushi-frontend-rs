@@ -1,4 +1,4 @@
-import {React, useContext, useEffect } from 'react';
+import { React, useContext, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import logo from '../../images/logo.png';
 import account from '../../images/account.svg';
@@ -9,7 +9,7 @@ import i18next from '../../utils/i18n';
 import { useTranslation } from 'react-i18next';
 import './Header.css';
 
-function Headers({ language, onLanguageChange, cartData }) {
+function Headers({ language, onLanguageChange, cartData, aboutUs, selectedCity, onCitySelected }) {
 
     const { t } = useTranslation();
 
@@ -41,6 +41,20 @@ function Headers({ language, onLanguageChange, cartData }) {
         return count;
     };
 
+    if (!aboutUs || !aboutUs[0].restaurants) {
+        return null;
+    }
+
+    const handleCityChange = (event) => {
+        const city = event.target.value;
+        onCitySelected(city); // Здесь подразумевается, что onCitySelected обновляет значение selectedCity
+    };
+
+    // Фильтрация ресторанов для выбранного города
+    const filteredRestaurants = aboutUs && aboutUs.length > 0
+    ? aboutUs.find(cityData => cityData.city === selectedCity)?.restaurants || []
+    : [];
+
     return (
         <header className="header">
             <div className="header__container-links">
@@ -69,11 +83,19 @@ function Headers({ language, onLanguageChange, cartData }) {
                 </div>
             </Link>
             <div className="header__container-select">
-                <select className="header__select app__text-opacity" id="city" name="selectedCity">
-                    <option className="header__select-city" value="beograd">Beograd</option>
+                <select className="header__select header__select-wd_city app__text-opacity" onChange={handleCityChange} value={selectedCity}>
+                    {aboutUs.map(cityData => (
+                    <optgroup label={cityData.city} key={cityData.city}>
+                        {cityData.restaurants.map(restaurant => (
+                        <option key={restaurant.id} value={restaurant.address}>
+                            {restaurant.address}
+                        </option>
+                        ))}
+                    </optgroup>
+                    ))}
                 </select>
                 <select
-                    className="header__select app__text-opacity"
+                    className="header__select header__select-wd_lang app__text-opacity"
                     id="language"
                     name="selectedLanguage"
                     value={language}
@@ -82,6 +104,7 @@ function Headers({ language, onLanguageChange, cartData }) {
                         <option className="header__select-language" value="sr-latn">Sr</option>
                         <option className="header__select-language" value="en">En</option>
                 </select>
+                
                 <NavLink 
                     className={({ isActive }) => (isActive ? "header__link-acc header__link-active" : "header__link-acc header__link")}
                     to="/profile">

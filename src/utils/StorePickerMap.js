@@ -2,22 +2,29 @@ import React from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 //хук для выбора магазина
-function StorePickerMap( {onStoreSelect } ) {
+function StorePickerMap({ onStoreSelect, takeaway}) {
 
-    const stores = [
-        {
-            id: 1,
-            name: 'Yume Shushi ul. Milovana Milovanovića 4',
-            coordinates: { lat: 44.8090336 , lng: 20.4580446 }
-        },
-        // Можно потом добавить другие магазины по мере их появления
-    ];
+    const stores = takeaway.map(cityInfo => 
+        cityInfo.restaurants.map(restaurant => ({
+            ...restaurant,
+            cityName: cityInfo.city
+        }))
+    ).flat().map(restaurant => ({
+        id: restaurant.id,
+        name: `${restaurant.cityName}, ${restaurant.address}`, // Город и адрес
+        coordinates: {
+            lat: restaurant.coordinates.latitude,
+            lng: restaurant.coordinates.longitude
+        }
+    }));
+
+    const defaultCenter = stores.length > 0 ? stores[0].coordinates : { lat: 0, lng: 0 };
 
     return (
         <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
             <GoogleMap
                 mapContainerStyle={{ width: '100%', height: '400px' }}
-                center={stores[0].coordinates}
+                center={defaultCenter}
                 zoom={15}
             >
             {stores.map(store => (

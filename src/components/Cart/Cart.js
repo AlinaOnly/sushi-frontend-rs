@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Carousel from '../Carousel/Carousel';
 import empty from '../../images/empty-cart.svg';
@@ -16,6 +16,7 @@ function Cart({
         handleSubmitPromo,
         errorMessage,
         onClearCart,
+        discount,
         onIncreaseQuantity,
         onDecreaseQuantity
     }) {
@@ -63,11 +64,22 @@ function Cart({
         return parseFloat(unitPrice).toFixed(2);
     };
 
-    // Функция для вычисления итоговой суммы всех товаров в корзине
+    // Функция для вычисления итоговой суммы всех товаров в корзине и чтобы учитывала скидку
     const calculateTotalSum = () => {
-        return cartData.reduce((sum, cartItem) => {
-        return sum + (cartItem.dish.final_price * cartItem.quantity);
+        let sum = cartData.reduce((accum, cartItem) => {
+            return accum + (cartItem.dish.final_price * cartItem.quantity);
         }, 0);
+        switch (discount.type) {
+            case '%': // Если тип скидки - процент
+                sum = sum - (sum * (discount.amount / 100));
+                break;
+            case 'number': // Если тип скидки - фиксированное число
+                sum = sum - discount.amount;
+                break;
+            default:
+            // Если скидка не применена, возвращаем sum без изменений
+        }
+        return sum >= 0 ? sum : 0; // Возвращаемое значение не может быть отрицательным
     };
 
     // Вычисляем итоговую сумму

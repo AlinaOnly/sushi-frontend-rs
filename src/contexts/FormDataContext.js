@@ -14,7 +14,7 @@ export const FormDataProvider = ({ children }) => {
 
     return (
         <FormDataContext.Provider value={{ formData, updateFormData }}>
-        {children}
+            {children}
         </FormDataContext.Provider>
     );
 };

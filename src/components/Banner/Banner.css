@@ -8,6 +8,10 @@
     line-height: 30px;
 }
 
+.banner__title {
+    margin: 0;
+}
+
 .banner__href {
     color: #FF3055;
 }

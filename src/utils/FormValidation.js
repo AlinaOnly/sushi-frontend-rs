@@ -68,7 +68,7 @@ function useFormValidation() {
     }, []);
 
     const handleChange = (event) => {
-      console.log(values);
+      //console.log(values);
       const { target } = event;
       const { name, value } = target;
       // Обрабатываем поле 'address' отдельно для установки isAddressValid

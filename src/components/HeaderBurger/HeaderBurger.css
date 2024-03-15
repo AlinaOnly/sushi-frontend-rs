@@ -59,7 +59,7 @@
     padding: 0;
     position: absolute;
     right: 35px;
-    top: 50px;
+    top: 80px;
 }
 
 .header-burger-menu__lists {
@@ -102,6 +102,15 @@
     padding: 0;
     margin-bottom: 30px;
     height: fit-content;
+}
+
+.header-burger__select-wd_lang {
+    width: 38px;
+}
+
+.header-burger__select-wd_city {
+    width: 110px;
+    margin: 0 0 14px 0;
 }
 
 .header-burger-menu__profile{
